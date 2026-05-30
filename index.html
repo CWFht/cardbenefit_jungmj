@@ -1,142 +1,757 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>카드혜택 비교툴 v1.4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>롯데하이마트 카드 판촉 혜택 비교툴</title>
   <style>
     :root{
-      --bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;
-      --primary:#2563eb;--soft:#dbeafe;--gold:#f4c542;--silver:#94a3b8;--bronze:#c98a4b;
-      --green:#16a34a;--purple:#7c3aed;--orange:#ea580c;--red:#dc2626;--shadow:0 8px 24px rgba(15,23,42,.08);
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --primary:#2563eb;
+      --good:#166534;
+      --warn:#b45309;
+      --bad:#991b1b;
+      --violet:#6b21a8;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+      --gold:#f4c542;
+      --silver:#94a3b8;
+      --bronze:#c98a4b;
     }
+
     *{box-sizing:border-box}
-    html,body{width:100%;max-width:100%;overflow-x:hidden}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;line-height:1.5}
-    .app{width:100%;max-width:1320px;margin:0 auto;padding:10px 8px 48px}
-    .hero{background:linear-gradient(135deg,#111827,#1d4ed8);color:#fff;border-radius:18px;padding:16px 14px;box-shadow:var(--shadow);margin-bottom:10px}
-    .hero h1{margin:0 0 4px;font-size:21px;letter-spacing:-.05em}.hero p{margin:0;color:rgba(255,255,255,.82);font-size:12px;line-height:1.35}
-    .layout{display:grid;grid-template-columns:1fr;gap:12px}.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:12px}.section-title{margin:0 0 12px;font-size:17px;letter-spacing:-.04em}
-    label{display:block;margin:11px 0 6px;font-size:12px;font-weight:850;color:#374151}input,select{width:100%;border:1px solid #d1d5db;border-radius:13px;padding:14px 13px;font-size:16px;background:#fff;color:var(--text);outline:none}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
-    .two-col{display:grid;grid-template-columns:1fr;gap:10px}.checks{display:grid;grid-template-columns:1fr;gap:4px}.option-details{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:10px}.option-details summary{cursor:pointer;font-size:13px;font-weight:950;color:#374151;list-style:none}.option-details summary::-webkit-details-marker{display:none}.option-details .checks{margin-top:8px}.checkbox-row{display:flex;align-items:center;gap:9px;margin:7px 0;font-size:13px}.checkbox-row input{width:18px;height:18px;accent-color:var(--primary)}
-    .button-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}button{border:0;border-radius:13px;padding:14px 12px;font-weight:900;cursor:pointer;font-size:14px}.primary-btn{background:var(--primary);color:#fff}.sub-btn{background:#eef2ff;color:#1e3a8a}.full-btn{width:100%;margin-top:8px;background:#111827;color:#fff}.small{font-size:12px;color:var(--muted)}
-    .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 8px;font-size:11px;font-weight:850;color:#374151}.chip.ok{background:#f0fdf4;color:#166534;border-color:#bbf7d0}.chip.warn{background:#fff7ed;color:#9a3412;border-color:#fed7aa}.chip.purple{background:#faf5ff;color:#6b21a8;border-color:#e9d5ff}
-    .notice{margin-top:10px;padding:11px;border-radius:13px;background:#fffbeb;color:#92400e;font-size:12px}.info-box{background:#f8fafc;border:1px solid var(--line);border-radius:15px;padding:12px;margin-bottom:10px;font-size:12px;color:#334155}.info-box summary{cursor:pointer;font-weight:900;list-style:none}.strategy-box{background:#fff7ed;border:1px solid #fed7aa;border-radius:15px;padding:12px;margin-bottom:10px;color:#9a3412;font-size:12px}
-    .recommend-card{display:grid;grid-template-columns:1fr;gap:12px;background:#fff;border:2px solid var(--primary);border-radius:20px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px}.badge{display:inline-flex;align-items:center;gap:4px;background:var(--soft);color:#1d4ed8;font-size:11px;font-weight:950;border-radius:999px;padding:5px 8px;margin:0 5px 6px 0}.badge.ok{background:#dcfce7;color:#166534}.badge.purple{background:#f3e8ff;color:#6b21a8}.badge.warn{background:#ffedd5;color:#9a3412}.badge.orange{background:#ffedd5;color:#9a3412}.recommend-card h2{margin:0;font-size:23px;letter-spacing:-.05em}.recommend-card p{margin:6px 0 0;color:var(--muted);font-size:13px}.big-number{font-size:26px;font-weight:950;color:var(--primary);letter-spacing:-.05em}
-    .top3-podium{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}.podium-card{width:100%;position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}.podium-card:before{content:"";position:absolute;right:-24px;top:-24px;width:86px;height:86px;border-radius:999px;opacity:.18}.podium-card.rank1{border:2px solid var(--gold);background:linear-gradient(180deg,#fff8dc,#fffef7)}.podium-card.rank1:before{background:var(--gold)}.podium-card.rank2{border:2px solid var(--silver);background:linear-gradient(180deg,#f3f4f6,#fff)}.podium-card.rank2:before{background:var(--silver)}.podium-card.rank3{border:2px solid var(--bronze);background:linear-gradient(180deg,#fdf0e6,#fffaf6)}.podium-card.rank3:before{background:var(--bronze)}.podium-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}.podium-medal{font-size:24px}.podium-label{font-size:10px;font-weight:950;border-radius:999px;padding:4px 7px;background:rgba(255,255,255,.72)}.podium-name{font-size:15px;font-weight:950;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.podium-value{font-size:19px;font-weight:950;letter-spacing:-.04em}.podium-sub{font-size:11px;color:var(--muted);margin-top:2px}.podium-mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.podium-mini span{font-size:11px;font-weight:850;border-radius:999px;padding:4px 7px;background:rgba(255,255,255,.72)}
-    .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}.kpi{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px;box-shadow:var(--shadow)}.kpi .label{font-size:11px;color:var(--muted);font-weight:800}.kpi .value{font-size:17px;font-weight:950;letter-spacing:-.04em}.kpi.full{grid-column:1 / -1}.kpi.full .value{font-size:22px;color:var(--primary)}
-    .result-table-wrap{display:none}.mobile-results{display:block}.mobile-result-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow)}.mobile-result-card.rank1{border:2px solid var(--gold);background:#fffaf0}.mobile-result-card.rank2{border:2px solid var(--silver);background:#f8fafc}.mobile-result-card.rank3{border:2px solid var(--bronze);background:#fff7f2}.mobile-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:12px}.mobile-card-title{font-size:17px;font-weight:950;letter-spacing:-.04em;line-height:1.25;margin-top:8px}.mobile-card-benefit{font-size:20px;font-weight:950;color:var(--primary);letter-spacing:-.04em}.mobile-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.mobile-card-grid.detail-grid{display:none}.mobile-result-card.open .detail-grid{display:grid}.toggle-detail{width:100%;margin-top:10px;background:#f1f5f9;color:#334155;padding:11px;font-size:13px}.mobile-card-item{background:#f8fafc;border-radius:13px;padding:10px}.mobile-card-item .m-label{font-size:11px;color:var(--muted);font-weight:850}.mobile-card-item .m-value{font-size:14px;font-weight:950}.mobile-card-note{font-size:12px;color:#475569;background:#f8fafc;border-radius:13px;padding:10px;margin-top:10px}.rank-pill{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 9px;border-radius:999px;background:#eef2ff;color:#1e3a8a;font-weight:950;font-size:12px}.rank-pill.gold{background:var(--gold);color:#fff}.rank-pill.silver{background:var(--silver);color:#fff}.rank-pill.bronze{background:var(--bronze);color:#fff}.status{font-weight:950}.status.free{color:#166534}.status.interest{color:#991b1b}.status.cond{color:#6b21a8}.status.need{color:#b45309}.em{font-weight:950;color:#6b21a8}.orange-text{font-weight:950;color:#9a3412}
-    .guide-modal{position:fixed;inset:0;background:rgba(15,23,42,.58);display:none;align-items:center;justify-content:center;padding:14px;z-index:99}.guide-modal.open{display:flex}.guide-panel{width:min(980px,100%);max-height:86vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.25);padding:14px}.guide-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}.guide-head h3{margin:0;font-size:17px}.close-btn{background:#f3f4f6;color:#111827;padding:9px 12px}.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--line);background:#fff}.guide-table{width:100%;min-width:720px;border-collapse:collapse}.guide-table th,.guide-table td{font-size:12px;padding:9px;border-bottom:1px solid var(--line);text-align:left;white-space:normal}.guide-table th{background:#f8fafc}.chart-actions{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}.chart-btn{background:#111827;color:#fff}.chart-btn.sub{background:#eef2ff;color:#1e3a8a}.chart-image-wrap{display:none;margin-top:12px;border:1px solid var(--line);border-radius:18px;padding:10px;background:#f8fafc}.chart-image-wrap.open{display:block}.chart-image-wrap img{width:100%;border-radius:12px;display:block}.chart-fallback{display:none;padding:18px;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:13px}.guide-note{margin-top:12px;padding:12px;border-radius:14px;background:#fffbeb;color:#92400e;font-size:13px}
-    @media(min-width:981px){.app{padding:24px 16px 80px}.hero{border-radius:28px;padding:28px 22px}.hero h1{font-size:38px}.hero p{font-size:15px;line-height:1.5}.layout{grid-template-columns:410px 1fr;align-items:start;gap:16px}.sticky{position:sticky;top:14px}.panel{border-radius:20px;padding:18px}.two-col{grid-template-columns:1fr 1fr}.checks{grid-template-columns:1fr}.recommend-card{grid-template-columns:1fr auto;border-radius:24px;padding:20px}.big-number{text-align:right;font-size:30px}.top3-podium{display:grid;grid-template-columns:1.15fr 1fr 1fr;overflow:visible;gap:12px;padding:0;margin-bottom:16px}.podium-card{min-width:0;border-radius:22px;padding:17px 16px}.mobile-card-grid.detail-grid{display:grid}.toggle-detail{display:none}.kpi-grid{grid-template-columns:repeat(5,1fr);gap:12px}.kpi.full{grid-column:auto}.kpi .value{font-size:20px}.result-table-wrap{display:block}.mobile-results{display:none}table{width:100%;border-collapse:collapse;min-width:1540px}th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:right;font-size:13px;white-space:nowrap;vertical-align:middle}th{background:#f9fafb;color:#374151;font-size:12px}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2),th:nth-child(16),td:nth-child(16){text-align:left}tr.rank-1 td{background:#fffaf0;font-weight:850}tr.rank-2 td{background:#f8fafc}tr.rank-3 td{background:#fff7f2}tr.strong-cond td{background:#faf5ff}tr.strategy td{background:#fff7ed}.chart-actions{grid-template-columns:1fr 1fr}}
-    @media print{body{background:#fff}.hero,.sticky,.button-row,.notice,.info-box,.strategy-box,.guide-modal,.mobile-results{display:none!important}.app{max-width:none;padding:0}.layout{display:block}.panel,.recommend-card,.kpi,.podium-card{box-shadow:none}.result-table-wrap{display:block}th,td{font-size:8.5px;padding:5px}}
+    html,body{width:100%;max-width:100%;overflow-x:hidden}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;
+      line-height:1.45;
+    }
+
+    .app{
+      width:100%;
+      max-width:1320px;
+      margin:0 auto;
+      padding:10px 8px 48px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#111827,#1d4ed8);
+      color:#fff;
+      border-radius:18px;
+      padding:16px 14px;
+      box-shadow:var(--shadow);
+      margin-bottom:10px;
+    }
+    .hero h1{margin:0 0 4px;font-size:21px;letter-spacing:-.05em}
+    .hero p{margin:0;color:rgba(255,255,255,.82);font-size:12px;line-height:1.35}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:10px}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:12px}
+    .sticky{position:static}
+
+    .section-title{font-size:15px;font-weight:950;margin:0 0 10px;letter-spacing:-.04em}
+    label{display:block;font-size:12px;font-weight:850;color:#475569;margin:12px 0 6px}
+    input,select,button{font-family:inherit}
+    input,select{
+      width:100%;
+      border:1px solid #d1d5db;
+      border-radius:14px;
+      padding:12px 11px;
+      font-size:15px;
+      background:#fff;
+      color:#111827;
+      outline:none;
+    }
+    input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+    .hint{font-size:11px;color:var(--muted);margin-top:4px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+    .option-details{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:10px}
+    .option-details summary{cursor:pointer;font-size:13px;font-weight:950;color:#374151;list-style:none}
+    .option-details summary::-webkit-details-marker{display:none}
+    .checks{display:grid;grid-template-columns:1fr;gap:4px;margin-top:8px}
+    .checkbox-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#374151;padding:4px 0}
+    .checkbox-row input{width:17px;height:17px;padding:0;margin:0;accent-color:var(--primary)}
+
+    .button-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    button{border:0;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:900;cursor:pointer}
+    .primary-btn{background:var(--primary);color:#fff}
+    .sub-btn{background:#eef2ff;color:#1e3a8a}
+    .full-btn{width:100%;margin-top:8px;background:#111827;color:#fff}
+    .full-btn.secondary{background:#334155}
+
+    .info-box{background:#f8fafc;border:1px solid var(--line);color:#334155;border-radius:16px;padding:12px;margin-bottom:10px;font-size:12px}
+    .info-box summary{cursor:pointer;font-weight:950;list-style:none}
+    .info-box summary::-webkit-details-marker{display:none}
+
+    .recommend-card{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      background:linear-gradient(135deg,#eff6ff,#ffffff);
+      border:1px solid #bfdbfe;
+      border-radius:18px;
+      padding:14px;
+      margin-bottom:10px;
+    }
+    .recommend-card.empty{background:#fff;border-color:var(--line)}
+    .recommend-label{font-size:12px;color:var(--muted);font-weight:800}
+    .recommend-name{font-size:22px;font-weight:950;letter-spacing:-.05em;margin:3px 0}
+    .recommend-desc{font-size:12px;color:#475569}
+    .big-number{font-size:28px;font-weight:950;letter-spacing:-.05em;color:#1d4ed8;text-align:left}
+    .badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+    .badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:850;background:#eef2ff;color:#1e3a8a}
+    .badge.ok{background:#dcfce7;color:#166534}.badge.warn{background:#ffedd5;color:#9a3412}.badge.dark{background:#e5e7eb;color:#111827}
+
+    .top3-podium{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
+    .podium-card{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+    .podium-card:before{content:"";position:absolute;right:-26px;top:-26px;width:92px;height:92px;border-radius:999px;opacity:.18}
+    .podium-card.rank1{border:2px solid var(--gold);background:linear-gradient(180deg,#fff8dc,#fffef7)}
+    .podium-card.rank1:before{background:var(--gold)}
+    .podium-card.rank2{border:2px solid var(--silver);background:linear-gradient(180deg,#f3f4f6,#fff)}
+    .podium-card.rank2:before{background:var(--silver)}
+    .podium-card.rank3{border:2px solid var(--bronze);background:linear-gradient(180deg,#fdf0e6,#fffaf6)}
+    .podium-card.rank3:before{background:var(--bronze)}
+    .podium-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+    .podium-medal{font-size:24px;line-height:1}
+    .podium-label{font-size:10px;font-weight:950;border-radius:999px;padding:4px 7px;background:rgba(255,255,255,.75)}
+    .podium-name{font-size:15px;font-weight:950;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .podium-value{font-size:19px;font-weight:950;letter-spacing:-.04em;margin-top:3px}
+    .podium-sub{font-size:11px;color:var(--muted);margin-top:2px}
+    .podium-mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .podium-mini span{font-size:10px;font-weight:850;border-radius:999px;padding:3px 6px;background:rgba(255,255,255,.78);color:#374151}
+
+    .kpi-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
+    .kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}
+    .kpi .label{font-size:11px;color:var(--muted);font-weight:800}
+    .kpi .value{font-size:20px;font-weight:950;letter-spacing:-.04em;margin-top:3px}
+    .kpi.blue .value{color:#1d4ed8}.kpi.green .value{color:#166534}.kpi.red .value{color:#991b1b}
+
+    .strategy-guide{display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-bottom:10px;color:#9a3412;font-size:12px}
+    .strategy-guide b{color:#7c2d12}
+
+    .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:#fff}
+    table{width:100%;border-collapse:collapse;min-width:1220px}
+    th,td{padding:10px 9px;border-bottom:1px solid var(--line);font-size:12px;text-align:left;vertical-align:top;white-space:nowrap}
+    th{position:sticky;top:0;background:#f8fafc;z-index:1;color:#475569;font-weight:950}
+    tr.rank-1 td{background:#fffaf0}
+    tr.rank-2 td{background:#f8fafc}
+    tr.rank-3 td{background:#fff7f2}
+    tr.strategy td{background:#f5f3ff}
+    .rank-pill{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 9px;border-radius:999px;background:#eef2ff;color:#1e3a8a;font-weight:950;font-size:12px}
+    .rank-pill.gold{background:var(--gold);color:#fff;box-shadow:0 4px 12px rgba(244,197,66,.28)}
+    .rank-pill.silver{background:var(--silver);color:#fff;box-shadow:0 4px 12px rgba(148,163,184,.25)}
+    .rank-pill.bronze{background:var(--bronze);color:#fff;box-shadow:0 4px 12px rgba(201,138,75,.25)}
+    .status{font-weight:950}.status.free{color:var(--good)}.status.interest{color:var(--bad)}.status.cond{color:var(--violet)}.status.need{color:var(--warn)}
+    .small{font-size:11px;color:var(--muted)}
+    .em{font-weight:950;color:var(--violet)}
+
+    .mobile-results{display:grid;grid-template-columns:1fr;gap:8px}
+    .mobile-result-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px;box-shadow:0 8px 18px rgba(15,23,42,.05)}
+    .mobile-result-card.rank1{border:2px solid var(--gold);background:#fffaf0}
+    .mobile-result-card.rank2{border:2px solid var(--silver);background:#f8fafc}
+    .mobile-result-card.rank3{border:2px solid var(--bronze);background:#fff7f2}
+    .mobile-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .mobile-name{font-size:15px;font-weight:950;letter-spacing:-.03em}
+    .mobile-main{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .mobile-main-item,.mobile-card-item{border:1px solid #e5e7eb;border-radius:12px;padding:9px;background:#fff}
+    .m-label{font-size:10px;color:var(--muted);font-weight:800}.m-value{font-size:14px;font-weight:950;margin-top:2px;letter-spacing:-.03em}
+    .mobile-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+    .mobile-card-grid.detail-grid{display:none}.mobile-result-card.open .detail-grid{display:grid}
+    .toggle-detail{width:100%;margin-top:10px;background:#f1f5f9;color:#334155;padding:10px;font-size:13px}
+    .mobile-card-note{font-size:11px;color:#475569;margin-top:9px;background:#f8fafc;border-radius:12px;padding:9px}
+
+    .guide-modal{position:fixed;inset:0;background:rgba(15,23,42,.58);display:none;align-items:center;justify-content:center;padding:14px;z-index:99}
+    .guide-modal.open{display:flex}
+    .guide-panel{width:min(980px,100%);max-height:86vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.25);padding:16px}
+    .guide-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+    .guide-head h3{margin:0;font-size:18px;letter-spacing:-.04em}
+    .close-btn{background:#f3f4f6;color:#111827;padding:9px 12px}
+    .guide-table{width:100%;min-width:720px;border-collapse:collapse}
+    .guide-table th,.guide-table td{font-size:12px;padding:9px;border-bottom:1px solid var(--line);text-align:left;white-space:normal}
+    .guide-table th{background:#f8fafc}
+    .guide-note{margin-top:12px;padding:12px;border-radius:14px;background:#fffbeb;color:#92400e;font-size:12px}
+    .chart-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+    .chart-btn{background:#111827;color:#fff}.chart-btn.sub{background:#eef2ff;color:#1e3a8a}
+    .chart-image-wrap{display:none;margin-top:10px;border:1px solid var(--line);border-radius:18px;padding:10px;background:#f8fafc}
+    .chart-image-wrap.open{display:block}
+    .chart-image-wrap img{width:100%;border-radius:12px;display:block}
+    .chart-fallback{display:none;padding:18px;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:13px}
+
+    .desktop-only{display:none}.mobile-only{display:block}
+
+    @media(min-width:981px){
+      .app{padding:18px 16px 60px}
+      .hero{border-radius:24px;padding:26px 24px;margin-bottom:16px}
+      .hero h1{font-size:38px}.hero p{font-size:15px;line-height:1.5}
+      .grid{grid-template-columns:360px 1fr;gap:16px}.sticky{position:sticky;top:16px;align-self:start}
+      .panel{border-radius:22px;padding:18px}.section-title{font-size:18px}
+      .recommend-card{grid-template-columns:1fr auto;padding:18px;border-radius:22px}.big-number{text-align:right;font-size:32px}
+      .top3-podium{grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:16px}.podium-card{border-radius:22px;padding:17px 16px}.podium-name{font-size:17px}.podium-value{font-size:23px}.podium-medal{font-size:30px}.podium-label{font-size:12px;padding:5px 9px}.podium-sub{font-size:12px}
+      .kpi-grid{grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.kpi{border-radius:18px;padding:14px}.kpi .value{font-size:22px}
+      .desktop-only{display:block}.mobile-only{display:none}.mobile-card-grid.detail-grid{display:grid}.toggle-detail{display:none}
+    }
+
+    @media print{
+      body{background:#fff}.app{max-width:none;padding:0}.hero,.sticky,.guide-modal,.mobile-only{display:none!important}.panel{box-shadow:none;border:0;padding:0}.desktop-only{display:block}.table-wrap{overflow:visible;border:0}table{min-width:0}th,td{font-size:9px;padding:5px}.recommend-card,.top3-podium,.kpi-grid{break-inside:avoid}.top3-podium{grid-template-columns:repeat(3,1fr)}
+    }
   </style>
 </head>
 <body>
-<main class="app">
-  <section class="hero">
-    <h1>카드혜택 비교툴 v1.4</h1>
-    <p>모바일 상담 화면에 맞춰 TOP3, 핵심금액, 카드별 요약을 먼저 보여주는 버전입니다.</p>
-  </section>
+  <div class="app">
+    <header class="hero">
+      <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
+      <p>결제금액과 할부개월을 입력하면 카드별 캐시백·청구할인·포인트·조건부 혜택·예상 이자를 한 번에 비교합니다.</p>
+    </header>
 
-  <section class="layout">
-    <aside class="panel sticky">
-      <h3 class="section-title">상담 조건 입력</h3>
-      <label for="amountInput">결제금액</label>
-      <input id="amountInput" type="text" inputmode="numeric" value="3,500,000" placeholder="예: 3,500,000" />
-      <div class="two-col">
-        <div><label for="installmentSelect">할부개월</label><select id="installmentSelect"><option value="0">일시불</option><option value="2">2개월</option><option value="3">3개월</option><option value="4">4개월</option><option value="5">5개월</option><option value="6">6개월</option><option value="12">12개월</option><option value="24">24개월</option><option value="36">36개월</option><option value="60">60개월</option></select></div>
-        <div><label for="categorySelect">구매 형태</label><select id="categorySelect"><option value="normal">일반 구매</option><option value="subscription">구독/구독한정</option><option value="mobile">모바일</option></select></div>
-      </div>
-      <label for="annualRateInput">일반 유이자 예상 연이율(혜택 차감 전 원금 기준)</label>
-      <input id="annualRateInput" type="number" value="19.5" min="0" max="25" step="0.1" />
-      <div class="small">무이자/고객유이자 조건이 없는 카드의 예상 이자 계산용입니다.</div>
-      <details class="option-details">
-        <summary>고급 반영 옵션 열기</summary>
-        <div class="checks">
-          <div class="checkbox-row"><input id="billingCheck" type="checkbox" checked><span>청구할인 포함</span></div>
-          <div class="checkbox-row"><input id="memberPointCheck" type="checkbox" checked><span>멤버스 포인트적립 포함</span></div>
-          <div class="checkbox-row"><input id="lolaCheck" type="checkbox" checked><span>플랜 롤라머니 7% 포함</span></div>
-          <div class="checkbox-row"><input id="superHeroCheck" type="checkbox" checked><span>슈퍼히어로 L.PAY 추가 캐시백 포함</span></div>
-          <div class="checkbox-row"><input id="memberHiddenCheck" type="checkbox" checked><span>멤버스 히든 조건부 포함</span></div>
-          <div class="checkbox-row"><input id="monthlySpend30Check" type="checkbox" checked><span>월 30만원 이상 사용조건 가능</span></div>
-          <div class="checkbox-row"><input id="splitStrategyCheck" type="checkbox" checked><span>우리/삼성 분할결제 전략 표시</span></div>
-          <div class="checkbox-row"><input id="naverPayCheck" type="checkbox"><span>네이버페이/QR 추가혜택 포함</span></div>
-          <div class="checkbox-row"><input id="interestCheck" type="checkbox" checked><span>유이자/예상 이자비용 반영</span></div>
-          <div class="checkbox-row"><input id="simpleModeCheck" type="checkbox"><span>금액대 캐시백만 비교</span></div>
+    <main class="grid">
+      <aside class="panel sticky">
+        <h2 class="section-title">상담 조건 입력</h2>
+
+        <label for="amountInput">결제금액</label>
+        <input id="amountInput" inputmode="numeric" value="3,000,000" placeholder="예: 3,000,000" />
+        <div class="hint">카드 혜택 차감 전 실제 결제원금 기준</div>
+
+        <div class="two-col">
+          <div>
+            <label for="installmentSelect">할부개월</label>
+            <select id="installmentSelect">
+              <option value="0">일시불</option>
+              <option value="2">2개월</option>
+              <option value="3">3개월</option>
+              <option value="4">4개월</option>
+              <option value="5" selected>5개월</option>
+              <option value="12">12개월</option>
+              <option value="24">24개월</option>
+              <option value="36">36개월</option>
+              <option value="48">48개월</option>
+              <option value="60">60개월</option>
+            </select>
+          </div>
+          <div>
+            <label for="categorySelect">구매구분</label>
+            <select id="categorySelect">
+              <option value="normal" selected>일반구매</option>
+              <option value="subscription">구독구매</option>
+            </select>
+          </div>
         </div>
-      </details>
-      <div class="button-row"><button class="primary-btn" onclick="calculate()">계산하기</button><button class="sub-btn" onclick="window.print()">요약 인쇄</button></div>
-      <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
-      <button class="full-btn" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
-      <div class="chip-row" id="activeChips"></div>
-      <div class="notice">모바일에서는 상세 표 대신 카드형 요약을 우선 표시합니다. 데스크톱에서는 전체 표가 표시됩니다.</div>
-    </aside>
 
-    <section>
-      <details class="info-box"><summary>계산 기준 보기</summary><div style="margin-top:10px">롯데 클래스카드/우리 일반카드는 금액대별 캐시백 제외, 36개월 구독한정 무이자는 일반 비교에서 제외, 우리/삼성은 최소금액 24개월 분할전략을 별도로 표시합니다.</div></details>
-      <div id="strategyGuide" class="strategy-box"></div>
-      <div id="recommendBox" class="recommend-card"></div>
-      <div id="top3Podium" class="top3-podium"></div>
-      <div class="kpi-grid">
-        <div class="kpi full"><div class="label">실체감가</div><div id="kpiNet" class="value">-</div></div>
-        <div class="kpi"><div class="label">결제금액</div><div id="kpiAmount" class="value">-</div></div>
-        <div class="kpi"><div class="label">총 혜택</div><div id="kpiBenefit" class="value">-</div></div>
-        <div class="kpi"><div class="label">이자비용</div><div id="kpiInterest" class="value">-</div></div>
-        <div class="kpi"><div class="label">순혜택</div><div id="kpiNetBenefit" class="value">-</div></div>
-      </div>
-      <div class="panel">
-        <h3 class="section-title">카드별 혜택 비교</h3>
-        <div id="mobileResults" class="mobile-results"></div>
-        <div class="table-wrap result-table-wrap">
-          <table>
-            <thead><tr><th>순위</th><th>카드명</th><th>금액대</th><th>청구할인</th><th>포인트</th><th>롤라</th><th>슈퍼히어로</th><th>사용조건부</th><th>라이트</th><th>네이버페이</th><th>할부상태</th><th>이자</th><th>총혜택</th><th>순혜택</th><th>실체감가</th><th>메모</th></tr></thead>
-            <tbody id="resultBody"></tbody>
-          </table>
+        <label for="annualRateInput">일반 유이자 예상 연이율</label>
+        <input id="annualRateInput" inputmode="decimal" value="19.5" />
+        <div class="hint">무이자/고객유이자 조건이 없는 경우, 혜택 차감 전 결제원금 기준으로 예상 이자를 계산합니다.</div>
+
+        <details class="option-details">
+          <summary>고급 반영 옵션 열기</summary>
+          <div class="checks">
+            <div class="checkbox-row"><input id="billingCheck" type="checkbox" checked><span>청구할인 포함</span></div>
+            <div class="checkbox-row"><input id="memberPointCheck" type="checkbox" checked><span>멤버스 포인트적립 포함</span></div>
+            <div class="checkbox-row"><input id="lolaCheck" type="checkbox" checked><span>플랜 롤라머니 7% 포함</span></div>
+            <div class="checkbox-row"><input id="superHeroCheck" type="checkbox" checked><span>슈퍼히어로 L.PAY 추가 캐시백 포함</span></div>
+            <div class="checkbox-row"><input id="memberHiddenCheck" type="checkbox" checked><span>멤버스 히든 조건부 포함</span></div>
+            <div class="checkbox-row"><input id="monthlySpend30Check" type="checkbox" checked><span>월 30만원 이상 사용조건 가능</span></div>
+            <div class="checkbox-row"><input id="splitStrategyCheck" type="checkbox" checked><span>우리/삼성 분할결제 전략 표시</span></div>
+            <div class="checkbox-row"><input id="naverPayCheck" type="checkbox"><span>네이버페이/QR 추가혜택 포함</span></div>
+            <div class="checkbox-row"><input id="interestCheck" type="checkbox" checked><span>유이자/예상 이자비용 반영</span></div>
+            <div class="checkbox-row"><input id="simpleModeCheck" type="checkbox"><span>금액대 캐시백만 비교</span></div>
+          </div>
+        </details>
+
+        <div class="button-row">
+          <button class="primary-btn" onclick="calculate()">계산하기</button>
+          <button class="sub-btn" onclick="window.print()">요약 인쇄</button>
         </div>
-      </div>
-    </section>
-  </section>
-</main>
+        <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
+        <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
+      </aside>
 
-<div id="installmentGuideModal" class="guide-modal" onclick="if(event.target.id==='installmentGuideModal') closeInstallmentGuide()"><div class="guide-panel"><div class="guide-head"><h3>카드 무이자 행사 빠른 확인</h3><button class="close-btn" onclick="closeInstallmentGuide()">닫기</button></div><div class="table-wrap"><table class="guide-table"><thead><tr><th>카드 구분</th><th>무이자/유이자 반영 기준</th><th>툴 반영 방식</th></tr></thead><tbody><tr><td>롯데 멤버스카드</td><td>5만원 이상 2~5개월, 100만원 이상 12개월</td><td>멤버스 전용 조건 반영</td></tr><tr><td>롯데 플랜카드</td><td>100만원 이상 2~5개월</td><td>100만원 기준 반영</td></tr><tr><td>롯데 클래스카드</td><td>100만원 이상 2~5개월 기준 임시 반영</td><td>추가 검수 필요</td></tr><tr><td>우리제휴</td><td>2~3개월 무이자, 24개월 고객유이자 6.0%</td><td>이자비용 + 분할전략 반영</td></tr><tr><td>삼성제휴</td><td>2~3개월 무이자, 24개월 고객유이자 6.5%</td><td>이자비용 + 조건부 반영</td></tr><tr><td>36개월 이상</td><td>구독한정/특수 조건</td><td>일반 비교 제외</td></tr></tbody></table></div><div class="chart-actions"><button class="chart-btn" onclick="toggleChartImage()">원본 장표 사진 보기</button><button class="chart-btn sub" onclick="toggleChartImage(false)">사진 닫기</button></div><div id="chartImageWrap" class="chart-image-wrap"><img src="card-installment-chart.png" alt="카드 할부 행사 장표" onerror="this.style.display='none';document.getElementById('chartImageFallback').style.display='block';"><div id="chartImageFallback" class="chart-fallback">이미지 파일을 같은 폴더에 <b>card-installment-chart.png</b> 이름으로 저장하면 표시됩니다.</div></div><div class="guide-note">※ 세부 행사는 변경될 수 있으므로 원본 장표와 함께 확인하세요.</div></div></div>
-<div id="amountBenefitGuideModal" class="guide-modal" onclick="if(event.target.id==='amountBenefitGuideModal') closeAmountBenefitGuide()"><div class="guide-panel"><div class="guide-head"><h3>월간 금액대별 혜택 빠른 확인</h3><button class="close-btn" onclick="closeAmountBenefitGuide()">닫기</button></div><div class="table-wrap"><table class="guide-table"><thead><tr><th>카드 구분</th><th>금액대별 혜택 기준</th><th>툴 반영 방식</th></tr></thead><tbody><tr><td>롯데 멤버스</td><td>100만원부터 금액대별 캐시백, 일시불/유이자 포인트 별도</td><td>캐시백+청구할인+포인트</td></tr><tr><td>롯데 플랜</td><td>20만원 이상 4만원, 청구할인/롤라 별도</td><td>고정혜택+청구할인+롤라</td></tr><tr><td>롯데 클래스</td><td>금액대별 캐시백 없음</td><td>청구할인만 반영</td></tr><tr><td>우리 일반</td><td>금액대별 캐시백 없음</td><td>캐시백 제외</td></tr><tr><td>우리/신한/삼성 제휴</td><td>300만원 이상 금액대별 캐시백</td><td>표준 구간 반영</td></tr><tr><td>KB국민 일반</td><td>500만원 이상 추가혜택</td><td>500만원 이상 반영</td></tr></tbody></table></div><div class="chart-actions"><button class="chart-btn" onclick="toggleAmountChartImage()">원본 장표 사진 보기</button><button class="chart-btn sub" onclick="toggleAmountChartImage(false)">사진 닫기</button></div><div id="amountChartImageWrap" class="chart-image-wrap"><img src="monthly-amount-benefit-chart.png" alt="월간 금액대별 혜택 장표" onerror="this.style.display='none';document.getElementById('amountChartImageFallback').style.display='block';"><div id="amountChartImageFallback" class="chart-fallback">이미지 파일을 같은 폴더에 <b>monthly-amount-benefit-chart.png</b> 이름으로 저장하면 표시됩니다.</div></div><div class="guide-note">※ 카드별 제외 조건은 원본 장표와 함께 확인하세요.</div></div></div>
+      <section class="panel">
+        <details class="info-box">
+          <summary>계산 기준 보기</summary>
+          <div style="margin-top:10px;">
+            ① 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
+            ② 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
+            ③ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
+            ④ 멤버스 히든은 최초 40만원 이상 결제 + 월 30만원 이상 사용 시 1.1만원 × 36개월 반영<br>
+            ⑤ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 24개월은 1.3만원 × 24개월 반영<br>
+            ⑥ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외<br>
+            ⑦ 우리/삼성은 최소금액만 24개월로 분리 결제하는 전략 행을 별도 표시
+          </div>
+        </details>
+
+        <div id="strategyGuide" class="strategy-guide"></div>
+        <div id="recommendBox" class="recommend-card empty"></div>
+        <div id="top3Podium" class="top3-podium"></div>
+
+        <div class="kpi-grid">
+          <div class="kpi blue"><div class="label">결제금액</div><div id="kpiAmount" class="value">0원</div></div>
+          <div class="kpi green"><div class="label">최대 순혜택</div><div id="kpiBenefit" class="value">0원</div></div>
+          <div class="kpi"><div class="label">예상 이자</div><div id="kpiInterest" class="value">0원</div></div>
+          <div class="kpi red"><div class="label">실체감가</div><div id="kpiNetCost" class="value">0원</div></div>
+          <div class="kpi"><div class="label">비교 카드 수</div><div id="kpiCount" class="value">0개</div></div>
+        </div>
+
+        <div class="mobile-only">
+          <h2 class="section-title">카드별 요약</h2>
+          <div id="mobileResults" class="mobile-results"></div>
+        </div>
+
+        <div class="desktop-only">
+          <h2 class="section-title">카드별 상세 혜택 비교</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>순위</th><th>카드명</th><th>금액대 캐시백</th><th>청구할인</th><th>포인트적립</th><th>롤라머니</th><th>슈퍼히어로</th><th>사용조건부</th><th>라이트/추가</th><th>네이버페이</th><th>할부상태</th><th>이자비용</th><th>총 혜택</th><th>순혜택</th><th>실체감가</th><th>판단 메모</th>
+                </tr>
+              </thead>
+              <tbody id="resultBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="installmentGuideModal" class="guide-modal" onclick="if(event.target.id==='installmentGuideModal') closeInstallmentGuide()">
+    <div class="guide-panel">
+      <div class="guide-head"><h3>카드 무이자 행사 빠른 확인</h3><button class="close-btn" onclick="closeInstallmentGuide()">닫기</button></div>
+      <div class="table-wrap">
+        <table class="guide-table">
+          <thead><tr><th>카드 구분</th><th>무이자/유이자 반영 기준</th><th>툴 반영 방식</th></tr></thead>
+          <tbody>
+            <tr><td>롯데 멤버스카드</td><td>5만원 이상 2~5개월 무이자, 100만원 이상 12개월 무이자</td><td>멤버스 전용 조건으로 반영</td></tr>
+            <tr><td>롯데 플랜카드</td><td>100만원 이상 2~5개월 무이자</td><td>멤버스와 다르게 100만원 기준으로 반영</td></tr>
+            <tr><td>롯데 클래스카드</td><td>100만원 이상 2~5개월 무이자 기준</td><td>금액대 캐시백 없이 청구할인 중심</td></tr>
+            <tr><td>우리 일반/제휴</td><td>2~3개월 무이자, 제휴 24개월 고객유이자 6.0%</td><td>우리 일반은 금액대 캐시백 없음, 우리제휴 24개월은 이자비용 반영</td></tr>
+            <tr><td>삼성 제휴</td><td>2~3개월 무이자, 24개월 고객유이자 6.5%</td><td>24개월 이자비용 + 사용조건부 캐시백 반영</td></tr>
+            <tr><td>KB국민 일반</td><td>2~3개월 무이자, 500만원 이상 추가혜택</td><td>500만원 이상 구간부터 반영</td></tr>
+            <tr><td>신한 제휴/일반</td><td>2~3개월 무이자 중심</td><td>금액대 혜택 + 무이자 상태 반영</td></tr>
+            <tr><td>36/48/60개월</td><td>구독한정 또는 특수 조건으로 분리</td><td>일반 비교에서는 무이자 제외</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-actions"><button class="chart-btn" onclick="toggleChartImage()">원본 장표 사진 보기</button><button class="chart-btn sub" onclick="toggleChartImage(false)">사진 닫기</button></div>
+      <div id="chartImageWrap" class="chart-image-wrap">
+        <img src="card-installment-chart.png" alt="카드 할부 행사 장표" onerror="this.style.display='none';document.getElementById('chartImageFallback').style.display='block';" />
+        <div id="chartImageFallback" class="chart-fallback">원본 장표 이미지를 보려면 HTML 파일과 같은 폴더에 이미지 파일을 <b>card-installment-chart.png</b> 이름으로 저장해주세요.</div>
+      </div>
+      <div class="guide-note">※ 카드사별 부분무이자/고객이자/특수 조건이 섞여 있어 일반 상담 기준으로 보수 반영했습니다.</div>
+    </div>
+  </div>
+
+  <div id="amountBenefitGuideModal" class="guide-modal" onclick="if(event.target.id==='amountBenefitGuideModal') closeAmountBenefitGuide()">
+    <div class="guide-panel">
+      <div class="guide-head"><h3>월간 금액대별 혜택 빠른 확인</h3><button class="close-btn" onclick="closeAmountBenefitGuide()">닫기</button></div>
+      <div class="table-wrap">
+        <table class="guide-table">
+          <thead><tr><th>카드 구분</th><th>금액대별 혜택 반영 기준</th><th>툴 반영 방식</th></tr></thead>
+          <tbody>
+            <tr><td>롯데 멤버스카드</td><td>100만원부터 금액대별 캐시백, 일시불/유이자 시 포인트적립 별도</td><td>금액대 캐시백 + 청구할인 + 포인트적립 반영</td></tr>
+            <tr><td>롯데 플랜카드</td><td>20만원 이상 4만원 혜택, 청구할인/롤라머니 별도</td><td>고정혜택 + 청구할인 + 롤라머니 반영</td></tr>
+            <tr><td>롯데 클래스카드</td><td>금액대별 캐시백 없음, 청구할인 5% 최대 5만원</td><td>금액대 캐시백 제외</td></tr>
+            <tr><td>우리 일반카드</td><td>제휴카드가 아닌 경우 금액대별 캐시백 없음</td><td>금액대 캐시백 제외</td></tr>
+            <tr><td>우리제휴/신한제휴/삼성제휴</td><td>300만원 이상부터 금액대별 캐시백 중심</td><td>표준 금액대별 혜택 반영</td></tr>
+            <tr><td>KB국민 일반카드</td><td>500만원 이상부터 추가혜택 존재</td><td>500만원 이상 구간부터 반영</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-actions"><button class="chart-btn" onclick="toggleAmountChartImage()">원본 장표 사진 보기</button><button class="chart-btn sub" onclick="toggleAmountChartImage(false)">사진 닫기</button></div>
+      <div id="amountChartImageWrap" class="chart-image-wrap">
+        <img src="monthly-amount-benefit-chart.png" alt="월간 금액대별 혜택 장표" onerror="this.style.display='none';document.getElementById('amountChartImageFallback').style.display='block';" />
+        <div id="amountChartImageFallback" class="chart-fallback">월간 금액대별 혜택 장표 이미지를 보려면 HTML 파일과 같은 폴더에 이미지 파일을 <b>monthly-amount-benefit-chart.png</b> 이름으로 저장해주세요.</div>
+      </div>
+      <div class="guide-note">※ 롯데 클래스카드/우리 일반카드처럼 금액대별 캐시백이 없는 카드는 계산에서 제외했습니다.</div>
+    </div>
+  </div>
 
 <script>
-const standardTiers=[{min:3000000,benefit:150000},{min:5000000,benefit:250000},{min:7000000,benefit:350000},{min:10000000,benefit:500000},{min:12000000,benefit:600000},{min:15000000,benefit:750000},{min:20000000,benefit:1000000}];
-const memberTiers=[{min:1000000,benefit:50000},{min:2000000,benefit:100000},{min:3000000,benefit:150000},{min:5000000,benefit:250000},{min:7000000,benefit:350000},{min:10000000,benefit:500000},{min:12000000,benefit:600000},{min:15000000,benefit:750000},{min:20000000,benefit:1000000}];
-const naverPayTiers=[{min:5000000,benefit:50000},{min:7000000,benefit:50000},{min:10000000,benefit:100000},{min:12000000,benefit:100000},{min:15000000,benefit:100000},{min:20000000,benefit:100000}];
-const superHeroTiers=[{min:200000,benefit:10000},{min:1000000,benefit:30000},{min:3000000,benefit:50000}];
-const cards=[
-{name:'롯데 멤버스카드',cashbackType:'tier',tiers:memberTiers,billing:{rate:.05,cap:30000},memberPoint:{specialRate:.01,specialCap:50000,baseRate:.005},superHero:true,naver:true,hidden:{firstPayMin:400000,monthly:11000,months:36},rules:[{m:[2,3,4,5],min:50000,type:'free',label:'5만원 이상 2~5개월 무이자'},{m:[12],min:1000000,type:'free',label:'100만원 이상 12개월 무이자'},{m:[36,60],min:0,type:'sub',label:'구독한정 무이자'}],memo:'포인트적립+슈퍼히어로+히든 조건부가 핵심.'},
-{name:'롯데 플랜카드',cashbackType:'fixed',fixedMin:200000,fixedBenefit:40000,billing:{rate:.05,cap:50000},lola:{rate:.07,cap:30000},superHero:true,rules:[{m:[2,3,4,5],min:1000000,type:'free',label:'100만원 이상 2~5개월 무이자'},{m:[36],min:0,type:'sub',label:'구독한정 무이자'}],memo:'20만원 이상 4만원+청구할인+롤라머니.'},
-{name:'롯데 클래스카드',cashbackType:'none',billing:{rate:.05,cap:50000},rules:[{m:[2,3,4,5],min:1000000,type:'free',label:'100만원 이상 2~5개월 무이자'},{m:[36],min:0,type:'sub',label:'구독한정 무이자'}],memo:'금액대별 캐시백 없음. 청구할인 5% 최대 5만원.'},
-{name:'롯데 W카드',cashbackType:'tier',tiers:standardTiers,excluded:[36,48,60],memo:'일부 장기할부 제외 조건 확인 필요.'},
-{name:'우리 일반카드',cashbackType:'none',rules:[{m:[2,3],min:0,type:'free',label:'2~3개월 무이자'}],memo:'우리 일반은 금액대별 캐시백 없음.'},
-{name:'우리제휴카드',cashbackType:'tier',tiers:standardTiers,naver:true,cond:{monthly:16000,months:[24,36],label:'월 30만원 이상 1.6만원'},customerRate:{24:.06},rules:[{m:[2,3],min:0,type:'free',label:'2~3개월 무이자'},{m:[36],min:0,type:'sub',label:'구독한정 무이자'}],split:{amount:390000,rate:.06,monthly:16000,months:24,label:'39만원만 24개월 분리'},memo:'사용조건부 청구할인과 39만원 분할전략이 핵심.'},
-{name:'신한제휴카드',cashbackType:'tier',tiers:standardTiers,naver:true,rules:[{m:[2,3],min:0,type:'free',label:'2~3개월 무이자'},{m:[36],min:0,type:'sub',label:'구독한정 무이자'}],memo:'금액대별 캐시백 우선 반영.'},
-{name:'삼성제휴카드',cashbackType:'tier',tiers:standardTiers,cond:{monthly:13000,months:[24,36],label:'월 30만원 이상 1.3만원'},customerRate:{24:.065},light:{min:3000000,benefit:100000},rules:[{m:[2,3],min:0,type:'free',label:'2~3개월 무이자'},{m:[36],min:0,type:'sub',label:'구독한정 무이자'}],split:{amount:240000,rate:.065,monthly:13000,months:24,lightMin:3000000,lightBenefit:100000,label:'24만원만 24개월 분리'},memo:'조건부+라이트 10만원+24만원 분할전략이 핵심.'},
-{name:'삼성 일반카드 LINK',cashbackType:'tier',tiers:standardTiers,min:3000000,rules:[{m:[2,3],min:0,type:'free',label:'2~3개월 무이자'}],memo:'LINK 적용 고객 한정.'},
-{name:'KB국민 일반카드',cashbackType:'tier',min:5000000,tiers:[{min:5000000,benefit:250000},{min:7000000,benefit:350000},{min:10000000,benefit:500000},{min:12000000,benefit:600000},{min:15000000,benefit:750000},{min:20000000,benefit:1000000}],rules:[{m:[2,3],min:0,type:'free',label:'2~3개월 무이자'}],memo:'일반카드라도 500만원 이상 추가혜택 반영.'}
-];
-const $=id=>document.getElementById(id);function onlyNumber(v){return String(v||'').replace(/[^0-9]/g,'')}function formatNumber(v){const n=Number(onlyNumber(v));return n?n.toLocaleString('ko-KR'):''}function won(v){return Math.round(v||0).toLocaleString('ko-KR')+'원'}function tier(tiers,amount){let b=0;(tiers||[]).forEach(t=>{if(amount>=t.min)b=t.benefit});return b}
-function base(card,amount){if(amount<(card.min||0))return 0;if(card.cashbackType==='none')return 0;if(card.cashbackType==='fixed')return amount>=(card.fixedMin||0)?card.fixedBenefit||0:0;return tier(card.tiers,amount)}
-function estimateInterest(amount,m,annual){return amount*(Number(annual||0)/100)*(m+1)/24}
-function instInfo(card,amount,m,category,annual,flags){if(!m)return{status:'일시불',label:'일시불',interest:0,cls:'free'};if((card.excluded||[]).includes(m))return{status:'제외',label:'해당 할부 제외',interest:0,cls:'interest'};for(const r of (card.rules||[])){if((r.m||[]).includes(m)&&amount>=(r.min||0)){if(r.type==='free')return{status:'무이자',label:r.label,interest:0,cls:'free'};if(r.type==='sub')return{status:'구독전용 제외',label:'일반 비교 제외',interest:flags.interest?estimateInterest(amount,m,annual):0,cls:'need'}}}const rate=card.customerRate&&card.customerRate[m];if(rate)return{status:`고객유이자 ${(rate*100).toFixed(1)}%`,label:'판촉안 명시 유이자',interest:flags.interest?amount*rate:0,cls:'interest'};return{status:'유이자 예상',label:`예상 연 ${annual}% 기준`,interest:flags.interest?estimateInterest(amount,m,annual):0,cls:'interest'}}
-const val=(id,def='')=>{const el=$(id);return el?el.value:def};
-const checked=(id,def=false)=>{const el=$(id);return el?el.checked:def};
-function calcRows(){const amount=Number(onlyNumber(val('amountInput'))),m=Number(val('installmentSelect',0)),category=val('categorySelect','normal'),annual=Number(val('annualRateInput',19.5)||0);const flags={billing:checked('billingCheck',true),point:checked('memberPointCheck',true),lola:checked('lolaCheck',true),hero:checked('superHeroCheck',true),hidden:checked('memberHiddenCheck',true),monthly:checked('monthlySpend30Check',true),split:checked('splitStrategyCheck',true),naver:checked('naverPayCheck',false),interest:checked('interestCheck',true),simple:checked('simpleModeCheck',false)};let rows=cards.map(card=>{const i=instInfo(card,amount,m,category,annual,flags);const b=base(card,amount);const bill=!flags.simple&&flags.billing&&card.billing?Math.min(amount*card.billing.rate,card.billing.cap):0;const point=!flags.simple&&flags.point&&card.memberPoint&&(i.status==='일시불'||i.status.includes('유이자'))?Math.min(amount*card.memberPoint.specialRate,card.memberPoint.specialCap)+amount*card.memberPoint.baseRate:0;const lola=!flags.simple&&flags.lola&&card.lola?Math.min(amount*card.lola.rate,card.lola.cap):0;const hero=!flags.simple&&flags.hero&&card.superHero?tier(superHeroTiers,amount):0;const hidden=!flags.simple&&flags.hidden&&flags.monthly&&card.hidden&&amount>=card.hidden.firstPayMin?card.hidden.monthly*card.hidden.months:0;const cond=!flags.simple&&flags.monthly&&card.cond&&(card.cond.months||[]).includes(m)?card.cond.monthly*m:0;const light=!flags.simple&&card.light&&m===24&&amount>=card.light.min?card.light.benefit:0;const naver=!flags.simple&&flags.naver&&card.naver?tier(naverPayTiers,amount):0;const conditionTotal=hidden+cond;const gross=b+bill+point+lola+hero+conditionTotal+light+naver;const interest=i.interest;return{...card,rowType:'normal',base:b,billing:bill,point,lola,hero,conditionTotal,hidden,cond,light,naver,inst:i,interest,gross,netBenefit:gross-interest,netCost:Math.max(amount-(gross-interest),0),strategyText:''}}).filter(r=>amount>0);if(flags.split&&!flags.simple&&flags.monthly){cards.filter(c=>c.split&&amount>=c.split.amount).forEach(card=>{const s=card.split,balance=Math.max(amount-s.amount,0),balanceM=m&&m!==24?m:0,balanceInst=instInfo(card,balance,balanceM,category,annual,flags);const b=base(card,amount),cond=s.monthly*s.months,light=s.lightMin&&amount>=s.lightMin?s.lightBenefit||0:0,naver=flags.naver&&card.naver?tier(naverPayTiers,amount):0,splitInterest=flags.interest?s.amount*s.rate:0,balanceInterest=flags.interest?balanceInst.interest:0,interest=splitInterest+balanceInterest,gross=b+cond+light+naver;rows.push({...card,name:card.name+' · 분할전략',rowType:'strategy',base:b,billing:0,point:0,lola:0,hero:0,conditionTotal:cond,hidden:0,cond,light,naver,inst:{status:'부분 24개월',label:s.label+' · 잔액 '+(balanceM?balanceM+'개월 '+balanceInst.status:'일시불/2~3개월 권장'),interest,cls:'cond'},interest,splitInterest,balanceInterest,gross,netBenefit:gross-interest,netCost:Math.max(amount-(gross-interest),0),strategyText:`${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balanceM?balanceM+'개월 '+balanceInst.status:'일시불/2~3개월 권장'}`,memo:card.name.includes('우리')?'39만원 24개월로 이자를 최소화하고 사용조건부 청구할인을 노리는 전략.':'24만원 24개월로 이자를 최소화하고 조건부+라이트 추가혜택을 노리는 전략.'})})}return{rows:rows.sort((a,b)=>b.netBenefit-a.netBenefit||a.netCost-b.netCost),amount,m,category,annual,flags}}
-function getRankBadge(i){if(i===0)return'<span class="rank-pill gold">🥇 1위</span>';if(i===1)return'<span class="rank-pill silver">🥈 2위</span>';if(i===2)return'<span class="rank-pill bronze">🥉 3위</span>';return`<span class="rank-pill">${i+1}위</span>`}function rowClass(i,r){return`${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''} ${r.conditionTotal?'strong-cond':''} ${r.rowType==='strategy'?'strategy':''}`}function conditionCell(r){if(!r.conditionTotal)return won(0);let a=[];if(r.hidden)a.push(`<span class="em">히든 ${won(r.hidden)}</span>`);if(r.cond)a.push(`<span class="em">${won(r.cond)}</span>`);return a.join('<br>')+'<br><span class="small">월 30만원 조건</span>'}function instStatus(i){return`<span class="status ${i.cls}">${i.status}</span><br><span class="small">${i.label}</span>`}
-function renderTop3(rows){const box=$('top3Podium');const top3=rows.slice(0,3);box.innerHTML=top3.map((r,i)=>{const m=[['🥇','rank1','1위 BEST'],['🥈','rank2','2위 GOOD'],['🥉','rank3','3위 CHECK']][i];return`<div class="podium-card ${m[1]}"><div class="podium-top"><div class="podium-medal">${m[0]}</div><div class="podium-label">${m[2]}</div></div><div class="podium-name">${r.name}</div><div class="podium-value">${won(r.netBenefit)}</div><div class="podium-sub">이자 반영 후 순혜택</div><div class="podium-sub">실체감가 ${won(r.netCost)}</div><div class="podium-mini">${r.conditionTotal?'<span>사용조건부</span>':''}${r.rowType==='strategy'?'<span>분할전략</span>':''}${r.interest===0?'<span>무이자</span>':''}</div></div>`}).join('')}
-function renderMobile(rows){$('mobileResults').innerHTML=rows.map((r,i)=>`<div class="mobile-result-card ${i===0?'rank1':i===1?'rank2':i===2?'rank3':''}" id="mobileCard${i}"><div class="mobile-card-head"><div><div>${getRankBadge(i)}</div><div class="mobile-card-title">${r.name}</div><div class="mobile-card-benefit">${won(r.netBenefit)}</div><div class="small">이자 반영 후 순혜택</div></div><div style="text-align:right">${r.rowType==='strategy'?'<span class="badge warn">분할</span>':''}${r.conditionTotal?'<span class="badge purple">조건부</span>':''}</div></div><div class="mobile-card-grid"><div class="mobile-card-item"><div class="m-label">실체감가</div><div class="m-value">${won(r.netCost)}</div></div><div class="mobile-card-item"><div class="m-label">총 혜택</div><div class="m-value">${won(r.gross)}</div></div><div class="mobile-card-item"><div class="m-label">이자비용</div><div class="m-value">${won(r.interest)}</div></div><div class="mobile-card-item"><div class="m-label">할부상태</div><div class="m-value">${r.inst.status}</div></div></div><button class="toggle-detail" onclick="toggleMobileDetail(${i})" type="button">혜택 세부항목 보기</button><div class="mobile-card-grid detail-grid">${r.base?`<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>`:''}${r.billing?`<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>`:''}${r.point?`<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>`:''}${r.conditionTotal?`<div class="mobile-card-item"><div class="m-label">사용조건부</div><div class="m-value">${won(r.conditionTotal)}</div></div>`:''}${r.light?`<div class="mobile-card-item"><div class="m-label">라이트/추가</div><div class="m-value">${won(r.light)}</div></div>`:''}</div><div class="mobile-card-note">${r.strategyText?`<b>${r.strategyText}</b><br>`:''}${r.memo||'-'}</div></div>`).join('')}
-function toggleMobileDetail(i){const el=$('mobileCard'+i);if(el)el.classList.toggle('open')}
-function renderStrategy(amount,rows){const s=rows.filter(r=>r.rowType==='strategy');$('strategyGuide').innerHTML=s.length?s.map(x=>`<div><b>${x.name}</b> — ${x.strategyText}<br>예상 이자 ${won(x.interest)} / 조건부·추가혜택 ${won(x.conditionTotal+x.light)}</div>`).join('<hr style="border:0;border-top:1px solid #fed7aa;margin:8px 0">'):'분할결제 전략이 있으면 이곳에 자동 표시됩니다.'}
-function render(){const {rows,amount,m,category,annual,flags}=calcRows(),best=rows[0];renderStrategy(amount,rows);renderTop3(rows);renderMobile(rows);$('kpiAmount').textContent=won(amount);$('kpiBenefit').textContent=best?won(best.gross):'-';$('kpiInterest').textContent=best?won(best.interest):'-';$('kpiNetBenefit').textContent=best?won(best.netBenefit):'-';$('kpiNet').textContent=best?won(best.netCost):'-';if(!best){$('recommendBox').innerHTML='<div><span class="badge">입력 대기</span><h2>결제금액을 입력해주세요</h2><p>금액 입력 후 카드별 혜택을 비교합니다.</p></div>';$('resultBody').innerHTML='';return}let tags='';if(best.billing)tags+='<span class="badge ok">청구할인</span>';if(best.point)tags+='<span class="badge ok">포인트</span>';if(best.lola)tags+='<span class="badge ok">롤라</span>';if(best.hero)tags+='<span class="badge orange">슈퍼히어로</span>';if(best.conditionTotal)tags+='<span class="badge purple">사용조건부</span>';if(best.rowType==='strategy')tags+='<span class="badge warn">분할전략</span>';const gap=rows[1]?best.netBenefit-rows[1].netBenefit:0;$('recommendBox').innerHTML=`<div>${tags}<span class="badge">추천 카드</span><h2>${best.name}</h2><p>${won(amount)} 기준, 순혜택 ${won(best.netBenefit)}입니다.${gap>0?' 2위 대비 '+won(gap)+' 유리합니다.':''}</p></div><div class="big-number">${won(best.netCost)}</div>`;$('resultBody').innerHTML=rows.map((r,i)=>`<tr class="${rowClass(i,r)}"><td>${getRankBadge(i)}</td><td>${r.name}</td><td>${won(r.base)}</td><td>${won(r.billing)}</td><td>${r.point?'<b>'+won(r.point)+'</b>':won(0)}</td><td>${won(r.lola)}</td><td>${won(r.hero)}</td><td>${conditionCell(r)}</td><td>${r.light?'<b>'+won(r.light)+'</b>':won(0)}</td><td>${won(r.naver)}</td><td>${instStatus(r.inst)}</td><td>${won(r.interest)}</td><td>${won(r.gross)}</td><td>${won(r.netBenefit)}</td><td>${won(r.netCost)}</td><td>${r.strategyText?'<span class="orange-text">'+r.strategyText+'</span><br>':''}${r.memo||'-'}</td></tr>`).join('');renderChips(m,category,annual,flags)}
-function renderChips(m,category,annual,flags){let chips=[m?m+'개월 기준':'일시불 기준',category==='subscription'?'구독 구매':'일반 구매',flags.simple?'금액대 캐시백만':'전체 혜택'];if(flags.hidden)chips.push('멤버스 히든');if(flags.monthly)chips.push('월30만원 조건');if(flags.split)chips.push('분할전략');if(flags.interest)chips.push('유이자 '+annual+'%');$('activeChips').innerHTML=chips.map(c=>`<span class="chip ${c.includes('30')||c.includes('히든')?'purple':c.includes('유이자')||c.includes('분할')?'warn':'ok'}">${c}</span>`).join('')}
-function openInstallmentGuide(){$('installmentGuideModal').classList.add('open')}function closeInstallmentGuide(){$('installmentGuideModal').classList.remove('open')}function openAmountBenefitGuide(){$('amountBenefitGuideModal').classList.add('open')}function closeAmountBenefitGuide(){$('amountBenefitGuideModal').classList.remove('open')}function toggleChartImage(force){const b=$('chartImageWrap');force===false?b.classList.remove('open'):b.classList.toggle('open')}function toggleAmountChartImage(force){const b=$('amountChartImageWrap');force===false?b.classList.remove('open'):b.classList.toggle('open')}
-const bindInput=(id,fn)=>{const el=$(id);if(el)el.addEventListener('input',fn)};
-const bindChange=(id,fn)=>{const el=$(id);if(el)el.addEventListener('change',fn)};
-bindInput('amountInput',()=>{const el=$('amountInput');el.value=formatNumber(el.value);render()});
-['installmentSelect','categorySelect','annualRateInput','billingCheck','memberPointCheck','lolaCheck','superHeroCheck','memberHiddenCheck','monthlySpend30Check','splitStrategyCheck','naverPayCheck','interestCheck','simpleModeCheck'].forEach(id=>bindChange(id,render));
-render();
+  const $ = id => document.getElementById(id);
+  const won = n => Math.round(Number(n||0)).toLocaleString('ko-KR') + '원';
+  const onlyNumber = v => String(v||'').replace(/[^0-9]/g,'');
+  const formatNumber = v => onlyNumber(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const val = (id,def='') => { const el=$(id); return el ? el.value : def; };
+  const checked = (id,def=false) => { const el=$(id); return el ? el.checked : def; };
+
+  const standardTiers = [
+    {min:3000000, benefit:150000}, {min:5000000, benefit:250000}, {min:7000000, benefit:350000},
+    {min:10000000, benefit:500000}, {min:12000000, benefit:600000}, {min:15000000, benefit:750000}, {min:20000000, benefit:1000000}
+  ];
+  const memberTiers = [
+    {min:1000000, benefit:50000}, {min:2000000, benefit:100000}, {min:3000000, benefit:150000},
+    {min:5000000, benefit:250000}, {min:7000000, benefit:350000}, {min:10000000, benefit:500000},
+    {min:12000000, benefit:600000}, {min:15000000, benefit:750000}, {min:20000000, benefit:1000000}
+  ];
+  const kbTiers = [
+    {min:5000000, benefit:250000}, {min:7000000, benefit:350000}, {min:10000000, benefit:500000},
+    {min:12000000, benefit:600000}, {min:15000000, benefit:750000}, {min:20000000, benefit:1000000}
+  ];
+
+  const cards = [
+    {
+      name:'롯데 멤버스카드', type:'lotte', cashbackType:'tier', tiers:memberTiers,
+      billingDiscount:{rate:.05, cap:30000}, memberPoint:{specialRate:.01, specialCap:50000, baseRate:.005},
+      superHeroLpay:true, supportsNaverPay:true,
+      hidden:{min:400000, monthly:11000, months:36, label:'최초 40만원 이상 + 월30만원 사용'},
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3,4,5], min:50000, label:'5만원 이상 2~5개월 무이자'},
+        {type:'free', months:[12], min:1000000, label:'100만원 이상 12개월 무이자'},
+        {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
+      ],
+      memo:'일시불/유이자할부 시 포인트적립 반영. L.PAY 슈퍼히어로 추가 + 히든 조건부가 핵심.'
+    },
+    {
+      name:'롯데 플랜카드', type:'lotte', cashbackType:'fixed', fixedMin:200000, fixedBenefit:40000,
+      billingDiscount:{rate:.05, cap:50000}, lolaMoney:{rate:.07, cap:30000}, superHeroLpay:true, supportsNaverPay:true,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
+        {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
+      ],
+      memo:'20만원 이상 고정혜택 + 청구할인 + 롤라머니 + 슈퍼히어로 조합.'
+    },
+    {
+      name:'롯데 클래스카드', type:'lotte', cashbackType:'none',
+      billingDiscount:{rate:.05, cap:50000}, supportsNaverPay:false,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
+        {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독 시 조건부 캐시백 별도'}
+      ],
+      memo:'금액대별 캐시백 없음. 청구할인 5% 최대 5만원만 일반 구매 반영.'
+    },
+    {
+      name:'우리 일반카드', type:'woori', cashbackType:'none', supportsNaverPay:false,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
+      ],
+      memo:'제휴카드가 아닌 우리 일반카드는 금액대별 캐시백 없음. 무이자 비교군.'
+    },
+    {
+      name:'우리제휴카드', type:'woori', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      cond:{monthly:16000, months:[24], min:300000, label:'월30만원 이상 사용'},
+      split:{amount:390000, rate:.06, monthly:16000, months:24, label:'39만원만 24개월 고객유이자 6.0%'},
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
+        {type:'customerInterest', months:[24], rate:.06, min:300000, label:'24개월 고객유이자 6.0%'}
+      ],
+      memo:'24개월 사용조건부 혜택이 크지만 고객유이자 발생. 분할전략 권장.'
+    },
+    {
+      name:'삼성제휴카드', type:'samsung', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      cond:{monthly:13000, months:[24], min:300000, label:'월30만원 이상 사용'},
+      light:{min:3000000, benefit:100000, label:'300만원 이상 라이트할부 추가'},
+      split:{amount:240000, rate:.065, monthly:13000, months:24, lightMin:3000000, lightBenefit:100000, label:'24만원만 24개월 고객유이자 6.5%'},
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
+        {type:'customerInterest', months:[24], rate:.065, min:300000, label:'24개월 고객유이자 6.5%'}
+      ],
+      memo:'24개월 조건부 + 300만원 이상 추가 10만원 혜택 확인.'
+    },
+    {
+      name:'신한제휴카드', type:'shinhan', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
+        {type:'subscriptionFree', months:[36], min:0, label:'36개월 구독한정'}
+      ],
+      memo:'금액대 캐시백 중심. 36개월은 구독한정으로 일반 비교 제외.'
+    },
+    {
+      name:'삼성 일반카드 LINK', type:'samsung', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
+      ],
+      memo:'LINK 적용 고객 한정. 조건 확인 필요.'
+    },
+    {
+      name:'KB국민 일반카드', type:'kb', cashbackType:'tier', tiers:kbTiers, supportsNaverPay:false,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
+      ],
+      memo:'500만원 이상부터 추가혜택 반영.'
+    }
+  ];
+
+  function tierBenefit(amount, tiers=[]){
+    let benefit=0;
+    tiers.forEach(t=>{ if(amount>=t.min) benefit=t.benefit; });
+    return benefit;
+  }
+  function baseCashback(card, amount){
+    if(card.cashbackType==='tier') return tierBenefit(amount, card.tiers||[]);
+    if(card.cashbackType==='fixed') return amount>=card.fixedMin ? card.fixedBenefit : 0;
+    return 0;
+  }
+  function billingDiscount(card, amount, flags){
+    if(flags.simple || !flags.billing || !card.billingDiscount) return 0;
+    return Math.min(amount*card.billingDiscount.rate, card.billingDiscount.cap);
+  }
+  function memberPoint(card, amount, inst, flags){
+    if(flags.simple || !flags.point || !card.memberPoint) return 0;
+    const eligible = inst.status === '일시불' || inst.status.includes('유이자');
+    if(!eligible) return 0;
+    return Math.min(amount*card.memberPoint.specialRate, card.memberPoint.specialCap) + amount*card.memberPoint.baseRate;
+  }
+  function lolaMoney(card, amount, flags){
+    if(flags.simple || !flags.lola || !card.lolaMoney) return 0;
+    return Math.min(amount*card.lolaMoney.rate, card.lolaMoney.cap);
+  }
+  function superHero(card, amount, flags){
+    if(flags.simple || !flags.hero || !card.superHeroLpay) return 0;
+    if(amount>=3000000) return 50000;
+    if(amount>=1000000) return 30000;
+    if(amount>=200000) return 10000;
+    return 0;
+  }
+  function hiddenBenefit(card, amount, flags){
+    if(flags.simple || !flags.hidden || !flags.monthly || !card.hidden) return 0;
+    return amount>=card.hidden.min ? card.hidden.monthly*card.hidden.months : 0;
+  }
+  function conditionalBenefit(card, amount, month, flags){
+    if(flags.simple || !flags.monthly || !card.cond) return 0;
+    if(!card.cond.months.includes(month) || amount<card.cond.min) return 0;
+    return card.cond.monthly*month;
+  }
+  function lightBenefit(card, amount, flags){
+    if(flags.simple || !card.light) return 0;
+    return amount>=card.light.min ? card.light.benefit : 0;
+  }
+  function naverPayBenefit(card, amount, flags){
+    if(flags.simple || !flags.naver || !card.supportsNaverPay) return 0;
+    if(amount>=3000000) return 30000;
+    if(amount>=1000000) return 10000;
+    return 0;
+  }
+  function estimateInterest(amount, month, annualRate){
+    if(!month || month<=0) return 0;
+    return amount*(annualRate/100)*((month+1)/24);
+  }
+  function getInstallmentInfo(card, amount, month, category, annualRate, flags){
+    if(month===0) return {status:'일시불', label:'일시불', interest:0, className:'free'};
+    const rules = card.installmentRules || [];
+    for(const rule of rules){
+      if(rule.months.includes(month) && amount>=rule.min){
+        if(rule.type==='free') return {status:'무이자', label:rule.label, interest:0, className:'free'};
+        if(rule.type==='customerInterest'){
+          const interest = flags.interest ? amount*rule.rate : 0;
+          return {status:'고객유이자', label:rule.label, interest, className:'interest'};
+        }
+        if(rule.type==='subscriptionFree'){
+          return {status:'구독전용 제외', label:'일반 비교 제외 · 필요 시 별도 상담', interest:flags.interest?estimateInterest(amount,month,annualRate):0, className:'need'};
+        }
+      }
+    }
+    const interest = flags.interest ? estimateInterest(amount,month,annualRate) : 0;
+    return {status:'일반 유이자 예상', label:`예상 연 ${annualRate}%`, interest, className:'interest'};
+  }
+
+  function buildBaseRows(amount, month, category, annualRate, flags){
+    return cards.map(card=>{
+      const inst = getInstallmentInfo(card, amount, month, category, annualRate, flags);
+      const base = baseCashback(card, amount);
+      const billing = billingDiscount(card, amount, flags);
+      const point = memberPoint(card, amount, inst, flags);
+      const lola = lolaMoney(card, amount, flags);
+      const hero = superHero(card, amount, flags);
+      const hidden = hiddenBenefit(card, amount, flags);
+      const cond = conditionalBenefit(card, amount, month, flags);
+      const conditionTotal = hidden + cond;
+      const light = lightBenefit(card, amount, flags);
+      const naver = naverPayBenefit(card, amount, flags);
+      const interest = inst.interest;
+      const gross = base + billing + point + lola + hero + conditionTotal + light + naver;
+      const netBenefit = gross - interest;
+      return {...card,rowType:'normal',base,billing,point,lola,hero,hidden,cond,conditionTotal,light,naver,inst,interest,gross,netBenefit,netCost:Math.max(amount-netBenefit,0),strategyText:''};
+    });
+  }
+
+  function buildStrategyRows(amount, month, category, annualRate, flags){
+    if(flags.simple || !flags.split || amount<=0) return [];
+    return cards.filter(c=>c.split && amount>=c.split.amount).map(card=>{
+      const s = card.split;
+      const base = baseCashback(card, amount);
+      const balance = Math.max(amount-s.amount,0);
+      const balanceMonth = month && month !== 24 ? month : 0;
+      const balanceInst = getInstallmentInfo(card,balance,balanceMonth,category,annualRate,flags);
+      const splitInterest = flags.interest ? s.amount*s.rate : 0;
+      const balanceInterest = flags.interest ? balanceInst.interest : 0;
+      const interest = splitInterest + balanceInterest;
+      const conditionTotal = s.monthly*s.months;
+      const light = card.type==='samsung' && amount>=s.lightMin ? s.lightBenefit : 0;
+      const naver = naverPayBenefit(card, amount, flags);
+      const gross = base + conditionTotal + light + naver;
+      const netBenefit = gross - interest;
+      const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
+      const strategyText = `${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balancePayText}`;
+      return {...card,name:`${card.name} · 분할전략`,rowType:'strategy',base,billing:0,point:0,lola:0,hero:0,hidden:0,cond:conditionTotal,conditionTotal,light,naver,inst:{status:'부분 24개월', label:`${s.label} · 잔액 ${balancePayText}`, interest, className:'cond'},splitInterest,balanceInterest,balanceInst,interest,gross,netBenefit,netCost:Math.max(amount-netBenefit,0),strategyText,memo:'잔액 결제개월은 현재 선택한 할부개월을 기준으로 무이자/유이자 여부와 예상 이자를 함께 계산합니다.'};
+    });
+  }
+
+  function getInputs(){
+    const amount = Number(onlyNumber(val('amountInput')));
+    const month = Number(val('installmentSelect',0));
+    const category = val('categorySelect','normal');
+    const annualRate = Number(val('annualRateInput',19.5)||0);
+    const flags = {
+      billing:checked('billingCheck',true), point:checked('memberPointCheck',true), lola:checked('lolaCheck',true), hero:checked('superHeroCheck',true), hidden:checked('memberHiddenCheck',true), monthly:checked('monthlySpend30Check',true), split:checked('splitStrategyCheck',true), naver:checked('naverPayCheck',false), interest:checked('interestCheck',true), simple:checked('simpleModeCheck',false)
+    };
+    return {amount,month,category,annualRate,flags};
+  }
+
+  function calculate(){
+    const {amount,month,category,annualRate,flags} = getInputs();
+    const rows = [...buildBaseRows(amount,month,category,annualRate,flags), ...buildStrategyRows(amount,month,category,annualRate,flags)]
+      .filter(r=>amount>0)
+      .sort((a,b)=>b.netBenefit-a.netBenefit);
+    render(amount, month, category, annualRate, flags, rows);
+  }
+
+  function medalBadge(i){
+    if(i===0) return '<span class="rank-pill gold">🥇 1위</span>';
+    if(i===1) return '<span class="rank-pill silver">🥈 2위</span>';
+    if(i===2) return '<span class="rank-pill bronze">🥉 3위</span>';
+    return `<span class="rank-pill">${i+1}위</span>`;
+  }
+  function rankClass(i){return i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';}
+
+  function render(amount, month, category, annualRate, flags, rows){
+    const best = rows[0];
+    renderStrategyGuide(rows);
+    renderRecommend(best, amount);
+    renderTop3(rows);
+    renderKpi(best, amount, rows);
+    renderMobile(rows);
+    renderTable(rows);
+  }
+
+  function renderStrategyGuide(rows){
+    const box=$('strategyGuide');
+    const strategies=rows.filter(r=>r.rowType==='strategy').slice(0,2);
+    if(!strategies.length){box.style.display='none';box.innerHTML='';return;}
+    box.style.display='block';
+    box.innerHTML='<b>분할결제 전략 제안</b><br>' + strategies.map(s=>`${s.name}: ${s.strategyText}<br><span class="small">예상 이자 ${won(s.interest)} = 24개월분 ${won(s.splitInterest||0)} + 잔액분 ${won(s.balanceInterest||0)}, 조건부/추가 혜택 ${won(s.conditionTotal+s.light)}</span>`).join('<br><br>');
+  }
+
+  function renderRecommend(best, amount){
+    const box=$('recommendBox');
+    if(!best || amount<=0){box.className='recommend-card empty';box.innerHTML='<div><div class="recommend-label">추천 카드</div><div class="recommend-name">결제금액을 입력해주세요</div><div class="recommend-desc">금액 입력 후 카드별 혜택을 비교할 수 있습니다.</div></div>';return;}
+    box.className='recommend-card';
+    const tags=[];
+    if(best.rowType==='strategy') tags.push('<span class="badge warn">분할전략</span>');
+    if(best.conditionTotal>0) tags.push('<span class="badge ok">사용조건부</span>');
+    if(best.point>0) tags.push('<span class="badge ok">포인트적립</span>');
+    if(best.interest>0) tags.push('<span class="badge warn">이자반영</span>'); else tags.push('<span class="badge ok">무이자/일시불</span>');
+    box.innerHTML=`
+      <div>
+        <div class="recommend-label">현재 조건 추천 1순위</div>
+        <div class="recommend-name">${best.name}</div>
+        <div class="recommend-desc">${best.memo || ''}</div>
+        <div class="badge-row">${tags.join('')}</div>
+      </div>
+      <div>
+        <div class="recommend-label">이자 반영 후 순혜택</div>
+        <div class="big-number">${won(best.netBenefit)}</div>
+        <div class="recommend-desc">실체감가 ${won(best.netCost)}</div>
+      </div>`;
+  }
+
+  function renderTop3(rows){
+    const box=$('top3Podium');
+    const top3=rows.slice(0,3);
+    if(!top3.length){box.innerHTML='';return;}
+    const medals=[{emoji:'🥇',cls:'rank1',label:'1위 BEST'},{emoji:'🥈',cls:'rank2',label:'2위 GOOD'},{emoji:'🥉',cls:'rank3',label:'3위 CHECK'}];
+    box.innerHTML=top3.map((r,i)=>`
+      <div class="podium-card ${medals[i].cls}">
+        <div class="podium-top"><div class="podium-medal">${medals[i].emoji}</div><div class="podium-label">${medals[i].label}</div></div>
+        <div class="podium-name">${r.name}</div>
+        <div class="podium-value">${won(r.netBenefit)}</div>
+        <div class="podium-sub">이자 반영 후 순혜택</div>
+        <div class="podium-sub">실체감가 ${won(r.netCost)}</div>
+        <div class="podium-mini">${r.conditionTotal>0?'<span>사용조건부</span>':''}${r.rowType==='strategy'?'<span>분할전략</span>':''}${r.interest===0?'<span>무이자</span>':''}</div>
+      </div>`).join('');
+  }
+
+  function renderKpi(best, amount, rows){
+    $('kpiAmount').textContent=won(amount);
+    $('kpiBenefit').textContent=best?won(best.netBenefit):'0원';
+    $('kpiInterest').textContent=best?won(best.interest):'0원';
+    $('kpiNetCost').textContent=best?won(best.netCost):'0원';
+    $('kpiCount').textContent=`${rows.length}개`;
+  }
+
+  function renderMobile(rows){
+    const box=$('mobileResults');
+    box.innerHTML=rows.map((r,i)=>`
+      <div class="mobile-result-card ${i===0?'rank1':i===1?'rank2':i===2?'rank3':''}" id="mobileCard${i}">
+        <div class="mobile-head"><div>${medalBadge(i)}</div><div class="mobile-name">${r.name}</div></div>
+        <div class="mobile-main">
+          <div class="mobile-main-item"><div class="m-label">순혜택</div><div class="m-value">${won(r.netBenefit)}</div></div>
+          <div class="mobile-main-item"><div class="m-label">실체감가</div><div class="m-value">${won(r.netCost)}</div></div>
+          <div class="mobile-main-item"><div class="m-label">할부상태</div><div class="m-value">${r.inst.status}</div></div>
+          <div class="mobile-main-item"><div class="m-label">이자비용</div><div class="m-value">${won(r.interest)}</div></div>
+        </div>
+        <button class="toggle-detail" onclick="toggleMobileDetail(${i})" type="button">혜택 세부항목 보기</button>
+        <div class="mobile-card-grid detail-grid">
+          ${r.base?`<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>`:''}
+          ${r.billing?`<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>`:''}
+          ${r.point?`<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>`:''}
+          ${r.lola?`<div class="mobile-card-item"><div class="m-label">롤라머니</div><div class="m-value">${won(r.lola)}</div></div>`:''}
+          ${r.hero?`<div class="mobile-card-item"><div class="m-label">슈퍼히어로</div><div class="m-value">${won(r.hero)}</div></div>`:''}
+          ${r.conditionTotal?`<div class="mobile-card-item"><div class="m-label">사용조건부</div><div class="m-value">${won(r.conditionTotal)}</div></div>`:''}
+          ${r.light?`<div class="mobile-card-item"><div class="m-label">라이트/추가</div><div class="m-value">${won(r.light)}</div></div>`:''}
+        </div>
+        <div class="mobile-card-note">${r.inst.label}${r.strategyText?'<br>'+r.strategyText:''}<br>${r.memo||''}</div>
+      </div>`).join('');
+  }
+
+  function renderTable(rows){
+    const body=$('resultBody');
+    body.innerHTML=rows.map((r,i)=>`
+      <tr class="${rankClass(i)} ${r.rowType==='strategy'?'strategy':''}">
+        <td>${medalBadge(i)}</td>
+        <td><b>${r.name}</b>${r.strategyText?`<br><span class="small">${r.strategyText}</span>`:''}</td>
+        <td>${won(r.base)}</td>
+        <td>${won(r.billing)}</td>
+        <td>${r.point>0?`<b>${won(r.point)}</b><br><span class="small">일시불/유이자</span>`:won(0)}</td>
+        <td>${won(r.lola)}</td>
+        <td>${won(r.hero)}</td>
+        <td>${won(r.conditionTotal)}${r.hidden?`<br><span class="small">멤버스 ${won(r.hidden)}</span>`:''}${r.cond?`<br><span class="small">월사용 ${won(r.cond)}</span>`:''}</td>
+        <td>${won(r.light)}</td>
+        <td>${won(r.naver)}</td>
+        <td><span class="status ${r.inst.className}">${r.inst.status}</span><br><span class="small">${r.inst.label}</span></td>
+        <td>${won(r.interest)}</td>
+        <td><b>${won(r.gross)}</b></td>
+        <td><b class="em">${won(r.netBenefit)}</b></td>
+        <td><b>${won(r.netCost)}</b></td>
+        <td><span class="small">${r.memo||''}</span></td>
+      </tr>`).join('');
+  }
+
+  function toggleMobileDetail(i){ const el=$('mobileCard'+i); if(el) el.classList.toggle('open'); }
+  function openInstallmentGuide(){ $('installmentGuideModal').classList.add('open'); }
+  function closeInstallmentGuide(){ $('installmentGuideModal').classList.remove('open'); }
+  function openAmountBenefitGuide(){ $('amountBenefitGuideModal').classList.add('open'); }
+  function closeAmountBenefitGuide(){ $('amountBenefitGuideModal').classList.remove('open'); }
+  function toggleChartImage(force){ const box=$('chartImageWrap'); if(force===false){box.classList.remove('open');return;} box.classList.toggle('open'); }
+  function toggleAmountChartImage(force){ const box=$('amountChartImageWrap'); if(force===false){box.classList.remove('open');return;} box.classList.toggle('open'); }
+
+  const bindInput=(id,fn)=>{const el=$(id); if(el) el.addEventListener('input',fn);};
+  const bindChange=(id,fn)=>{const el=$(id); if(el) el.addEventListener('change',fn);};
+  bindInput('amountInput',()=>{const el=$('amountInput'); el.value=formatNumber(el.value); calculate();});
+  ['installmentSelect','categorySelect','annualRateInput','billingCheck','memberPointCheck','lolaCheck','superHeroCheck','memberHiddenCheck','monthlySpend30Check','splitStrategyCheck','naverPayCheck','interestCheck','simpleModeCheck'].forEach(id=>bindChange(id,calculate));
+  calculate();
 </script>
 </body>
 </html>
