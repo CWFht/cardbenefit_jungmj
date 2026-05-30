@@ -70,6 +70,13 @@
     }
     input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
     .hint{font-size:11px;color:var(--muted);margin-top:4px}
+    .rate-guide{margin-top:8px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+    .rate-guide-title{background:#334155;color:#fff;font-size:12px;font-weight:950;text-align:center;padding:7px 8px;letter-spacing:-.03em}
+    .rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e5e7eb}
+    .rate-cell{background:#fff;padding:8px 7px;min-height:54px}
+    .rate-cell b{display:block;font-size:11px;color:#475569;margin-bottom:3px}
+    .rate-cell span{display:block;font-size:13px;font-weight:950;color:#111827;letter-spacing:-.03em}
+    .rate-note{font-size:10px;color:var(--muted);padding:7px 8px;background:#f8fafc;line-height:1.35}
     .two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
     .option-details{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:10px}
@@ -323,6 +330,7 @@
       .sticky{position:sticky;top:16px;align-self:start}
       .panel{border-radius:22px;padding:18px}
       .section-title{font-size:18px}
+      .rate-grid{grid-template-columns:repeat(5,1fr)}
       .recommend-card{grid-template-columns:1fr auto;padding:18px;border-radius:22px}
       .big-number{text-align:right;font-size:32px}
       .top3-podium{grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:16px}
@@ -416,11 +424,12 @@
           <div>
             <label for="installmentSelect">할부개월</label>
             <select id="installmentSelect">
+              <option value="" selected>선택</option>
               <option value="0">일시불</option>
               <option value="2">2개월</option>
               <option value="3">3개월</option>
               <option value="4">4개월</option>
-              <option value="5" selected>5개월</option>
+              <option value="5">5개월</option>
               <option value="12">12개월</option>
               <option value="24">24개월</option>
               <option value="36">36개월</option>
@@ -440,6 +449,17 @@
         <label for="annualRateInput">일반 유이자 예상 연이율</label>
         <input id="annualRateInput" inputmode="decimal" value="19.5" />
         <div class="hint">무이자/고객유이자 조건이 없는 경우, 혜택 차감 전 결제원금 기준으로 예상 이자를 계산합니다.</div>
+        <div class="rate-guide">
+          <div class="rate-guide-title">할부 수수료율 참고표</div>
+          <div class="rate-grid">
+            <div class="rate-cell"><b>2개월</b><span>10.9~15.5%</span></div>
+            <div class="rate-cell"><b>3~5개월</b><span>14.5~19%</span></div>
+            <div class="rate-cell"><b>6~12개월</b><span>16.5~19.5%</span></div>
+            <div class="rate-cell"><b>13~18개월</b><span>17~19.5%</span></div>
+            <div class="rate-cell"><b>19~36개월</b><span>18~19.5%</span></div>
+          </div>
+          <div class="rate-note">※ 예시 장표 참고용입니다. 실제 수수료율은 카드사·고객 조건·행사 적용 여부에 따라 달라질 수 있습니다.</div>
+        </div>
 
         <details class="option-details">
           <summary>고급 반영 옵션 열기</summary>
@@ -906,6 +926,7 @@
   }
 
   function getInstallmentInfo(card, amount, month, category, annualRate, flags){
+    if(month === null || Number.isNaN(month)) return {status:'할부개월 선택', label:'할부개월을 선택하면 무이자/유이자 기준이 반영됩니다.', interest:0, className:'need'};
     if(month === 0) return {status:'일시불', label:'일시불', interest:0, className:'free'};
     const rules = card.installmentRules || [];
 
@@ -1030,7 +1051,8 @@
 
   function getInputs(){
     const amount = Number(onlyNumber(val('amountInput')));
-    const month = Number(val('installmentSelect', 0));
+    const installmentRaw = val('installmentSelect', '');
+    const month = installmentRaw === '' ? null : Number(installmentRaw);
     const category = val('categorySelect', 'normal');
     const annualRate = Number(val('annualRateInput', 19.5) || 0);
     const flags = {
