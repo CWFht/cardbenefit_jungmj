@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <title>롯데하이마트 카드 판촉 혜택 비교툴</title>
   <style>
     :root{
@@ -12,6 +12,7 @@
       --muted:#64748b;
       --line:#e5e7eb;
       --primary:#2563eb;
+      --primary-dark:#1d4ed8;
       --good:#166534;
       --warn:#b45309;
       --bad:#991b1b;
@@ -106,7 +107,9 @@
     .big-number{font-size:28px;font-weight:950;letter-spacing:-.05em;color:#1d4ed8;text-align:left}
     .badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
     .badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:850;background:#eef2ff;color:#1e3a8a}
-    .badge.ok{background:#dcfce7;color:#166534}.badge.warn{background:#ffedd5;color:#9a3412}.badge.dark{background:#e5e7eb;color:#111827}
+    .badge.ok{background:#dcfce7;color:#166534}
+    .badge.warn{background:#ffedd5;color:#9a3412}
+    .badge.dark{background:#e5e7eb;color:#111827}
 
     .top3-podium{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
     .podium-card{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
@@ -130,7 +133,9 @@
     .kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}
     .kpi .label{font-size:11px;color:var(--muted);font-weight:800}
     .kpi .value{font-size:20px;font-weight:950;letter-spacing:-.04em;margin-top:3px}
-    .kpi.blue .value{color:#1d4ed8}.kpi.green .value{color:#166534}.kpi.red .value{color:#991b1b}
+    .kpi.blue .value{color:#1d4ed8}
+    .kpi.green .value{color:#166534}
+    .kpi.red .value{color:#991b1b}
 
     .strategy-guide{display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-bottom:10px;color:#9a3412;font-size:12px}
     .strategy-guide b{color:#7c2d12}
@@ -147,7 +152,11 @@
     .rank-pill.gold{background:var(--gold);color:#fff;box-shadow:0 4px 12px rgba(244,197,66,.28)}
     .rank-pill.silver{background:var(--silver);color:#fff;box-shadow:0 4px 12px rgba(148,163,184,.25)}
     .rank-pill.bronze{background:var(--bronze);color:#fff;box-shadow:0 4px 12px rgba(201,138,75,.25)}
-    .status{font-weight:950}.status.free{color:var(--good)}.status.interest{color:var(--bad)}.status.cond{color:var(--violet)}.status.need{color:var(--warn)}
+    .status{font-weight:950}
+    .status.free{color:var(--good)}
+    .status.interest{color:var(--bad)}
+    .status.cond{color:var(--violet)}
+    .status.need{color:var(--warn)}
     .small{font-size:11px;color:var(--muted)}
     .em{font-weight:950;color:var(--violet)}
 
@@ -160,9 +169,11 @@
     .mobile-name{font-size:15px;font-weight:950;letter-spacing:-.03em}
     .mobile-main{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .mobile-main-item,.mobile-card-item{border:1px solid #e5e7eb;border-radius:12px;padding:9px;background:#fff}
-    .m-label{font-size:10px;color:var(--muted);font-weight:800}.m-value{font-size:14px;font-weight:950;margin-top:2px;letter-spacing:-.03em}
+    .m-label{font-size:10px;color:var(--muted);font-weight:800}
+    .m-value{font-size:14px;font-weight:950;margin-top:2px;letter-spacing:-.03em}
     .mobile-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
-    .mobile-card-grid.detail-grid{display:none}.mobile-result-card.open .detail-grid{display:grid}
+    .mobile-card-grid.detail-grid{display:none}
+    .mobile-result-card.open .detail-grid{display:grid}
     .toggle-detail{width:100%;margin-top:10px;background:#f1f5f9;color:#334155;padding:10px;font-size:13px}
     .mobile-card-note{font-size:11px;color:#475569;margin-top:9px;background:#f8fafc;border-radius:12px;padding:9px}
 
@@ -177,28 +188,135 @@
     .guide-table th{background:#f8fafc}
     .guide-note{margin-top:12px;padding:12px;border-radius:14px;background:#fffbeb;color:#92400e;font-size:12px}
     .chart-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
-    .chart-btn{background:#111827;color:#fff}.chart-btn.sub{background:#eef2ff;color:#1e3a8a}
+    .chart-btn{background:#111827;color:#fff}
+    .chart-btn.sub{background:#eef2ff;color:#1e3a8a}
     .chart-image-wrap{display:none;margin-top:10px;border:1px solid var(--line);border-radius:18px;padding:10px;background:#f8fafc}
     .chart-image-wrap.open{display:block}
     .chart-image-wrap img{width:100%;border-radius:12px;display:block}
     .chart-fallback{display:none;padding:18px;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:13px}
 
-    .desktop-only{display:none}.mobile-only{display:block}
+    .image-viewer-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,.94);
+      display:none;
+      z-index:120;
+      flex-direction:column;
+    }
+    .image-viewer-modal.open{display:flex}
+    .image-viewer-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      color:#fff;
+      flex-shrink:0;
+    }
+    .image-viewer-title{font-size:14px;font-weight:950;letter-spacing:-.03em}
+    .image-viewer-actions{display:flex;gap:8px}
+    .viewer-btn{
+      background:rgba(255,255,255,.14);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.22);
+      padding:9px 11px;
+      border-radius:12px;
+    }
+    .image-viewer-help{
+      color:rgba(255,255,255,.78);
+      font-size:11px;
+      padding:0 12px 10px;
+      text-align:center;
+      flex-shrink:0;
+    }
+    .image-viewer-body{
+      flex:1;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      touch-action:pan-x pan-y pinch-zoom;
+      padding:10px;
+    }
+    .image-viewer-body img{
+      display:block;
+      width:150vw;
+      max-width:none;
+      height:auto;
+      margin:0 auto;
+      border-radius:10px;
+      background:#fff;
+    }
+    .image-viewer-modal.fit .image-viewer-body img{
+      width:100%;
+      max-width:1400px;
+    }
+    .image-viewer-modal.zoom .image-viewer-body img{
+      width:220vw;
+      max-width:none;
+    }
+    .image-viewer-fallback{
+      display:none;
+      color:#fff7ed;
+      background:rgba(154,52,18,.35);
+      border:1px solid rgba(251,146,60,.35);
+      border-radius:12px;
+      padding:14px;
+      margin:12px;
+      font-size:13px;
+    }
+
+    .desktop-only{display:none}
+    .mobile-only{display:block}
+
+    @media(orientation:landscape){
+      .image-viewer-body img{
+        width:100vw;
+        max-width:none;
+      }
+      .image-viewer-modal.zoom .image-viewer-body img{
+        width:160vw;
+      }
+    }
 
     @media(min-width:981px){
       .app{padding:18px 16px 60px}
       .hero{border-radius:24px;padding:26px 24px;margin-bottom:16px}
-      .hero h1{font-size:38px}.hero p{font-size:15px;line-height:1.5}
-      .grid{grid-template-columns:360px 1fr;gap:16px}.sticky{position:sticky;top:16px;align-self:start}
-      .panel{border-radius:22px;padding:18px}.section-title{font-size:18px}
-      .recommend-card{grid-template-columns:1fr auto;padding:18px;border-radius:22px}.big-number{text-align:right;font-size:32px}
-      .top3-podium{grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:16px}.podium-card{border-radius:22px;padding:17px 16px}.podium-name{font-size:17px}.podium-value{font-size:23px}.podium-medal{font-size:30px}.podium-label{font-size:12px;padding:5px 9px}.podium-sub{font-size:12px}
-      .kpi-grid{grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.kpi{border-radius:18px;padding:14px}.kpi .value{font-size:22px}
-      .desktop-only{display:block}.mobile-only{display:none}.mobile-card-grid.detail-grid{display:grid}.toggle-detail{display:none}
+      .hero h1{font-size:38px}
+      .hero p{font-size:15px;line-height:1.5}
+      .grid{grid-template-columns:360px 1fr;gap:16px}
+      .sticky{position:sticky;top:16px;align-self:start}
+      .panel{border-radius:22px;padding:18px}
+      .section-title{font-size:18px}
+      .recommend-card{grid-template-columns:1fr auto;padding:18px;border-radius:22px}
+      .big-number{text-align:right;font-size:32px}
+      .top3-podium{grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:16px}
+      .podium-card{border-radius:22px;padding:17px 16px}
+      .podium-name{font-size:17px}
+      .podium-value{font-size:23px}
+      .podium-medal{font-size:30px}
+      .podium-label{font-size:12px;padding:5px 9px}
+      .podium-sub{font-size:12px}
+      .kpi-grid{grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+      .kpi{border-radius:18px;padding:14px}
+      .kpi .value{font-size:22px}
+      .desktop-only{display:block}
+      .mobile-only{display:none}
+      .mobile-card-grid.detail-grid{display:grid}
+      .toggle-detail{display:none}
+      .image-viewer-body img{width:100%;max-width:1600px}
+      .image-viewer-modal.zoom .image-viewer-body img{width:1500px;max-width:none}
     }
 
     @media print{
-      body{background:#fff}.app{max-width:none;padding:0}.hero,.sticky,.guide-modal,.mobile-only{display:none!important}.panel{box-shadow:none;border:0;padding:0}.desktop-only{display:block}.table-wrap{overflow:visible;border:0}table{min-width:0}th,td{font-size:9px;padding:5px}.recommend-card,.top3-podium,.kpi-grid{break-inside:avoid}.top3-podium{grid-template-columns:repeat(3,1fr)}
+      body{background:#fff}
+      .app{max-width:none;padding:0}
+      .hero,.sticky,.guide-modal,.image-viewer-modal,.mobile-only{display:none!important}
+      .panel{box-shadow:none;border:0;padding:0}
+      .desktop-only{display:block}
+      .table-wrap{overflow:visible;border:0}
+      table{min-width:0}
+      th,td{font-size:9px;padding:5px}
+      .recommend-card,.top3-podium,.kpi-grid{break-inside:avoid}
+      .top3-podium{grid-template-columns:repeat(3,1fr)}
     }
   </style>
 </head>
@@ -307,7 +425,22 @@
             <table>
               <thead>
                 <tr>
-                  <th>순위</th><th>카드명</th><th>금액대 캐시백</th><th>청구할인</th><th>포인트적립</th><th>롤라머니</th><th>슈퍼히어로</th><th>사용조건부</th><th>라이트/추가</th><th>네이버페이</th><th>할부상태</th><th>이자비용</th><th>총 혜택</th><th>순혜택</th><th>실체감가</th><th>판단 메모</th>
+                  <th>순위</th>
+                  <th>카드명</th>
+                  <th>금액대 캐시백</th>
+                  <th>청구할인</th>
+                  <th>포인트적립</th>
+                  <th>롤라머니</th>
+                  <th>슈퍼히어로</th>
+                  <th>사용조건부</th>
+                  <th>라이트/추가</th>
+                  <th>네이버페이</th>
+                  <th>할부상태</th>
+                  <th>이자비용</th>
+                  <th>총 혜택</th>
+                  <th>순혜택</th>
+                  <th>실체감가</th>
+                  <th>판단 메모</th>
                 </tr>
               </thead>
               <tbody id="resultBody"></tbody>
@@ -320,10 +453,19 @@
 
   <div id="installmentGuideModal" class="guide-modal" onclick="if(event.target.id==='installmentGuideModal') closeInstallmentGuide()">
     <div class="guide-panel">
-      <div class="guide-head"><h3>카드 무이자 행사 빠른 확인</h3><button class="close-btn" onclick="closeInstallmentGuide()">닫기</button></div>
+      <div class="guide-head">
+        <h3>카드 무이자 행사 빠른 확인</h3>
+        <button class="close-btn" onclick="closeInstallmentGuide()">닫기</button>
+      </div>
       <div class="table-wrap">
         <table class="guide-table">
-          <thead><tr><th>카드 구분</th><th>무이자/유이자 반영 기준</th><th>툴 반영 방식</th></tr></thead>
+          <thead>
+            <tr>
+              <th>카드 구분</th>
+              <th>무이자/유이자 반영 기준</th>
+              <th>툴 반영 방식</th>
+            </tr>
+          </thead>
           <tbody>
             <tr><td>롯데 멤버스카드</td><td>5만원 이상 2~5개월 무이자, 100만원 이상 12개월 무이자</td><td>멤버스 전용 조건으로 반영</td></tr>
             <tr><td>롯데 플랜카드</td><td>100만원 이상 2~5개월 무이자</td><td>멤버스와 다르게 100만원 기준으로 반영</td></tr>
@@ -336,7 +478,10 @@
           </tbody>
         </table>
       </div>
-      <div class="chart-actions"><button class="chart-btn" onclick="toggleChartImage()">원본 장표 사진 보기</button><button class="chart-btn sub" onclick="toggleChartImage(false)">사진 닫기</button></div>
+      <div class="chart-actions">
+        <button class="chart-btn" onclick="openImageViewer('card-installment-chart.png','카드 무이자혜택 원본 장표')">원본 장표 크게 보기</button>
+        <button class="chart-btn sub" onclick="toggleChartImage()">작게 보기/닫기</button>
+      </div>
       <div id="chartImageWrap" class="chart-image-wrap">
         <img src="card-installment-chart.png" alt="카드 할부 행사 장표" onerror="this.style.display='none';document.getElementById('chartImageFallback').style.display='block';" />
         <div id="chartImageFallback" class="chart-fallback">원본 장표 이미지를 보려면 HTML 파일과 같은 폴더에 이미지 파일을 <b>card-installment-chart.png</b> 이름으로 저장해주세요.</div>
@@ -347,10 +492,19 @@
 
   <div id="amountBenefitGuideModal" class="guide-modal" onclick="if(event.target.id==='amountBenefitGuideModal') closeAmountBenefitGuide()">
     <div class="guide-panel">
-      <div class="guide-head"><h3>월간 금액대별 혜택 빠른 확인</h3><button class="close-btn" onclick="closeAmountBenefitGuide()">닫기</button></div>
+      <div class="guide-head">
+        <h3>월간 금액대별 혜택 빠른 확인</h3>
+        <button class="close-btn" onclick="closeAmountBenefitGuide()">닫기</button>
+      </div>
       <div class="table-wrap">
         <table class="guide-table">
-          <thead><tr><th>카드 구분</th><th>금액대별 혜택 반영 기준</th><th>툴 반영 방식</th></tr></thead>
+          <thead>
+            <tr>
+              <th>카드 구분</th>
+              <th>금액대별 혜택 반영 기준</th>
+              <th>툴 반영 방식</th>
+            </tr>
+          </thead>
           <tbody>
             <tr><td>롯데 멤버스카드</td><td>100만원부터 금액대별 캐시백, 일시불/유이자 시 포인트적립 별도</td><td>금액대 캐시백 + 청구할인 + 포인트적립 반영</td></tr>
             <tr><td>롯데 플랜카드</td><td>20만원 이상 4만원 혜택, 청구할인/롤라머니 별도</td><td>고정혜택 + 청구할인 + 롤라머니 반영</td></tr>
@@ -361,7 +515,10 @@
           </tbody>
         </table>
       </div>
-      <div class="chart-actions"><button class="chart-btn" onclick="toggleAmountChartImage()">원본 장표 사진 보기</button><button class="chart-btn sub" onclick="toggleAmountChartImage(false)">사진 닫기</button></div>
+      <div class="chart-actions">
+        <button class="chart-btn" onclick="openImageViewer('monthly-amount-benefit-chart.png','카드 금액대별 혜택 원본 장표')">원본 장표 크게 보기</button>
+        <button class="chart-btn sub" onclick="toggleAmountChartImage()">작게 보기/닫기</button>
+      </div>
       <div id="amountChartImageWrap" class="chart-image-wrap">
         <img src="monthly-amount-benefit-chart.png" alt="월간 금액대별 혜택 장표" onerror="this.style.display='none';document.getElementById('amountChartImageFallback').style.display='block';" />
         <div id="amountChartImageFallback" class="chart-fallback">월간 금액대별 혜택 장표 이미지를 보려면 HTML 파일과 같은 폴더에 이미지 파일을 <b>monthly-amount-benefit-chart.png</b> 이름으로 저장해주세요.</div>
@@ -370,33 +527,77 @@
     </div>
   </div>
 
+  <div id="imageViewerModal" class="image-viewer-modal" onclick="if(event.target.id==='imageViewerModal') closeImageViewer()">
+    <div class="image-viewer-head">
+      <div id="imageViewerTitle" class="image-viewer-title">원본 장표</div>
+      <div class="image-viewer-actions">
+        <button class="viewer-btn" onclick="setViewerMode('fit')">맞춤</button>
+        <button class="viewer-btn" onclick="setViewerMode('zoom')">확대</button>
+        <button class="viewer-btn" onclick="closeImageViewer()">닫기</button>
+      </div>
+    </div>
+    <div class="image-viewer-help">휴대폰을 가로로 돌리면 더 크게 보입니다. 화면을 손가락으로 확대하거나 좌우로 밀어 확인하세요.</div>
+    <div id="imageViewerFallback" class="image-viewer-fallback">이미지 파일을 찾을 수 없습니다. HTML 파일과 같은 폴더에 이미지 파일명을 정확히 맞춰 저장해주세요.</div>
+    <div class="image-viewer-body">
+      <img id="imageViewerImg" src="" alt="원본 장표 확대 보기" onerror="this.style.display='none';document.getElementById('imageViewerFallback').style.display='block';" />
+    </div>
+  </div>
+
 <script>
   const $ = id => document.getElementById(id);
-  const won = n => Math.round(Number(n||0)).toLocaleString('ko-KR') + '원';
-  const onlyNumber = v => String(v||'').replace(/[^0-9]/g,'');
+  const won = n => Math.round(Number(n || 0)).toLocaleString('ko-KR') + '원';
+  const onlyNumber = v => String(v || '').replace(/[^0-9]/g, '');
   const formatNumber = v => onlyNumber(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const val = (id,def='') => { const el=$(id); return el ? el.value : def; };
-  const checked = (id,def=false) => { const el=$(id); return el ? el.checked : def; };
+  const val = (id, def = '') => {
+    const el = $(id);
+    return el ? el.value : def;
+  };
+  const checked = (id, def = false) => {
+    const el = $(id);
+    return el ? el.checked : def;
+  };
 
   const standardTiers = [
-    {min:3000000, benefit:150000}, {min:5000000, benefit:250000}, {min:7000000, benefit:350000},
-    {min:10000000, benefit:500000}, {min:12000000, benefit:600000}, {min:15000000, benefit:750000}, {min:20000000, benefit:1000000}
+    {min:3000000, benefit:150000},
+    {min:5000000, benefit:250000},
+    {min:7000000, benefit:350000},
+    {min:10000000, benefit:500000},
+    {min:12000000, benefit:600000},
+    {min:15000000, benefit:750000},
+    {min:20000000, benefit:1000000}
   ];
+
   const memberTiers = [
-    {min:1000000, benefit:50000}, {min:2000000, benefit:100000}, {min:3000000, benefit:150000},
-    {min:5000000, benefit:250000}, {min:7000000, benefit:350000}, {min:10000000, benefit:500000},
-    {min:12000000, benefit:600000}, {min:15000000, benefit:750000}, {min:20000000, benefit:1000000}
+    {min:1000000, benefit:50000},
+    {min:2000000, benefit:100000},
+    {min:3000000, benefit:150000},
+    {min:5000000, benefit:250000},
+    {min:7000000, benefit:350000},
+    {min:10000000, benefit:500000},
+    {min:12000000, benefit:600000},
+    {min:15000000, benefit:750000},
+    {min:20000000, benefit:1000000}
   ];
+
   const kbTiers = [
-    {min:5000000, benefit:250000}, {min:7000000, benefit:350000}, {min:10000000, benefit:500000},
-    {min:12000000, benefit:600000}, {min:15000000, benefit:750000}, {min:20000000, benefit:1000000}
+    {min:5000000, benefit:250000},
+    {min:7000000, benefit:350000},
+    {min:10000000, benefit:500000},
+    {min:12000000, benefit:600000},
+    {min:15000000, benefit:750000},
+    {min:20000000, benefit:1000000}
   ];
 
   const cards = [
     {
-      name:'롯데 멤버스카드', type:'lotte', cashbackType:'tier', tiers:memberTiers,
-      billingDiscount:{rate:.05, cap:30000}, memberPoint:{specialRate:.01, specialCap:50000, baseRate:.005},
-      superHeroLpay:true, supportsNaverPay:true,
+      name:'롯데 멤버스카드',
+      type:'lotte',
+      cashbackType:'tier',
+      tiers:memberTiers,
+      billingDiscount:{rate:.05, cap:30000},
+      memberPoint:{specialRate:.01, specialCap:50000, baseRate:.005},
+      superHeroLpay:true,
+      supportsNaverPay:true,
       hidden:{min:400000, monthly:11000, months:36, label:'최초 40만원 이상 + 월30만원 사용'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
@@ -407,8 +608,15 @@
       memo:'일시불/유이자할부 시 포인트적립 반영. L.PAY 슈퍼히어로 추가 + 히든 조건부가 핵심.'
     },
     {
-      name:'롯데 플랜카드', type:'lotte', cashbackType:'fixed', fixedMin:200000, fixedBenefit:40000,
-      billingDiscount:{rate:.05, cap:50000}, lolaMoney:{rate:.07, cap:30000}, superHeroLpay:true, supportsNaverPay:true,
+      name:'롯데 플랜카드',
+      type:'lotte',
+      cashbackType:'fixed',
+      fixedMin:200000,
+      fixedBenefit:40000,
+      billingDiscount:{rate:.05, cap:50000},
+      lolaMoney:{rate:.07, cap:30000},
+      superHeroLpay:true,
+      supportsNaverPay:true,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
@@ -417,8 +625,11 @@
       memo:'20만원 이상 고정혜택 + 청구할인 + 롤라머니 + 슈퍼히어로 조합.'
     },
     {
-      name:'롯데 클래스카드', type:'lotte', cashbackType:'none',
-      billingDiscount:{rate:.05, cap:50000}, supportsNaverPay:false,
+      name:'롯데 클래스카드',
+      type:'lotte',
+      cashbackType:'none',
+      billingDiscount:{rate:.05, cap:50000},
+      supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
@@ -427,7 +638,10 @@
       memo:'금액대별 캐시백 없음. 청구할인 5% 최대 5만원만 일반 구매 반영.'
     },
     {
-      name:'우리 일반카드', type:'woori', cashbackType:'none', supportsNaverPay:false,
+      name:'우리 일반카드',
+      type:'woori',
+      cashbackType:'none',
+      supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
@@ -435,8 +649,12 @@
       memo:'제휴카드가 아닌 우리 일반카드는 금액대별 캐시백 없음. 무이자 비교군.'
     },
     {
-      name:'우리제휴카드', type:'woori', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
-      cond:{monthly:16000, months:[24], min:300000, label:'월30만원 이상 사용'},
+      name:'우리제휴카드',
+      type:'woori',
+      cashbackType:'tier',
+      tiers:standardTiers,
+      supportsNaverPay:false,
+      cond:{monthly:16000, months:[24,36], min:300000, label:'월30만원 이상 사용'},
       split:{amount:390000, rate:.06, monthly:16000, months:24, label:'39만원만 24개월 고객유이자 6.0%'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
@@ -446,7 +664,11 @@
       memo:'24개월 사용조건부 혜택이 크지만 고객유이자 발생. 분할전략 권장.'
     },
     {
-      name:'삼성제휴카드', type:'samsung', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      name:'삼성제휴카드',
+      type:'samsung',
+      cashbackType:'tier',
+      tiers:standardTiers,
+      supportsNaverPay:false,
       cond:{monthly:13000, months:[24], min:300000, label:'월30만원 이상 사용'},
       light:{min:3000000, benefit:100000, label:'300만원 이상 라이트할부 추가'},
       split:{amount:240000, rate:.065, monthly:13000, months:24, lightMin:3000000, lightBenefit:100000, label:'24만원만 24개월 고객유이자 6.5%'},
@@ -458,7 +680,11 @@
       memo:'24개월 조건부 + 300만원 이상 추가 10만원 혜택 확인.'
     },
     {
-      name:'신한제휴카드', type:'shinhan', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      name:'신한제휴카드',
+      type:'shinhan',
+      cashbackType:'tier',
+      tiers:standardTiers,
+      supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
@@ -467,7 +693,11 @@
       memo:'금액대 캐시백 중심. 36개월은 구독한정으로 일반 비교 제외.'
     },
     {
-      name:'삼성 일반카드 LINK', type:'samsung', cashbackType:'tier', tiers:standardTiers, supportsNaverPay:false,
+      name:'삼성 일반카드 LINK',
+      type:'samsung',
+      cashbackType:'tier',
+      tiers:standardTiers,
+      supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
@@ -475,7 +705,11 @@
       memo:'LINK 적용 고객 한정. 조건 확인 필요.'
     },
     {
-      name:'KB국민 일반카드', type:'kb', cashbackType:'tier', tiers:kbTiers, supportsNaverPay:false,
+      name:'KB국민 일반카드',
+      type:'kb',
+      cashbackType:'tier',
+      tiers:kbTiers,
+      supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
@@ -484,81 +718,107 @@
     }
   ];
 
-  function tierBenefit(amount, tiers=[]){
-    let benefit=0;
-    tiers.forEach(t=>{ if(amount>=t.min) benefit=t.benefit; });
+  function tierBenefit(amount, tiers = []){
+    let benefit = 0;
+    tiers.forEach(t => {
+      if(amount >= t.min) benefit = t.benefit;
+    });
     return benefit;
   }
+
   function baseCashback(card, amount){
-    if(card.cashbackType==='tier') return tierBenefit(amount, card.tiers||[]);
-    if(card.cashbackType==='fixed') return amount>=card.fixedMin ? card.fixedBenefit : 0;
+    if(card.cashbackType === 'tier') return tierBenefit(amount, card.tiers || []);
+    if(card.cashbackType === 'fixed') return amount >= card.fixedMin ? card.fixedBenefit : 0;
     return 0;
   }
+
   function billingDiscount(card, amount, flags){
     if(flags.simple || !flags.billing || !card.billingDiscount) return 0;
-    return Math.min(amount*card.billingDiscount.rate, card.billingDiscount.cap);
+    return Math.min(amount * card.billingDiscount.rate, card.billingDiscount.cap);
   }
+
   function memberPoint(card, amount, inst, flags){
     if(flags.simple || !flags.point || !card.memberPoint) return 0;
     const eligible = inst.status === '일시불' || inst.status.includes('유이자');
     if(!eligible) return 0;
-    return Math.min(amount*card.memberPoint.specialRate, card.memberPoint.specialCap) + amount*card.memberPoint.baseRate;
+    const special = Math.min(amount * card.memberPoint.specialRate, card.memberPoint.specialCap);
+    const base = amount * card.memberPoint.baseRate;
+    return special + base;
   }
+
   function lolaMoney(card, amount, flags){
     if(flags.simple || !flags.lola || !card.lolaMoney) return 0;
-    return Math.min(amount*card.lolaMoney.rate, card.lolaMoney.cap);
+    return Math.min(amount * card.lolaMoney.rate, card.lolaMoney.cap);
   }
+
   function superHero(card, amount, flags){
     if(flags.simple || !flags.hero || !card.superHeroLpay) return 0;
-    if(amount>=3000000) return 50000;
-    if(amount>=1000000) return 30000;
-    if(amount>=200000) return 10000;
+    if(amount >= 3000000) return 50000;
+    if(amount >= 1000000) return 30000;
+    if(amount >= 200000) return 10000;
     return 0;
   }
+
   function hiddenBenefit(card, amount, flags){
     if(flags.simple || !flags.hidden || !flags.monthly || !card.hidden) return 0;
-    return amount>=card.hidden.min ? card.hidden.monthly*card.hidden.months : 0;
+    return amount >= card.hidden.min ? card.hidden.monthly * card.hidden.months : 0;
   }
+
   function conditionalBenefit(card, amount, month, flags){
     if(flags.simple || !flags.monthly || !card.cond) return 0;
-    if(!card.cond.months.includes(month) || amount<card.cond.min) return 0;
-    return card.cond.monthly*month;
+    if(!card.cond.months.includes(month) || amount < card.cond.min) return 0;
+    return card.cond.monthly * month;
   }
+
   function lightBenefit(card, amount, flags){
     if(flags.simple || !card.light) return 0;
-    return amount>=card.light.min ? card.light.benefit : 0;
+    return amount >= card.light.min ? card.light.benefit : 0;
   }
+
   function naverPayBenefit(card, amount, flags){
     if(flags.simple || !flags.naver || !card.supportsNaverPay) return 0;
-    if(amount>=3000000) return 30000;
-    if(amount>=1000000) return 10000;
+    if(amount >= 3000000) return 30000;
+    if(amount >= 1000000) return 10000;
     return 0;
   }
+
   function estimateInterest(amount, month, annualRate){
-    if(!month || month<=0) return 0;
-    return amount*(annualRate/100)*((month+1)/24);
+    if(!month || month <= 0) return 0;
+    return amount * (annualRate / 100) * ((month + 1) / 24);
   }
+
   function getInstallmentInfo(card, amount, month, category, annualRate, flags){
-    if(month===0) return {status:'일시불', label:'일시불', interest:0, className:'free'};
+    if(month === 0) return {status:'일시불', label:'일시불', interest:0, className:'free'};
     const rules = card.installmentRules || [];
+
     for(const rule of rules){
-      if(rule.months.includes(month) && amount>=rule.min){
-        if(rule.type==='free') return {status:'무이자', label:rule.label, interest:0, className:'free'};
-        if(rule.type==='customerInterest'){
-          const interest = flags.interest ? amount*rule.rate : 0;
+      if(rule.months.includes(month) && amount >= rule.min){
+        if(rule.type === 'free'){
+          return {status:'무이자', label:rule.label, interest:0, className:'free'};
+        }
+
+        if(rule.type === 'customerInterest'){
+          const interest = flags.interest ? amount * rule.rate : 0;
           return {status:'고객유이자', label:rule.label, interest, className:'interest'};
         }
-        if(rule.type==='subscriptionFree'){
-          return {status:'구독전용 제외', label:'일반 비교 제외 · 필요 시 별도 상담', interest:flags.interest?estimateInterest(amount,month,annualRate):0, className:'need'};
+
+        if(rule.type === 'subscriptionFree'){
+          return {
+            status:'구독전용 제외',
+            label:'일반 비교 제외 · 필요 시 별도 상담',
+            interest:flags.interest ? estimateInterest(amount, month, annualRate) : 0,
+            className:'need'
+          };
         }
       }
     }
-    const interest = flags.interest ? estimateInterest(amount,month,annualRate) : 0;
+
+    const interest = flags.interest ? estimateInterest(amount, month, annualRate) : 0;
     return {status:'일반 유이자 예상', label:`예상 연 ${annualRate}%`, interest, className:'interest'};
   }
 
   function buildBaseRows(amount, month, category, annualRate, flags){
-    return cards.map(card=>{
+    return cards.map(card => {
       const inst = getInstallmentInfo(card, amount, month, category, annualRate, flags);
       const base = baseCashback(card, amount);
       const billing = billingDiscount(card, amount, flags);
@@ -573,58 +833,128 @@
       const interest = inst.interest;
       const gross = base + billing + point + lola + hero + conditionTotal + light + naver;
       const netBenefit = gross - interest;
-      return {...card,rowType:'normal',base,billing,point,lola,hero,hidden,cond,conditionTotal,light,naver,inst,interest,gross,netBenefit,netCost:Math.max(amount-netBenefit,0),strategyText:''};
+
+      return {
+        ...card,
+        rowType:'normal',
+        base,
+        billing,
+        point,
+        lola,
+        hero,
+        hidden,
+        cond,
+        conditionTotal,
+        light,
+        naver,
+        inst,
+        interest,
+        gross,
+        netBenefit,
+        netCost:Math.max(amount - netBenefit, 0),
+        strategyText:''
+      };
     });
   }
 
   function buildStrategyRows(amount, month, category, annualRate, flags){
-    if(flags.simple || !flags.split || amount<=0) return [];
-    return cards.filter(c=>c.split && amount>=c.split.amount).map(card=>{
+    if(flags.simple || !flags.split || amount <= 0) return [];
+
+    return cards.filter(c => c.split && amount >= c.split.amount).map(card => {
       const s = card.split;
       const base = baseCashback(card, amount);
-      const balance = Math.max(amount-s.amount,0);
+      const balance = Math.max(amount - s.amount, 0);
       const balanceMonth = month && month !== 24 ? month : 0;
-      const balanceInst = getInstallmentInfo(card,balance,balanceMonth,category,annualRate,flags);
-      const splitInterest = flags.interest ? s.amount*s.rate : 0;
+      const balanceInst = getInstallmentInfo(card, balance, balanceMonth, category, annualRate, flags);
+      const splitInterest = flags.interest ? s.amount * s.rate : 0;
       const balanceInterest = flags.interest ? balanceInst.interest : 0;
       const interest = splitInterest + balanceInterest;
-      const conditionTotal = s.monthly*s.months;
-      const light = card.type==='samsung' && amount>=s.lightMin ? s.lightBenefit : 0;
+      const conditionTotal = s.monthly * s.months;
+      const light = card.type === 'samsung' && amount >= s.lightMin ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
       const gross = base + conditionTotal + light + naver;
       const netBenefit = gross - interest;
       const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
       const strategyText = `${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balancePayText}`;
-      return {...card,name:`${card.name} · 분할전략`,rowType:'strategy',base,billing:0,point:0,lola:0,hero:0,hidden:0,cond:conditionTotal,conditionTotal,light,naver,inst:{status:'부분 24개월', label:`${s.label} · 잔액 ${balancePayText}`, interest, className:'cond'},splitInterest,balanceInterest,balanceInst,interest,gross,netBenefit,netCost:Math.max(amount-netBenefit,0),strategyText,memo:'잔액 결제개월은 현재 선택한 할부개월을 기준으로 무이자/유이자 여부와 예상 이자를 함께 계산합니다.'};
+
+      return {
+        ...card,
+        name:`${card.name} · 분할전략`,
+        rowType:'strategy',
+        base,
+        billing:0,
+        point:0,
+        lola:0,
+        hero:0,
+        hidden:0,
+        cond:conditionTotal,
+        conditionTotal,
+        light,
+        naver,
+        inst:{
+          status:'부분 24개월',
+          label:`${s.label} · 잔액 ${balancePayText}`,
+          interest,
+          className:'cond'
+        },
+        splitInterest,
+        balanceInterest,
+        balanceInst,
+        interest,
+        gross,
+        netBenefit,
+        netCost:Math.max(amount - netBenefit, 0),
+        strategyText,
+        memo:'잔액 결제개월은 현재 선택한 할부개월을 기준으로 무이자/유이자 여부와 예상 이자를 함께 계산합니다.'
+      };
     });
   }
 
   function getInputs(){
     const amount = Number(onlyNumber(val('amountInput')));
-    const month = Number(val('installmentSelect',0));
-    const category = val('categorySelect','normal');
-    const annualRate = Number(val('annualRateInput',19.5)||0);
+    const month = Number(val('installmentSelect', 0));
+    const category = val('categorySelect', 'normal');
+    const annualRate = Number(val('annualRateInput', 19.5) || 0);
     const flags = {
-      billing:checked('billingCheck',true), point:checked('memberPointCheck',true), lola:checked('lolaCheck',true), hero:checked('superHeroCheck',true), hidden:checked('memberHiddenCheck',true), monthly:checked('monthlySpend30Check',true), split:checked('splitStrategyCheck',true), naver:checked('naverPayCheck',false), interest:checked('interestCheck',true), simple:checked('simpleModeCheck',false)
+      billing:checked('billingCheck', true),
+      point:checked('memberPointCheck', true),
+      lola:checked('lolaCheck', true),
+      hero:checked('superHeroCheck', true),
+      hidden:checked('memberHiddenCheck', true),
+      monthly:checked('monthlySpend30Check', true),
+      split:checked('splitStrategyCheck', true),
+      naver:checked('naverPayCheck', false),
+      interest:checked('interestCheck', true),
+      simple:checked('simpleModeCheck', false)
     };
-    return {amount,month,category,annualRate,flags};
+    return {amount, month, category, annualRate, flags};
   }
 
   function calculate(){
-    const {amount,month,category,annualRate,flags} = getInputs();
-    const rows = [...buildBaseRows(amount,month,category,annualRate,flags), ...buildStrategyRows(amount,month,category,annualRate,flags)]
-      .filter(r=>amount>0)
-      .sort((a,b)=>b.netBenefit-a.netBenefit);
+    const {amount, month, category, annualRate, flags} = getInputs();
+    const rows = [
+      ...buildBaseRows(amount, month, category, annualRate, flags),
+      ...buildStrategyRows(amount, month, category, annualRate, flags)
+    ]
+      .filter(r => amount > 0)
+      .sort((a,b) => b.netBenefit - a.netBenefit);
+
     render(amount, month, category, annualRate, flags, rows);
   }
 
   function medalBadge(i){
-    if(i===0) return '<span class="rank-pill gold">🥇 1위</span>';
-    if(i===1) return '<span class="rank-pill silver">🥈 2위</span>';
-    if(i===2) return '<span class="rank-pill bronze">🥉 3위</span>';
-    return `<span class="rank-pill">${i+1}위</span>`;
+    if(i === 0) return '<span class="rank-pill gold">🥇 1위</span>';
+    if(i === 1) return '<span class="rank-pill silver">🥈 2위</span>';
+    if(i === 2) return '<span class="rank-pill bronze">🥉 3위</span>';
+    return `<span class="rank-pill">${i + 1}위</span>`;
   }
-  function rankClass(i){return i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';}
+
+  function rankClass(i){
+    if(i === 0) return 'rank-1';
+    if(i === 1) return 'rank-2';
+    if(i === 2) return 'rank-3';
+    return '';
+  }
 
   function render(amount, month, category, annualRate, flags, rows){
     const best = rows[0];
@@ -637,23 +967,39 @@
   }
 
   function renderStrategyGuide(rows){
-    const box=$('strategyGuide');
-    const strategies=rows.filter(r=>r.rowType==='strategy').slice(0,2);
-    if(!strategies.length){box.style.display='none';box.innerHTML='';return;}
-    box.style.display='block';
-    box.innerHTML='<b>분할결제 전략 제안</b><br>' + strategies.map(s=>`${s.name}: ${s.strategyText}<br><span class="small">예상 이자 ${won(s.interest)} = 24개월분 ${won(s.splitInterest||0)} + 잔액분 ${won(s.balanceInterest||0)}, 조건부/추가 혜택 ${won(s.conditionTotal+s.light)}</span>`).join('<br><br>');
+    const box = $('strategyGuide');
+    const strategies = rows.filter(r => r.rowType === 'strategy').slice(0,2);
+
+    if(!strategies.length){
+      box.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+
+    box.style.display = 'block';
+    box.innerHTML = '<b>분할결제 전략 제안</b><br>' + strategies.map(s => {
+      return `${s.name}: ${s.strategyText}<br><span class="small">예상 이자 ${won(s.interest)} = 24개월분 ${won(s.splitInterest || 0)} + 잔액분 ${won(s.balanceInterest || 0)}, 조건부/추가 혜택 ${won(s.conditionTotal + s.light)}</span>`;
+    }).join('<br><br>');
   }
 
   function renderRecommend(best, amount){
-    const box=$('recommendBox');
-    if(!best || amount<=0){box.className='recommend-card empty';box.innerHTML='<div><div class="recommend-label">추천 카드</div><div class="recommend-name">결제금액을 입력해주세요</div><div class="recommend-desc">금액 입력 후 카드별 혜택을 비교할 수 있습니다.</div></div>';return;}
-    box.className='recommend-card';
-    const tags=[];
-    if(best.rowType==='strategy') tags.push('<span class="badge warn">분할전략</span>');
-    if(best.conditionTotal>0) tags.push('<span class="badge ok">사용조건부</span>');
-    if(best.point>0) tags.push('<span class="badge ok">포인트적립</span>');
-    if(best.interest>0) tags.push('<span class="badge warn">이자반영</span>'); else tags.push('<span class="badge ok">무이자/일시불</span>');
-    box.innerHTML=`
+    const box = $('recommendBox');
+
+    if(!best || amount <= 0){
+      box.className = 'recommend-card empty';
+      box.innerHTML = '<div><div class="recommend-label">추천 카드</div><div class="recommend-name">결제금액을 입력해주세요</div><div class="recommend-desc">금액 입력 후 카드별 혜택을 비교할 수 있습니다.</div></div>';
+      return;
+    }
+
+    box.className = 'recommend-card';
+    const tags = [];
+    if(best.rowType === 'strategy') tags.push('<span class="badge warn">분할전략</span>');
+    if(best.conditionTotal > 0) tags.push('<span class="badge ok">사용조건부</span>');
+    if(best.point > 0) tags.push('<span class="badge ok">포인트적립</span>');
+    if(best.interest > 0) tags.push('<span class="badge warn">이자반영</span>');
+    else tags.push('<span class="badge ok">무이자/일시불</span>');
+
+    box.innerHTML = `
       <div>
         <div class="recommend-label">현재 조건 추천 1순위</div>
         <div class="recommend-name">${best.name}</div>
@@ -668,89 +1014,225 @@
   }
 
   function renderTop3(rows){
-    const box=$('top3Podium');
-    const top3=rows.slice(0,3);
-    if(!top3.length){box.innerHTML='';return;}
-    const medals=[{emoji:'🥇',cls:'rank1',label:'1위 BEST'},{emoji:'🥈',cls:'rank2',label:'2위 GOOD'},{emoji:'🥉',cls:'rank3',label:'3위 CHECK'}];
-    box.innerHTML=top3.map((r,i)=>`
+    const box = $('top3Podium');
+    const top3 = rows.slice(0,3);
+
+    if(!top3.length){
+      box.innerHTML = '';
+      return;
+    }
+
+    const medals = [
+      {emoji:'🥇', cls:'rank1', label:'1위 BEST'},
+      {emoji:'🥈', cls:'rank2', label:'2위 GOOD'},
+      {emoji:'🥉', cls:'rank3', label:'3위 CHECK'}
+    ];
+
+    box.innerHTML = top3.map((r,i) => `
       <div class="podium-card ${medals[i].cls}">
-        <div class="podium-top"><div class="podium-medal">${medals[i].emoji}</div><div class="podium-label">${medals[i].label}</div></div>
+        <div class="podium-top">
+          <div class="podium-medal">${medals[i].emoji}</div>
+          <div class="podium-label">${medals[i].label}</div>
+        </div>
         <div class="podium-name">${r.name}</div>
         <div class="podium-value">${won(r.netBenefit)}</div>
         <div class="podium-sub">이자 반영 후 순혜택</div>
         <div class="podium-sub">실체감가 ${won(r.netCost)}</div>
-        <div class="podium-mini">${r.conditionTotal>0?'<span>사용조건부</span>':''}${r.rowType==='strategy'?'<span>분할전략</span>':''}${r.interest===0?'<span>무이자</span>':''}</div>
-      </div>`).join('');
+        <div class="podium-mini">
+          ${r.conditionTotal > 0 ? '<span>사용조건부</span>' : ''}
+          ${r.rowType === 'strategy' ? '<span>분할전략</span>' : ''}
+          ${r.interest === 0 ? '<span>무이자</span>' : ''}
+        </div>
+      </div>
+    `).join('');
   }
 
   function renderKpi(best, amount, rows){
-    $('kpiAmount').textContent=won(amount);
-    $('kpiBenefit').textContent=best?won(best.netBenefit):'0원';
-    $('kpiInterest').textContent=best?won(best.interest):'0원';
-    $('kpiNetCost').textContent=best?won(best.netCost):'0원';
-    $('kpiCount').textContent=`${rows.length}개`;
+    $('kpiAmount').textContent = won(amount);
+    $('kpiBenefit').textContent = best ? won(best.netBenefit) : '0원';
+    $('kpiInterest').textContent = best ? won(best.interest) : '0원';
+    $('kpiNetCost').textContent = best ? won(best.netCost) : '0원';
+    $('kpiCount').textContent = `${rows.length}개`;
   }
 
   function renderMobile(rows){
-    const box=$('mobileResults');
-    box.innerHTML=rows.map((r,i)=>`
+    const box = $('mobileResults');
+
+    box.innerHTML = rows.map((r,i) => `
       <div class="mobile-result-card ${i===0?'rank1':i===1?'rank2':i===2?'rank3':''}" id="mobileCard${i}">
-        <div class="mobile-head"><div>${medalBadge(i)}</div><div class="mobile-name">${r.name}</div></div>
+        <div class="mobile-head">
+          <div>${medalBadge(i)}</div>
+          <div class="mobile-name">${r.name}</div>
+        </div>
         <div class="mobile-main">
-          <div class="mobile-main-item"><div class="m-label">순혜택</div><div class="m-value">${won(r.netBenefit)}</div></div>
-          <div class="mobile-main-item"><div class="m-label">실체감가</div><div class="m-value">${won(r.netCost)}</div></div>
-          <div class="mobile-main-item"><div class="m-label">할부상태</div><div class="m-value">${r.inst.status}</div></div>
-          <div class="mobile-main-item"><div class="m-label">이자비용</div><div class="m-value">${won(r.interest)}</div></div>
+          <div class="mobile-main-item">
+            <div class="m-label">순혜택</div>
+            <div class="m-value">${won(r.netBenefit)}</div>
+          </div>
+          <div class="mobile-main-item">
+            <div class="m-label">실체감가</div>
+            <div class="m-value">${won(r.netCost)}</div>
+          </div>
+          <div class="mobile-main-item">
+            <div class="m-label">할부상태</div>
+            <div class="m-value">${r.inst.status}</div>
+          </div>
+          <div class="mobile-main-item">
+            <div class="m-label">이자비용</div>
+            <div class="m-value">${won(r.interest)}</div>
+          </div>
         </div>
         <button class="toggle-detail" onclick="toggleMobileDetail(${i})" type="button">혜택 세부항목 보기</button>
         <div class="mobile-card-grid detail-grid">
-          ${r.base?`<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>`:''}
-          ${r.billing?`<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>`:''}
-          ${r.point?`<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>`:''}
-          ${r.lola?`<div class="mobile-card-item"><div class="m-label">롤라머니</div><div class="m-value">${won(r.lola)}</div></div>`:''}
-          ${r.hero?`<div class="mobile-card-item"><div class="m-label">슈퍼히어로</div><div class="m-value">${won(r.hero)}</div></div>`:''}
-          ${r.conditionTotal?`<div class="mobile-card-item"><div class="m-label">사용조건부</div><div class="m-value">${won(r.conditionTotal)}</div></div>`:''}
-          ${r.light?`<div class="mobile-card-item"><div class="m-label">라이트/추가</div><div class="m-value">${won(r.light)}</div></div>`:''}
+          ${r.base ? `<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>` : ''}
+          ${r.billing ? `<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>` : ''}
+          ${r.point ? `<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>` : ''}
+          ${r.lola ? `<div class="mobile-card-item"><div class="m-label">롤라머니</div><div class="m-value">${won(r.lola)}</div></div>` : ''}
+          ${r.hero ? `<div class="mobile-card-item"><div class="m-label">슈퍼히어로</div><div class="m-value">${won(r.hero)}</div></div>` : ''}
+          ${r.conditionTotal ? `<div class="mobile-card-item"><div class="m-label">사용조건부</div><div class="m-value">${won(r.conditionTotal)}</div></div>` : ''}
+          ${r.light ? `<div class="mobile-card-item"><div class="m-label">라이트/추가</div><div class="m-value">${won(r.light)}</div></div>` : ''}
         </div>
-        <div class="mobile-card-note">${r.inst.label}${r.strategyText?'<br>'+r.strategyText:''}<br>${r.memo||''}</div>
-      </div>`).join('');
+        <div class="mobile-card-note">
+          ${r.inst.label}${r.strategyText ? '<br>' + r.strategyText : ''}<br>${r.memo || ''}
+        </div>
+      </div>
+    `).join('');
   }
 
   function renderTable(rows){
-    const body=$('resultBody');
-    body.innerHTML=rows.map((r,i)=>`
-      <tr class="${rankClass(i)} ${r.rowType==='strategy'?'strategy':''}">
+    const body = $('resultBody');
+
+    body.innerHTML = rows.map((r,i) => `
+      <tr class="${rankClass(i)} ${r.rowType === 'strategy' ? 'strategy' : ''}">
         <td>${medalBadge(i)}</td>
-        <td><b>${r.name}</b>${r.strategyText?`<br><span class="small">${r.strategyText}</span>`:''}</td>
+        <td>
+          <b>${r.name}</b>
+          ${r.strategyText ? `<br><span class="small">${r.strategyText}</span>` : ''}
+        </td>
         <td>${won(r.base)}</td>
         <td>${won(r.billing)}</td>
-        <td>${r.point>0?`<b>${won(r.point)}</b><br><span class="small">일시불/유이자</span>`:won(0)}</td>
+        <td>${r.point > 0 ? `<b>${won(r.point)}</b><br><span class="small">일시불/유이자</span>` : won(0)}</td>
         <td>${won(r.lola)}</td>
         <td>${won(r.hero)}</td>
-        <td>${won(r.conditionTotal)}${r.hidden?`<br><span class="small">멤버스 ${won(r.hidden)}</span>`:''}${r.cond?`<br><span class="small">월사용 ${won(r.cond)}</span>`:''}</td>
+        <td>
+          ${won(r.conditionTotal)}
+          ${r.hidden ? `<br><span class="small">멤버스 ${won(r.hidden)}</span>` : ''}
+          ${r.cond ? `<br><span class="small">월사용 ${won(r.cond)}</span>` : ''}
+        </td>
         <td>${won(r.light)}</td>
         <td>${won(r.naver)}</td>
-        <td><span class="status ${r.inst.className}">${r.inst.status}</span><br><span class="small">${r.inst.label}</span></td>
+        <td>
+          <span class="status ${r.inst.className}">${r.inst.status}</span><br>
+          <span class="small">${r.inst.label}</span>
+        </td>
         <td>${won(r.interest)}</td>
         <td><b>${won(r.gross)}</b></td>
         <td><b class="em">${won(r.netBenefit)}</b></td>
         <td><b>${won(r.netCost)}</b></td>
-        <td><span class="small">${r.memo||''}</span></td>
-      </tr>`).join('');
+        <td><span class="small">${r.memo || ''}</span></td>
+      </tr>
+    `).join('');
   }
 
-  function toggleMobileDetail(i){ const el=$('mobileCard'+i); if(el) el.classList.toggle('open'); }
-  function openInstallmentGuide(){ $('installmentGuideModal').classList.add('open'); }
-  function closeInstallmentGuide(){ $('installmentGuideModal').classList.remove('open'); }
-  function openAmountBenefitGuide(){ $('amountBenefitGuideModal').classList.add('open'); }
-  function closeAmountBenefitGuide(){ $('amountBenefitGuideModal').classList.remove('open'); }
-  function toggleChartImage(force){ const box=$('chartImageWrap'); if(force===false){box.classList.remove('open');return;} box.classList.toggle('open'); }
-  function toggleAmountChartImage(force){ const box=$('amountChartImageWrap'); if(force===false){box.classList.remove('open');return;} box.classList.toggle('open'); }
+  function toggleMobileDetail(i){
+    const el = $('mobileCard' + i);
+    if(el) el.classList.toggle('open');
+  }
 
-  const bindInput=(id,fn)=>{const el=$(id); if(el) el.addEventListener('input',fn);};
-  const bindChange=(id,fn)=>{const el=$(id); if(el) el.addEventListener('change',fn);};
-  bindInput('amountInput',()=>{const el=$('amountInput'); el.value=formatNumber(el.value); calculate();});
-  ['installmentSelect','categorySelect','annualRateInput','billingCheck','memberPointCheck','lolaCheck','superHeroCheck','memberHiddenCheck','monthlySpend30Check','splitStrategyCheck','naverPayCheck','interestCheck','simpleModeCheck'].forEach(id=>bindChange(id,calculate));
+  function openInstallmentGuide(){
+    $('installmentGuideModal').classList.add('open');
+  }
+
+  function closeInstallmentGuide(){
+    $('installmentGuideModal').classList.remove('open');
+  }
+
+  function openAmountBenefitGuide(){
+    $('amountBenefitGuideModal').classList.add('open');
+  }
+
+  function closeAmountBenefitGuide(){
+    $('amountBenefitGuideModal').classList.remove('open');
+  }
+
+  function toggleChartImage(force){
+    const box = $('chartImageWrap');
+    if(force === false){
+      box.classList.remove('open');
+      return;
+    }
+    box.classList.toggle('open');
+  }
+
+  function toggleAmountChartImage(force){
+    const box = $('amountChartImageWrap');
+    if(force === false){
+      box.classList.remove('open');
+      return;
+    }
+    box.classList.toggle('open');
+  }
+
+  function openImageViewer(src, title){
+    const modal = $('imageViewerModal');
+    const img = $('imageViewerImg');
+    const fallback = $('imageViewerFallback');
+
+    $('imageViewerTitle').textContent = title || '원본 장표';
+    fallback.style.display = 'none';
+    img.style.display = 'block';
+    img.src = src;
+
+    modal.classList.remove('fit', 'zoom');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeImageViewer(){
+    const modal = $('imageViewerModal');
+    modal.classList.remove('open');
+    $('imageViewerImg').src = '';
+    document.body.style.overflow = '';
+  }
+
+  function setViewerMode(mode){
+    const modal = $('imageViewerModal');
+    modal.classList.remove('fit', 'zoom');
+    if(mode) modal.classList.add(mode);
+  }
+
+  const bindInput = (id, fn) => {
+    const el = $(id);
+    if(el) el.addEventListener('input', fn);
+  };
+
+  const bindChange = (id, fn) => {
+    const el = $(id);
+    if(el) el.addEventListener('change', fn);
+  };
+
+  bindInput('amountInput', () => {
+    const el = $('amountInput');
+    el.value = formatNumber(el.value);
+    calculate();
+  });
+
+  [
+    'installmentSelect',
+    'categorySelect',
+    'annualRateInput',
+    'billingCheck',
+    'memberPointCheck',
+    'lolaCheck',
+    'superHeroCheck',
+    'memberHiddenCheck',
+    'monthlySpend30Check',
+    'splitStrategyCheck',
+    'naverPayCheck',
+    'interestCheck',
+    'simpleModeCheck'
+  ].forEach(id => bindChange(id, calculate));
+
   calculate();
 </script>
 </body>
