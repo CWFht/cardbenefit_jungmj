@@ -343,6 +343,39 @@
       .image-viewer-modal.zoom .image-viewer-body img{width:1500px;max-width:none}
     }
 
+
+
+    .print-summary-modal .guide-panel{max-width:920px}
+    .print-select-row{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}
+    .print-summary-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .print-preview-box{border:1px solid var(--line);border-radius:16px;background:#f8fafc;padding:12px;margin-top:12px}
+    .print-preview-head{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
+    .print-preview-title{font-size:18px;font-weight:950;letter-spacing:-.04em}
+    .print-preview-meta{font-size:12px;color:var(--muted)}
+    .print-editor-list{display:grid;grid-template-columns:1fr;gap:8px}
+    .print-editor-row{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px}
+    .print-item-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:900}
+    .print-item-line span{white-space:nowrap;color:#1d4ed8;font-weight:950}
+    .print-item-detail{font-size:11px;color:#64748b;margin-top:3px}
+    .print-note-input{width:100%;min-height:42px;margin-top:8px;border:1px solid #d1d5db;border-radius:10px;padding:8px;font-size:12px;resize:vertical;background:#fff}
+    .print-summary-sheet{display:none;background:#fff;color:#111827;padding:0}
+    .print-sheet-title{font-size:22px;font-weight:950;letter-spacing:-.05em;margin-bottom:6px}
+    .print-sheet-sub{font-size:11px;color:#475569;margin-bottom:14px}
+    .print-sheet-card{border:2px solid #111827;border-radius:14px;padding:14px;margin-bottom:12px}
+    .print-sheet-card h2{margin:0 0 8px;font-size:20px;letter-spacing:-.04em}
+    .print-sheet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+    .print-sheet-kpi{border:1px solid #d1d5db;border-radius:10px;padding:8px}
+    .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
+    .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
+    .print-benefit-list{display:grid;grid-template-columns:1fr;gap:7px}
+    .print-benefit-row{border:1px solid #d1d5db;border-radius:10px;padding:9px;break-inside:avoid}
+    .print-benefit-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:950}
+    .print-benefit-line .amount{white-space:nowrap;color:#111827}
+    .print-benefit-detail{font-size:10px;color:#64748b;margin-top:2px}
+    .print-benefit-note{margin-top:7px;border-top:1px dashed #cbd5e1;padding-top:6px;font-size:11px;min-height:24px;white-space:pre-wrap}
+    .print-benefit-note b{font-weight:950}
+    .print-bottom-note{margin-top:12px;font-size:10px;color:#64748b;line-height:1.45}
+
     @media print{
       body{background:#fff}
       .app{max-width:none;padding:0}
@@ -354,6 +387,13 @@
       th,td{font-size:9px;padding:5px}
       .recommend-card,.top3-podium,.kpi-grid{break-inside:avoid}
       .top3-podium{grid-template-columns:repeat(3,1fr)}
+      body.print-summary-mode .app,
+      body.print-summary-mode .guide-modal,
+      body.print-summary-mode .image-viewer-modal{display:none!important}
+      body.print-summary-mode .print-summary-sheet{display:block!important}
+      body.print-summary-mode{background:#fff}
+      body.print-summary-mode *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      @page{size:A4;margin:12mm}
     }
   </style>
 </head>
@@ -419,7 +459,7 @@
 
         <div class="button-row">
           <button class="primary-btn" onclick="calculate()">계산하기</button>
-          <button class="sub-btn" onclick="window.print()">요약 인쇄</button>
+          <button class="sub-btn" onclick="openPrintSummary()">요약 인쇄</button>
         </div>
         <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
         <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
@@ -578,6 +618,29 @@
     </div>
   </div>
 
+  
+
+  <div id="printSummaryModal" class="guide-modal print-summary-modal" onclick="if(event.target.id==='printSummaryModal') closePrintSummary()">
+    <div class="guide-panel">
+      <div class="guide-head">
+        <h3>요약 인쇄 카드 선택</h3>
+        <button class="close-btn" onclick="closePrintSummary()">닫기</button>
+      </div>
+      <div class="print-select-row">
+        <label for="printCardSelect">인쇄할 카드 혜택 선택</label>
+        <select id="printCardSelect" onchange="renderPrintSummaryEditor()"></select>
+        <div class="hint">베스트 1~3위가 아니어도 현재 비교표에 표시된 카드 중 하나를 선택할 수 있습니다.</div>
+      </div>
+      <div id="printSummaryEditor" class="print-preview-box"></div>
+      <div class="print-summary-actions">
+        <button class="primary-btn" onclick="printSelectedCardSummary()">선택 카드 요약 인쇄</button>
+        <button class="sub-btn" onclick="closePrintSummary()">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="printSummarySheet" class="print-summary-sheet"></section>
+
   <div id="imageViewerModal" class="image-viewer-modal" onclick="if(event.target.id==='imageViewerModal') closeImageViewer()">
     <div class="image-viewer-head">
       <div id="imageViewerTitle" class="image-viewer-title">원본 장표</div>
@@ -607,6 +670,10 @@
     const el = $(id);
     return el ? el.checked : def;
   };
+
+
+  let currentRows = [];
+  let currentContext = {amount:0, month:0, category:'normal', annualRate:19.5, flags:{}};
 
   const standardTiers = [
     {min:3000000, benefit:150000},
@@ -990,6 +1057,8 @@
       .filter(r => amount > 0)
       .sort((a,b) => b.netBenefit - a.netBenefit);
 
+    currentRows = rows;
+    currentContext = {amount, month, category, annualRate, flags};
     render(amount, month, category, annualRate, flags, rows);
   }
 
@@ -1190,6 +1259,129 @@
     if(el) el.classList.toggle('open');
   }
 
+
+
+
+
+  function openPrintSummary(){
+    calculate();
+    const modal = $('printSummaryModal');
+    const select = $('printCardSelect');
+    if(!currentRows.length){
+      select.innerHTML = '<option value="">결제금액을 먼저 입력해주세요</option>';
+      $('printSummaryEditor').innerHTML = '<div class="hint">결제금액 입력 후 다시 시도해주세요.</div>';
+    }else{
+      select.innerHTML = currentRows.map((r,i)=>`<option value="${i}">${i+1}위 · ${safeText(r.name)} · 순혜택 ${won(r.netBenefit)}</option>`).join('');
+      select.value = '0';
+      renderPrintSummaryEditor();
+    }
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePrintSummary(){
+    $('printSummaryModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function selectedPrintRow(){
+    const idx = Number(val('printCardSelect',0));
+    return currentRows[idx] || null;
+  }
+
+  function getPrintBenefitItems(row){
+    if(!row) return [];
+    const items = [];
+    const add = (key,label,value,detail='',negative=false) => {
+      if(Number(value||0) !== 0 || key === 'installment' || key === 'netBenefit' || key === 'netCost'){
+        items.push({key,label,value:Number(value||0),detail,negative});
+      }
+    };
+    add('base','금액대 캐시백',row.base,'월간 금액대별 혜택 기준');
+    add('billing','청구할인',row.billing,'카드 청구할인 적용분');
+    add('point','포인트적립',row.point,'롯데 멤버스카드 일시불/유이자할부 결제 시 반영');
+    add('lola','롤라머니',row.lola,'롯데 플랜카드 롤라머니 환산 혜택');
+    add('hero','슈퍼히어로/L.PAY',row.hero,'슈퍼히어로 모델 + L.PAY 등록/결제 조건');
+    add('condition','사용조건부 혜택',row.conditionTotal,`${row.hidden?`멤버스 히든 ${won(row.hidden)} `:''}${row.cond?`월 사용조건 ${won(row.cond)}`:''}`.trim());
+    add('light','라이트/추가 혜택',row.light,'삼성제휴 라이트할부 등 추가 혜택');
+    add('naver','네이버페이/QR 추가혜택',row.naver,'옵션 선택 시 반영');
+    add('installment','할부상태',0,`${row.inst.status} · ${row.inst.label}${row.strategyText?` · ${row.strategyText}`:''}`);
+    add('interest','이자비용 차감',row.interest,row.splitInterest?`24개월분 ${won(row.splitInterest||0)} + 잔액분 ${won(row.balanceInterest||0)}`:'혜택 차감 전 결제원금 기준 예상',true);
+    add('gross','총 혜택',row.gross,'이자 차감 전 혜택 합계');
+    add('netBenefit','최종 순혜택',row.netBenefit,'총 혜택에서 예상 이자비용 차감');
+    add('netCost','실체감가',row.netCost,'결제금액 - 순혜택');
+    return items;
+  }
+
+  function renderPrintSummaryEditor(){
+    const row = selectedPrintRow();
+    const box = $('printSummaryEditor');
+    if(!row){box.innerHTML='<div class="hint">선택 가능한 카드가 없습니다.</div>';return;}
+    const items = getPrintBenefitItems(row);
+    box.innerHTML = `
+      <div class="print-preview-head">
+        <div>
+          <div class="print-preview-title">${safeText(row.name)}</div>
+          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
+        </div>
+      </div>
+      <div class="print-editor-list">
+        ${items.map((item,i)=>`
+          <div class="print-editor-row">
+            <div class="print-item-line"><b>${safeText(item.label)}</b><span>${item.key==='installment'?safeText(row.inst.status):(item.negative?'-':'')+won(item.value)}</span></div>
+            ${item.detail?`<div class="print-item-detail">${safeText(item.detail)}</div>`:''}
+            <textarea class="print-note-input" data-print-note-index="${i}" placeholder="지급조건 / 지급시기 / 특이사항 메모 입력"></textarea>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+
+  function renderPrintSummarySheet(row, items, notes){
+    const sheet = $('printSummarySheet');
+    const now = new Date();
+    const dateText = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+    sheet.innerHTML = `
+      <div class="print-sheet-title">카드 혜택 상담 요약</div>
+      <div class="print-sheet-sub">출력일 ${dateText} · 롯데하이마트 카드 판촉 혜택 비교툴</div>
+      <div class="print-sheet-card">
+        <h2>${safeText(row.name)}</h2>
+        <div class="print-sheet-sub">${safeText(row.memo||'')}</div>
+        <div class="print-sheet-grid">
+          <div class="print-sheet-kpi"><div class="label">결제금액</div><div class="value">${won(currentContext.amount)}</div></div>
+          <div class="print-sheet-kpi"><div class="label">총 혜택</div><div class="value">${won(row.gross)}</div></div>
+          <div class="print-sheet-kpi"><div class="label">순혜택</div><div class="value">${won(row.netBenefit)}</div></div>
+          <div class="print-sheet-kpi"><div class="label">실체감가</div><div class="value">${won(row.netCost)}</div></div>
+        </div>
+      </div>
+      <div class="print-benefit-list">
+        ${items.map((item,i)=>`
+          <div class="print-benefit-row">
+            <div class="print-benefit-line"><span>${safeText(item.label)}</span><span class="amount">${item.key==='installment'?safeText(row.inst.status):(item.negative?'-':'')+won(item.value)}</span></div>
+            ${item.detail?`<div class="print-benefit-detail">${safeText(item.detail)}</div>`:''}
+            <div class="print-benefit-note"><b>특이사항</b> ${safeText(notes[i]||'')}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="print-bottom-note">※ 본 출력물은 상담 시 입력한 결제금액/할부개월/반영 옵션을 기준으로 한 예상 비교 자료입니다. 실제 지급 조건, 지급일, 카드사 승인 조건은 행사 장표와 카드사 정책에 따라 최종 확인이 필요합니다.</div>
+    `;
+  }
+
+  function printSelectedCardSummary(){
+    const row = selectedPrintRow();
+    if(!row) return;
+    const items = getPrintBenefitItems(row);
+    const notes = Array.from(document.querySelectorAll('[data-print-note-index]')).map(el=>el.value || '');
+    renderPrintSummarySheet(row, items, notes);
+    document.body.classList.add('print-summary-mode');
+    closePrintSummary();
+    setTimeout(()=>window.print(), 80);
+  }
+
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('print-summary-mode');
+    const sheet = $('printSummarySheet');
+    if(sheet) sheet.innerHTML = '';
+  });
 
 
   const affiliateCards = [
