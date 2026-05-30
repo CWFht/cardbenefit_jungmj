@@ -264,6 +264,43 @@
       font-size:13px;
     }
 
+
+
+    .full-btn.accent{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff}
+    .issue-card-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .issue-card{
+      display:grid;
+      grid-template-columns:92px 1fr;
+      gap:12px;
+      align-items:start;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(15,23,42,.05);
+    }
+    .issue-img-wrap{border-radius:14px;background:#f8fafc;border:1px solid #e5e7eb;padding:8px;display:flex;align-items:center;justify-content:center;min-height:118px;overflow:hidden}
+    .issue-card-img{display:block;max-width:100%;max-height:150px;border-radius:10px;object-fit:contain}
+    .issue-content{min-width:0}
+    .issue-title{font-size:16px;font-weight:950;letter-spacing:-.04em;margin-bottom:4px}
+    .issue-desc{font-size:11px;color:var(--muted);margin-bottom:8px}
+    .issue-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .issue-actions button{padding:10px 8px;font-size:12px;border-radius:12px}
+    .issue-open{background:#111827;color:#fff}.issue-copy{background:#eef2ff;color:#1e3a8a}.issue-save{background:#f1f5f9;color:#334155}.issue-disabled{opacity:.5;cursor:not-allowed}
+    .issue-url-input{font-size:12px;padding:10px;border-radius:12px;margin-top:8px}
+    .issue-url-text{font-size:11px;color:#475569;background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:8px;margin-top:8px;word-break:break-all;white-space:normal}
+    .issue-qr-row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+    .issue-qr{width:96px;height:96px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;padding:6px;object-fit:contain}
+    .issue-qr-empty{width:96px;height:96px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc;color:#64748b;font-size:11px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px}
+    .issue-toast{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:#dcfce7;color:#166534;font-size:12px;font-weight:850}
+    .issue-toast.open{display:block}
+    @media(min-width:981px){
+      .issue-card-grid{grid-template-columns:repeat(3,1fr)}
+      .issue-card{grid-template-columns:1fr;align-content:start}
+      .issue-img-wrap{min-height:190px}
+      .issue-card-img{max-height:220px}
+    }
+
     .desktop-only{display:none}
     .mobile-only{display:block}
 
@@ -386,6 +423,7 @@
         </div>
         <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
         <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
+        <button class="full-btn accent" onclick="openCardIssueGuide()">제휴카드 발급 링크</button>
       </aside>
 
       <section class="panel">
@@ -524,6 +562,23 @@
         <div id="amountChartImageFallback" class="chart-fallback">월간 금액대별 혜택 장표 이미지를 보려면 HTML 파일과 같은 폴더에 이미지 파일을 <b>monthly-amount-benefit-chart.png</b> 이름으로 저장해주세요.</div>
       </div>
       <div class="guide-note">※ 롯데 클래스카드/우리 일반카드처럼 금액대별 캐시백이 없는 카드는 계산에서 제외했습니다.</div>
+    </div>
+  </div>
+
+
+
+  <div id="cardIssueModal" class="guide-modal" onclick="if(event.target.id==='cardIssueModal') closeCardIssueGuide()">
+    <div class="guide-panel">
+      <div class="guide-head">
+        <h3>제휴카드 발급 링크</h3>
+        <button class="close-btn" onclick="closeCardIssueGuide()">닫기</button>
+      </div>
+      <div id="issueToast" class="issue-toast"></div>
+      <div id="cardIssueGrid" class="issue-card-grid"></div>
+      <div class="guide-note">
+        ※ 삼성·신한·우리 제휴카드 발급 URL을 기본값으로 반영했습니다. 현장에서 링크가 변경되면 URL 입력칸에 새 링크를 붙여넣고 저장하면 해당 기기에서 우선 적용됩니다.<br>
+        ※ QR코드는 등록된 URL 기준으로 자동 생성됩니다. GitHub Pages처럼 HTTPS 환경에서는 URL 복사 버튼이 안정적으로 작동합니다.
+      </div>
     </div>
   </div>
 
@@ -1137,6 +1192,167 @@
   function toggleMobileDetail(i){
     const el = $('mobileCard' + i);
     if(el) el.classList.toggle('open');
+  }
+
+
+
+  const affiliateCards = [
+    {
+      id:'samsung',
+      name:'삼성제휴카드',
+      image:'samsung-partner-card.png',
+      url:'https://www.samsungcard.com/personal/card/simple-apply/UHPPCA0225M0.jsp?code=AAP1883&aIncmpC=QKHIMART36&affcode=HMT4170228',
+      desc:'삼성제휴카드 발급 링크 · QR · URL 복사용'
+    },
+    {
+      id:'shinhan',
+      name:'신한제휴카드',
+      image:'shinhan-partner-card.png',
+      url:'https://m.site.naver.com/20U3L',
+      desc:'신한제휴카드 발급 링크 · QR · URL 복사용'
+    },
+    {
+      id:'woori',
+      name:'우리제휴카드',
+      image:'woori-partner-card.png',
+      url:'https://m.site.naver.com/1Erah',
+      desc:'우리제휴카드 발급 링크 · QR · URL 복사용'
+    }
+  ];
+
+  const issueStorageKey = 'himartAffiliateCardIssueLinksV1';
+
+  function safeText(value){
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  function getSavedIssueLinks(){
+    try{
+      return JSON.parse(localStorage.getItem(issueStorageKey) || '{}');
+    }catch(e){
+      return {};
+    }
+  }
+
+  function getIssueUrl(card){
+    const saved = getSavedIssueLinks();
+    return saved[card.id] || card.url || '';
+  }
+
+  function qrUrl(url){
+    return 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=' + encodeURIComponent(url);
+  }
+
+  function renderCardIssueLinks(){
+    const grid = $('cardIssueGrid');
+    if(!grid) return;
+    grid.innerHTML = affiliateCards.map(card => {
+      const url = getIssueUrl(card);
+      const hasUrl = !!url;
+      return `
+        <div class="issue-card">
+          <div class="issue-img-wrap">
+            <img class="issue-card-img" src="${safeText(card.image)}" alt="${safeText(card.name)} 이미지" onerror="this.style.display='none';" />
+          </div>
+          <div class="issue-content">
+            <div class="issue-title">${safeText(card.name)}</div>
+            <div class="issue-desc">${safeText(card.desc)}</div>
+            <div class="issue-qr-row">
+              ${hasUrl ? `<img class="issue-qr" src="${qrUrl(url)}" alt="${safeText(card.name)} QR코드" />` : `<div class="issue-qr-empty">URL 등록 후<br>QR 생성</div>`}
+              <div style="flex:1;min-width:120px;">
+                <div class="issue-url-text">${hasUrl ? safeText(url) : '발급 URL이 아직 등록되지 않았습니다.'}</div>
+              </div>
+            </div>
+            <input class="issue-url-input" id="issueUrl_${safeText(card.id)}" value="${safeText(url)}" placeholder="발급 URL 붙여넣기" />
+            <div class="issue-actions">
+              <button class="issue-open ${hasUrl ? '' : 'issue-disabled'}" onclick="openIssueUrl('${safeText(card.id)}')">발급 링크 열기</button>
+              <button class="issue-copy ${hasUrl ? '' : 'issue-disabled'}" onclick="copyIssueUrl('${safeText(card.id)}')">URL 복사</button>
+              <button class="issue-save" onclick="saveIssueUrl('${safeText(card.id)}')">URL 저장</button>
+              <button class="issue-copy ${hasUrl ? '' : 'issue-disabled'}" onclick="copyIssueQr('${safeText(card.id)}')">QR 링크 복사</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function findIssueCard(id){
+    return affiliateCards.find(card => card.id === id);
+  }
+
+  function saveIssueUrl(id){
+    const input = $('issueUrl_' + id);
+    if(!input) return;
+    const saved = getSavedIssueLinks();
+    saved[id] = input.value.trim();
+    localStorage.setItem(issueStorageKey, JSON.stringify(saved));
+    renderCardIssueLinks();
+    showIssueToast('발급 URL을 저장했습니다.');
+  }
+
+  function openIssueUrl(id){
+    const card = findIssueCard(id);
+    if(!card) return;
+    const url = getIssueUrl(card);
+    if(!url){showIssueToast('먼저 발급 URL을 등록해주세요.');return;}
+    window.open(url, '_blank', 'noopener');
+  }
+
+  async function copyText(text){
+    if(!text) return false;
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    }catch(e){}
+    const temp = document.createElement('textarea');
+    temp.value = text;
+    temp.style.position = 'fixed';
+    temp.style.left = '-9999px';
+    document.body.appendChild(temp);
+    temp.focus();
+    temp.select();
+    let ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e){ ok = false; }
+    document.body.removeChild(temp);
+    return ok;
+  }
+
+  async function copyIssueUrl(id){
+    const card = findIssueCard(id);
+    if(!card) return;
+    const url = getIssueUrl(card);
+    if(!url){showIssueToast('먼저 발급 URL을 등록해주세요.');return;}
+    const ok = await copyText(url);
+    showIssueToast(ok ? '발급 URL을 복사했습니다.' : '복사에 실패했습니다. URL을 직접 선택해 복사해주세요.');
+  }
+
+  async function copyIssueQr(id){
+    const card = findIssueCard(id);
+    if(!card) return;
+    const url = getIssueUrl(card);
+    if(!url){showIssueToast('먼저 발급 URL을 등록해주세요.');return;}
+    const ok = await copyText(qrUrl(url));
+    showIssueToast(ok ? 'QR 이미지 링크를 복사했습니다.' : '복사에 실패했습니다.');
+  }
+
+  function showIssueToast(message){
+    const toast = $('issueToast');
+    if(!toast) return;
+    toast.textContent = message;
+    toast.classList.add('open');
+    clearTimeout(showIssueToast.timer);
+    showIssueToast.timer = setTimeout(()=>toast.classList.remove('open'), 1800);
+  }
+
+  function openCardIssueGuide(){
+    renderCardIssueLinks();
+    $('cardIssueModal').classList.add('open');
+  }
+
+  function closeCardIssueGuide(){
+    $('cardIssueModal').classList.remove('open');
   }
 
   function openInstallmentGuide(){
