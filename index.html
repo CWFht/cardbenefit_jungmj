@@ -623,11 +623,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>롯데 멤버스카드</td><td>100만원부터 금액대별 캐시백, 일시불/유이자 시 포인트적립 별도</td><td>금액대 캐시백 + 청구할인 + 포인트적립 반영</td></tr>
-            <tr><td>롯데 플랜카드</td><td>20만원 이상 4만원 혜택, 청구할인/롤라머니 별도</td><td>고정혜택 + 청구할인 + 롤라머니 반영</td></tr>
+            <tr><td>롯데 멤버스카드</td><td>300만원부터 금액대별 캐시백, 일시불/유이자 시 포인트적립 별도</td><td>금액대 캐시백 + 청구할인 + 포인트적립 반영</td></tr>
+            <tr><td>롯데 플랜카드</td><td>20만원 이상 4만원 혜택, 청구할인/롤라머니 별도</td><td>플랜카드는 금액대별 표준 캐시백 제외, 고정혜택 중심 반영</td></tr>
+            <tr><td>롯데 W카드</td><td>300만원 이상부터 금액대별 캐시백</td><td>표준 금액대별 혜택 반영</td></tr>
             <tr><td>롯데 클래스카드</td><td>금액대별 캐시백 없음, 청구할인 5% 최대 5만원</td><td>금액대 캐시백 제외</td></tr>
             <tr><td>우리 일반카드</td><td>제휴카드가 아닌 경우 금액대별 캐시백 없음</td><td>금액대 캐시백 제외</td></tr>
-            <tr><td>우리제휴/신한제휴/삼성제휴</td><td>300만원 이상부터 금액대별 캐시백 중심</td><td>표준 금액대별 혜택 반영</td></tr>
+            <tr><td>우리제휴/신한제휴/삼성제휴/삼성 일반 LINK</td><td>300만원 이상부터 금액대별 캐시백 중심</td><td>표준 금액대별 혜택 반영</td></tr>
             <tr><td>KB국민 일반카드</td><td>500만원 이상부터 추가혜택 존재</td><td>500만원 이상 구간부터 반영</td></tr>
           </tbody>
         </table>
@@ -727,8 +728,6 @@
   ];
 
   const memberTiers = [
-    {min:1000000, benefit:50000},
-    {min:2000000, benefit:100000},
     {min:3000000, benefit:150000},
     {min:5000000, benefit:250000},
     {min:7000000, benefit:350000},
@@ -764,7 +763,7 @@
         {type:'free', months:[12], min:1000000, label:'100만원 이상 12개월 무이자'},
         {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
       ],
-      memo:'일시불/유이자할부 시 포인트적립 반영. L.PAY 슈퍼히어로 추가 + 히든 조건부가 핵심.'
+      memo:'300만원 구간부터 금액대 캐시백 반영. 일시불/유이자할부 시 포인트적립, L.PAY 슈퍼히어로 추가 + 히든 조건부가 핵심.'
     },
     {
       name:'롯데 플랜카드',
@@ -782,6 +781,19 @@
         {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
       ],
       memo:'20만원 이상 고정혜택 + 청구할인 + 롤라머니 + 슈퍼히어로 조합.'
+    },
+    {
+      name:'롯데 W카드',
+      type:'lotte',
+      cashbackType:'tier',
+      tiers:standardTiers,
+      supportsNaverPay:false,
+      installmentRules:[
+        {type:'free', months:[0], min:0, label:'일시불'},
+        {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
+        {type:'subscriptionFree', months:[36,48,60], min:0, label:'장표상 36/48/60개월 제외·확인 필요'}
+      ],
+      memo:'월간 금액대별 혜택 장표 기준 300만원 구간부터 금액대 캐시백 반영.'
     },
     {
       name:'롯데 클래스카드',
