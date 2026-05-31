@@ -301,6 +301,10 @@
     .issue-qr-empty{width:96px;height:96px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc;color:#64748b;font-size:11px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px}
     .issue-toast{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:#dcfce7;color:#166534;font-size:12px;font-weight:850}
     .issue-toast.open{display:block}
+    .member-card{grid-template-columns:64px 1fr}
+    .member-icon-wrap{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#dcfce7);display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid #dbeafe}
+    .full-btn.member{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+    @media(min-width:981px){.member-card{grid-template-columns:72px 1fr}.member-icon-wrap{width:72px;height:72px}}
     @media(min-width:981px){
       .issue-card-grid{grid-template-columns:repeat(3,1fr)}
       .issue-card{grid-template-columns:1fr;align-content:start}
@@ -526,6 +530,7 @@
         <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
         <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
         <button class="full-btn accent" onclick="openCardIssueGuide()">제휴카드 발급 링크</button>
+        <button class="full-btn member" onclick="openMemberJoinGuide()">L.POINT 회원등록 링크</button>
       </aside>
 
       <section class="panel">
@@ -683,7 +688,16 @@
     </div>
   </div>
 
-  
+  <div id="memberJoinModal" class="guide-modal" onclick="if(event.target.id==='memberJoinModal') closeMemberJoinGuide()">
+    <div class="guide-panel">
+      <div class="guide-head">
+        <h3>L.POINT 회원등록 링크</h3>
+        <button class="close-btn" onclick="closeMemberJoinGuide()">닫기</button>
+      </div>
+      <div id="memberJoinToast" class="issue-toast"></div>
+      <div id="memberJoinGrid" class="issue-card-grid"></div>
+    </div>
+  </div>
 
   <div id="printSummaryModal" class="guide-modal print-summary-modal" onclick="if(event.target.id==='printSummaryModal') closePrintSummary()">
     <div class="guide-panel">
@@ -1805,6 +1819,90 @@
 
   function closeCardIssueGuide(){
     $('cardIssueModal').classList.remove('open');
+  }
+
+  const memberJoinLinks = [
+    {
+      id:'lpoint_join',
+      name:'L.POINT 회원가입',
+      icon:'👤',
+      url:'https://members.lpoint.com/exView/join/mbrJoin_01_001',
+      desc:'회원등록이 안 되어 있는 고객용 L.POINT 회원가입 링크'
+    },
+    {
+      id:'lpoint_mobile_card',
+      name:'L.POINT 모바일카드/등록',
+      icon:'📱',
+      url:'https://m.lpoint.com/app/card/LWCA800100.do?cop=L320&br=0294&pd=10135#',
+      desc:'모바일 L.POINT 카드 화면으로 바로 연결되는 링크'
+    }
+  ];
+
+  function findMemberJoinLink(id){
+    return memberJoinLinks.find(link => link.id === id);
+  }
+
+  function renderMemberJoinLinks(){
+    const grid = $('memberJoinGrid');
+    if(!grid) return;
+    grid.innerHTML = memberJoinLinks.map(link => `
+      <div class="issue-card member-card">
+        <div class="member-icon-wrap">${safeText(link.icon)}</div>
+        <div class="issue-content">
+          <div class="issue-title">${safeText(link.name)}</div>
+          <div class="issue-desc">${safeText(link.desc)}</div>
+          <div class="issue-qr-row">
+            <img class="issue-qr" src="${qrUrl(link.url)}" alt="${safeText(link.name)} QR코드" />
+            <div style="flex:1;min-width:120px;">
+              <div class="issue-url-text">${safeText(link.url)}</div>
+            </div>
+          </div>
+          <div class="issue-actions">
+            <button class="issue-open" onclick="openMemberJoinUrl('${safeText(link.id)}')">링크 열기</button>
+            <button class="issue-copy" onclick="copyMemberJoinUrl('${safeText(link.id)}')">URL 복사</button>
+            <button class="issue-copy" onclick="copyMemberJoinQr('${safeText(link.id)}')">QR 링크 복사</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function showMemberJoinToast(message){
+    const toast = $('memberJoinToast');
+    if(!toast) return;
+    toast.textContent = message;
+    toast.classList.add('open');
+    clearTimeout(showMemberJoinToast.timer);
+    showMemberJoinToast.timer = setTimeout(()=>toast.classList.remove('open'), 1800);
+  }
+
+  function openMemberJoinUrl(id){
+    const link = findMemberJoinLink(id);
+    if(!link) return;
+    window.open(link.url, '_blank', 'noopener');
+  }
+
+  async function copyMemberJoinUrl(id){
+    const link = findMemberJoinLink(id);
+    if(!link) return;
+    const ok = await copyText(link.url);
+    showMemberJoinToast(ok ? '회원등록 URL을 복사했습니다.' : '복사에 실패했습니다. URL을 직접 선택해 복사해주세요.');
+  }
+
+  async function copyMemberJoinQr(id){
+    const link = findMemberJoinLink(id);
+    if(!link) return;
+    const ok = await copyText(qrUrl(link.url));
+    showMemberJoinToast(ok ? 'QR 이미지 링크를 복사했습니다.' : '복사에 실패했습니다.');
+  }
+
+  function openMemberJoinGuide(){
+    renderMemberJoinLinks();
+    $('memberJoinModal').classList.add('open');
+  }
+
+  function closeMemberJoinGuide(){
+    $('memberJoinModal').classList.remove('open');
   }
 
   function openInstallmentGuide(){
