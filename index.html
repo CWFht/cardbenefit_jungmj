@@ -297,14 +297,30 @@
     .issue-url-input{font-size:12px;padding:10px;border-radius:12px;margin-top:8px}
     .issue-url-text{font-size:11px;color:#475569;background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:8px;margin-top:8px;word-break:break-all;white-space:normal}
     .issue-qr-row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
-    .issue-qr{width:96px;height:96px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;padding:6px;object-fit:contain}
+    .issue-qr{width:96px;height:96px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;padding:6px;object-fit:contain;cursor:zoom-in;transition:transform .15s ease, box-shadow .15s ease}
+    .issue-qr:hover{transform:scale(1.03);box-shadow:0 8px 18px rgba(37,99,235,.14)}
     .issue-qr-empty{width:96px;height:96px;border:1px dashed #cbd5e1;border-radius:12px;background:#f8fafc;color:#64748b;font-size:11px;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px}
+    .qr-viewer-modal{position:fixed;inset:0;background:rgba(2,6,23,.82);display:none;align-items:center;justify-content:center;padding:16px;z-index:140}
+    .qr-viewer-modal.open{display:flex}
+    .qr-viewer-panel{width:min(520px,100%);background:#fff;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.32);padding:18px}
+    .qr-viewer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .qr-viewer-title{font-size:18px;font-weight:950;letter-spacing:-.04em;color:#0f172a}
+    .qr-viewer-close{background:#eef2ff;color:#1e3a8a;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:900}
+    .qr-viewer-body{display:grid;grid-template-columns:1fr;gap:14px;justify-items:center}
+    .qr-viewer-image-wrap{width:100%;max-width:320px;border:1px solid #dbeafe;border-radius:24px;background:#fff;padding:14px;box-shadow:0 14px 32px rgba(15,23,42,.08)}
+    .qr-viewer-image{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain}
+    .qr-viewer-caption{font-size:12px;color:#64748b;text-align:center;line-height:1.5}
+    .qr-viewer-url{width:100%;font-size:12px;color:#334155;background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:10px 12px;word-break:break-all}
+    .qr-viewer-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+    .qr-viewer-actions button{padding:11px 10px;font-size:13px;border-radius:12px}
     .issue-toast{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:#dcfce7;color:#166534;font-size:12px;font-weight:850}
     .issue-toast.open{display:block}
-    .member-card{grid-template-columns:64px 1fr}
-    .member-icon-wrap{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#dcfce7);display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid #dbeafe}
+    .member-card{grid-template-columns:112px 1fr}
+    .member-image-wrap{width:112px;min-height:112px;border-radius:18px;background:linear-gradient(135deg,#f8fafc,#eef2ff);display:flex;align-items:center;justify-content:center;border:1px solid #dbeafe;overflow:hidden;padding:8px}
+    .member-link-img{width:100%;height:100%;max-height:128px;object-fit:contain;border-radius:14px;display:block}
+    .member-icon-wrap{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#dcfce7);display:flex;align-items:center;justify-content:center;font-size:30px;border:1px solid #dbeafe}
     .full-btn.member{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
-    @media(min-width:981px){.member-card{grid-template-columns:72px 1fr}.member-icon-wrap{width:72px;height:72px}}
+    @media(min-width:981px){.member-card{grid-template-columns:1fr}.member-image-wrap{width:100%;min-height:168px}.member-link-img{max-height:188px}.member-icon-wrap{width:86px;height:86px;font-size:34px}}
     @media(min-width:981px){
       .issue-card-grid{grid-template-columns:repeat(3,1fr)}
       .issue-card{grid-template-columns:1fr;align-content:start}
@@ -699,6 +715,26 @@
     </div>
   </div>
 
+  <div id="qrViewerModal" class="qr-viewer-modal" onclick="if(event.target.id==='qrViewerModal') closeQrViewer()">
+    <div class="qr-viewer-panel">
+      <div class="qr-viewer-head">
+        <div id="qrViewerTitle" class="qr-viewer-title">QR 확대 보기</div>
+        <button class="qr-viewer-close" onclick="closeQrViewer()">닫기</button>
+      </div>
+      <div class="qr-viewer-body">
+        <div class="qr-viewer-image-wrap">
+          <img id="qrViewerImage" class="qr-viewer-image" src="" alt="QR 확대 이미지" />
+        </div>
+        <div class="qr-viewer-caption">카메라 촬영이 쉽도록 크게 보여줍니다. 휴대폰은 화면 밝기를 높이면 인식이 더 잘 됩니다.</div>
+        <div id="qrViewerUrl" class="qr-viewer-url"></div>
+        <div class="qr-viewer-actions">
+          <button class="issue-open" onclick="openQrViewerTarget()">링크 열기</button>
+          <button class="issue-copy" onclick="copyQrViewerTarget()">URL 복사</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="printSummaryModal" class="guide-modal print-summary-modal" onclick="if(event.target.id==='printSummaryModal') closePrintSummary()">
     <div class="guide-panel">
       <div class="guide-head">
@@ -755,6 +791,7 @@
 
   let currentRows = [];
   let currentContext = {amount:0, month:0, category:'normal', annualRate:19.5, flags:{}};
+  let currentQrViewerUrl = '';
 
   const standardTiers = [
     {min:3000000, benefit:150000},
@@ -1662,6 +1699,45 @@
   });
 
 
+  function openQrViewer(title, url){
+    if(!url) return;
+    currentQrViewerUrl = url;
+    const modal = $('qrViewerModal');
+    const img = $('qrViewerImage');
+    const titleEl = $('qrViewerTitle');
+    const urlEl = $('qrViewerUrl');
+    if(titleEl) titleEl.textContent = title || 'QR 확대 보기';
+    if(urlEl) urlEl.textContent = url;
+    if(img) img.src = qrUrl(url);
+    if(modal) modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeQrViewer(){
+    const modal = $('qrViewerModal');
+    if(modal) modal.classList.remove('open');
+    const img = $('qrViewerImage');
+    if(img) img.src = '';
+    currentQrViewerUrl = '';
+    document.body.style.overflow = '';
+  }
+
+  function openQrViewerTarget(){
+    if(!currentQrViewerUrl) return;
+    window.open(currentQrViewerUrl, '_blank', 'noopener');
+  }
+
+  async function copyQrViewerTarget(){
+    if(!currentQrViewerUrl) return;
+    const ok = await copyText(currentQrViewerUrl);
+    if($('cardIssueModal') && $('cardIssueModal').classList.contains('open')){
+      showIssueToast(ok ? 'URL을 복사했습니다.' : '복사에 실패했습니다.');
+    }
+    if($('memberJoinModal') && $('memberJoinModal').classList.contains('open')){
+      showMemberJoinToast(ok ? 'URL을 복사했습니다.' : '복사에 실패했습니다.');
+    }
+  }
+
   const affiliateCards = [
     {
       id:'samsung',
@@ -1724,7 +1800,7 @@
             <div class="issue-title">${safeText(card.name)}</div>
             <div class="issue-desc">${safeText(card.desc)}</div>
             <div class="issue-qr-row">
-              ${hasUrl ? `<img class="issue-qr" src="${qrUrl(url)}" alt="${safeText(card.name)} QR코드" />` : `<div class="issue-qr-empty">URL 등록 후<br>QR 생성</div>`}
+              ${hasUrl ? `<img class="issue-qr" src="${qrUrl(url)}" alt="${safeText(card.name)} QR코드" onclick="openQrViewer('${safeText(card.name)} 발급 QR','${safeText(url)}')" />` : `<div class="issue-qr-empty">URL 등록 후<br>QR 생성</div>`}
               <div style="flex:1;min-width:120px;">
                 <div class="issue-url-text">${hasUrl ? safeText(url) : '발급 URL이 아직 등록되지 않았습니다.'}</div>
               </div>
@@ -1735,6 +1811,7 @@
               <button class="issue-copy ${hasUrl ? '' : 'issue-disabled'}" onclick="copyIssueUrl('${safeText(card.id)}')">URL 복사</button>
               <button class="issue-save" onclick="saveIssueUrl('${safeText(card.id)}')">URL 저장</button>
               <button class="issue-copy ${hasUrl ? '' : 'issue-disabled'}" onclick="copyIssueQr('${safeText(card.id)}')">QR 링크 복사</button>
+              <button class="issue-open ${hasUrl ? '' : 'issue-disabled'}" onclick="openQrViewer('${safeText(card.name)} 발급 QR','${safeText(url)}')">QR 확대보기</button>
             </div>
           </div>
         </div>
@@ -1826,6 +1903,7 @@
       id:'lpoint_join',
       name:'L.POINT 회원가입',
       icon:'👤',
+      image:'lpoint-join-image.png',
       url:'https://members.lpoint.com/exView/join/mbrJoin_01_001',
       desc:'회원등록이 안 되어 있는 고객용 L.POINT 회원가입 링크'
     },
@@ -1833,6 +1911,7 @@
       id:'lpoint_mobile_card',
       name:'L.POINT 모바일카드/등록',
       icon:'📱',
+      image:'lpoint-mobile-card-image.png',
       url:'https://m.lpoint.com/app/card/LWCA800100.do?cop=L320&br=0294&pd=10135#',
       desc:'모바일 L.POINT 카드 화면으로 바로 연결되는 링크'
     }
@@ -1847,12 +1926,15 @@
     if(!grid) return;
     grid.innerHTML = memberJoinLinks.map(link => `
       <div class="issue-card member-card">
-        <div class="member-icon-wrap">${safeText(link.icon)}</div>
+        <div class="member-image-wrap">
+          <img class="member-link-img" src="${safeText(link.image)}" alt="${safeText(link.name)} 이미지" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <div class="member-icon-wrap" style="display:none">${safeText(link.icon)}</div>
+        </div>
         <div class="issue-content">
           <div class="issue-title">${safeText(link.name)}</div>
           <div class="issue-desc">${safeText(link.desc)}</div>
           <div class="issue-qr-row">
-            <img class="issue-qr" src="${qrUrl(link.url)}" alt="${safeText(link.name)} QR코드" />
+            <img class="issue-qr" src="${qrUrl(link.url)}" alt="${safeText(link.name)} QR코드" onclick="openQrViewer('${safeText(link.name)} QR','${safeText(link.url)}')" />
             <div style="flex:1;min-width:120px;">
               <div class="issue-url-text">${safeText(link.url)}</div>
             </div>
@@ -1861,6 +1943,7 @@
             <button class="issue-open" onclick="openMemberJoinUrl('${safeText(link.id)}')">링크 열기</button>
             <button class="issue-copy" onclick="copyMemberJoinUrl('${safeText(link.id)}')">URL 복사</button>
             <button class="issue-copy" onclick="copyMemberJoinQr('${safeText(link.id)}')">QR 링크 복사</button>
+            <button class="issue-open" onclick="openQrViewer('${safeText(link.name)} QR','${safeText(link.url)}')">QR 확대보기</button>
           </div>
         </div>
       </div>
