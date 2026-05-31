@@ -395,7 +395,32 @@
     .print-benefit-note{margin-top:9px;border-top:1px dashed #cbd5e1;padding-top:7px;font-size:11px;min-height:30px;white-space:pre-wrap;color:#334155}
     .print-benefit-note b{font-weight:950}
     .print-bottom-note{margin-top:12px;font-size:10px;color:#64748b;line-height:1.45}
-    .capture-render-stage{position:fixed;left:-100000px;top:0;width:860px;background:#fff;z-index:-1;pointer-events:none}
+    .capture-render-stage{position:fixed;left:-100000px;top:0;width:1120px;background:#fff;z-index:-1;pointer-events:none}
+
+    @media print{
+      body.print-summary-mode .print-summary-sheet{display:block!important;width:100%;max-width:none}
+      body.print-summary-mode .print-sheet-title{font-size:18px;margin-bottom:2px}
+      body.print-summary-mode .print-sheet-sub{font-size:9px;margin-bottom:6px}
+      body.print-summary-mode .print-sheet-card{padding:8px;margin-bottom:6px;border-radius:10px}
+      body.print-summary-mode .print-sheet-card h2{font-size:16px;margin-bottom:2px}
+      body.print-summary-mode .print-sheet-grid{gap:5px;margin-top:6px}
+      body.print-summary-mode .print-sheet-kpi{padding:5px;border-radius:8px}
+      body.print-summary-mode .print-sheet-kpi .label{font-size:8px}
+      body.print-summary-mode .print-sheet-kpi .value{font-size:11px}
+      body.print-summary-mode .print-benefit-list{grid-template-columns:repeat(3,1fr);gap:5px}
+      body.print-summary-mode .print-benefit-row{padding:7px 7px 7px 10px;border-radius:9px}
+      body.print-summary-mode .print-benefit-row::before{width:4px}
+      body.print-summary-mode .print-benefit-top{gap:6px}
+      body.print-summary-mode .print-benefit-main{gap:6px}
+      body.print-summary-mode .print-benefit-icon{width:24px;height:24px;border-radius:8px;font-size:12px;flex-basis:24px}
+      body.print-summary-mode .print-benefit-label{font-size:11px}
+      body.print-summary-mode .print-benefit-sub{font-size:8px;line-height:1.25;margin-top:1px}
+      body.print-summary-mode .print-benefit-amount{font-size:9px;padding:4px 6px}
+      body.print-summary-mode .print-benefit-tags{gap:3px;margin-top:4px}
+      body.print-summary-mode .print-tag{font-size:7px;padding:2px 5px}
+      body.print-summary-mode .print-benefit-note{font-size:8px;min-height:16px;margin-top:4px;padding-top:4px;line-height:1.25}
+      body.print-summary-mode .print-bottom-note{font-size:8px;margin-top:6px}
+    }
 
     @media print{
       body{background:#fff}
@@ -1492,41 +1517,54 @@
 <style>
   *{box-sizing:border-box}
   body{margin:0;background:#fff;color:#111827;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;line-height:1.45}
-  .print-page{width:min(920px,100%);margin:0 auto;padding:18px}
-  .print-sheet-title{font-size:24px;font-weight:950;letter-spacing:-.05em;margin-bottom:6px}
-  .print-sheet-sub{font-size:12px;color:#475569;margin-bottom:14px}
-  .print-sheet-card{border:2px solid #111827;border-radius:16px;padding:14px;margin-bottom:12px;break-inside:avoid;background:linear-gradient(180deg,#fff,#f8fafc)}
-  .print-sheet-card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.04em}
-  .print-sheet-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-  .print-sheet-kpi{border:1px solid #d1d5db;border-radius:12px;padding:8px;background:#fff}
-  .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
-  .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
-  .print-benefit-list{display:grid;grid-template-columns:1fr;gap:9px}
-  .print-benefit-row{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:12px;break-inside:avoid;position:relative;overflow:hidden}
-  .print-benefit-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#cbd5e1}
+  .print-page{width:1120px;max-width:100%;margin:0 auto;padding:12px}
+  .print-sheet-title{font-size:20px;font-weight:950;letter-spacing:-.05em;margin-bottom:3px}
+  .print-sheet-sub{font-size:10px;color:#475569;margin-bottom:7px}
+  .print-sheet-card{border:2px solid #111827;border-radius:12px;padding:9px;margin-bottom:7px;break-inside:avoid;background:linear-gradient(180deg,#fff,#f8fafc)}
+  .print-sheet-card h2{margin:0 0 3px;font-size:18px;letter-spacing:-.04em}
+  .print-sheet-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:6px}
+  .print-sheet-kpi{border:1px solid #d1d5db;border-radius:9px;padding:6px;background:#fff}
+  .print-sheet-kpi .label{font-size:8px;color:#64748b;font-weight:800}
+  .print-sheet-kpi .value{font-size:12px;font-weight:950;margin-top:1px}
+  .print-benefit-list{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .print-benefit-row{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:7px 7px 7px 10px;break-inside:avoid;position:relative;overflow:hidden}
+  .print-benefit-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#cbd5e1}
   .tone-blue::before{background:#2563eb}.tone-green::before{background:#16a34a}.tone-violet::before{background:#7c3aed}.tone-orange::before{background:#ea580c}.tone-red::before{background:#dc2626}.tone-slate::before{background:#475569}
-  .print-benefit-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-  .print-benefit-main{display:flex;align-items:flex-start;gap:10px;min-width:0}
-  .print-benefit-icon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#eff6ff;font-size:16px;flex:0 0 34px}
+  .print-benefit-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
+  .print-benefit-main{display:flex;align-items:flex-start;gap:6px;min-width:0}
+  .print-benefit-icon{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#eff6ff;font-size:12px;flex:0 0 24px}
   .tone-green .print-benefit-icon{background:#dcfce7}.tone-violet .print-benefit-icon{background:#f3e8ff}.tone-orange .print-benefit-icon{background:#ffedd5}.tone-red .print-benefit-icon{background:#fee2e2}.tone-slate .print-benefit-icon{background:#e2e8f0}
   .print-benefit-text{min-width:0}
-  .print-benefit-label{font-size:15px;font-weight:950;letter-spacing:-.03em;color:#0f172a}
-  .print-benefit-sub{font-size:11px;color:#64748b;margin-top:3px;line-height:1.4}
-  .print-benefit-amount{white-space:nowrap;border-radius:999px;padding:7px 10px;background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:950}
+  .print-benefit-label{font-size:11px;font-weight:950;letter-spacing:-.03em;color:#0f172a}
+  .print-benefit-sub{font-size:8px;color:#64748b;margin-top:1px;line-height:1.25}
+  .print-benefit-amount{white-space:nowrap;border-radius:999px;padding:4px 6px;background:#eff6ff;color:#1d4ed8;font-size:9px;font-weight:950}
   .tone-red .print-benefit-amount{background:#fee2e2;color:#b91c1c}.tone-slate .print-benefit-amount{background:#e2e8f0;color:#334155}
-  .print-benefit-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .print-tag{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 8px;background:#f1f5f9;color:#334155;font-size:10px;font-weight:850}
-  .print-benefit-note{margin-top:9px;border-top:1px dashed #cbd5e1;padding-top:7px;font-size:11px;min-height:30px;white-space:pre-wrap;color:#334155}
+  .print-benefit-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+  .print-tag{display:inline-flex;align-items:center;gap:2px;border-radius:999px;padding:2px 5px;background:#f1f5f9;color:#334155;font-size:7px;font-weight:850}
+  .print-benefit-note{margin-top:4px;border-top:1px dashed #cbd5e1;padding-top:4px;font-size:8px;min-height:16px;white-space:pre-wrap;color:#334155;line-height:1.25}
   .print-benefit-note b{font-weight:950}
-  .print-bottom-note{margin-top:12px;font-size:10px;color:#64748b;line-height:1.45}
+  .print-bottom-note{margin-top:6px;font-size:8px;color:#64748b;line-height:1.35}
   @media print{
-    @page{size:A4;margin:12mm}
-    .print-page{width:100%;padding:0}
+    @page{size:A4 landscape;margin:7mm}
+    html,body{width:100%;height:100%;overflow:hidden}
+    .print-page{width:100%;max-width:none;padding:0}
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
+  @media screen and (min-width:681px){
+    body{background:#e5e7eb}
+    .print-page{background:#fff;box-shadow:0 10px 30px rgba(15,23,42,.12);margin-top:14px;margin-bottom:14px}
+  }
   @media(max-width:680px){
-    .print-page{padding:14px}
+    .print-page{width:100%;padding:14px}
     .print-sheet-grid{grid-template-columns:repeat(2,1fr)}
+    .print-benefit-list{grid-template-columns:1fr}
+    .print-benefit-row{padding:12px;border-radius:16px}
+    .print-benefit-icon{width:34px;height:34px;border-radius:12px;font-size:16px;flex-basis:34px}
+    .print-benefit-label{font-size:15px}
+    .print-benefit-sub{font-size:11px;line-height:1.4}
+    .print-benefit-amount{font-size:13px;padding:7px 10px}
+    .print-tag{font-size:10px;padding:5px 8px}
+    .print-benefit-note{font-size:11px;min-height:30px;margin-top:9px;padding-top:7px}
   }
 </style>
 </head>
