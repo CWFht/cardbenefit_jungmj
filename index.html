@@ -148,7 +148,7 @@
     .strategy-guide b{color:#7c2d12}
 
     .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:#fff}
-    table{width:100%;border-collapse:collapse;min-width:1220px}
+    table{width:100%;border-collapse:collapse;min-width:1320px}
     th,td{padding:10px 9px;border-bottom:1px solid var(--line);font-size:12px;text-align:left;vertical-align:top;white-space:nowrap}
     th{position:sticky;top:0;background:#f8fafc;z-index:1;color:#475569;font-weight:950}
     tr.rank-1 td{background:#fffaf0}
@@ -371,7 +371,7 @@
     .print-sheet-sub{font-size:11px;color:#475569;margin-bottom:14px}
     .print-sheet-card{border:2px solid #111827;border-radius:14px;padding:14px;margin-bottom:12px}
     .print-sheet-card h2{margin:0 0 8px;font-size:20px;letter-spacing:-.04em}
-    .print-sheet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+    .print-sheet-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
     .print-sheet-kpi{border:1px solid #d1d5db;border-radius:10px;padding:8px}
     .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
     .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
@@ -446,6 +446,10 @@
           </div>
         </div>
 
+        <label for="productCashbackInput">제품별 캐시백 혜택</label>
+        <input id="productCashbackInput" inputmode="numeric" value="0" placeholder="예: 100,000" />
+        <div class="hint">상품권, 제조사 캐시백, 품목별 추가 혜택처럼 카드와 별도로 발생하는 제품 혜택을 입력합니다. 모든 카드 비교와 요약 인쇄에 동일하게 반영됩니다.</div>
+
         <label for="annualRateInput">일반 유이자 예상 연이율</label>
         <input id="annualRateInput" inputmode="decimal" value="19.5" />
         <div class="hint">무이자/고객유이자 조건이 없는 경우, 혜택 차감 전 결제원금 기준으로 예상 이자를 계산합니다.</div>
@@ -490,13 +494,14 @@
         <details class="info-box">
           <summary>계산 기준 보기</summary>
           <div style="margin-top:10px;">
-            ① 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
-            ② 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
-            ③ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
-            ④ 멤버스 히든은 최초 40만원 이상 결제 + 월 30만원 이상 사용 시 1.1만원 × 36개월 반영<br>
-            ⑤ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 24개월은 1.3만원 × 24개월 반영<br>
-            ⑥ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외<br>
-            ⑦ 우리/삼성은 최소금액만 24개월로 분리 결제하는 전략 행을 별도 표시
+            ① 제품별 캐시백은 상품권·제조사 캐시백 등 카드와 별도로 발생하는 혜택으로 모든 카드 비교에 동일 반영<br>
+            ② 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
+            ③ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
+            ④ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
+            ⑤ 멤버스 히든은 최초 40만원 이상 결제 + 월 30만원 이상 사용 시 1.1만원 × 36개월 반영<br>
+            ⑥ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 24개월은 1.3만원 × 24개월 반영<br>
+            ⑦ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외<br>
+            ⑧ 우리/삼성은 최소금액만 24개월로 분리 결제하는 전략 행을 별도 표시
           </div>
         </details>
 
@@ -526,6 +531,7 @@
                   <th>순위</th>
                   <th>카드명</th>
                   <th>금액대 캐시백</th>
+                  <th>제품별 캐시백</th>
                   <th>청구할인</th>
                   <th>포인트적립</th>
                   <th>롤라머니</th>
@@ -956,7 +962,7 @@
     return {status:'일반 유이자 예상', label:`예상 연 ${annualRate}%`, interest, className:'interest'};
   }
 
-  function buildBaseRows(amount, month, category, annualRate, flags){
+  function buildBaseRows(amount, month, category, annualRate, flags, productCashback){
     return cards.map(card => {
       const inst = getInstallmentInfo(card, amount, month, category, annualRate, flags);
       const base = baseCashback(card, amount);
@@ -969,14 +975,16 @@
       const conditionTotal = hidden + cond;
       const light = lightBenefit(card, amount, flags);
       const naver = naverPayBenefit(card, amount, flags);
+      const product = Number(productCashback || 0);
       const interest = inst.interest;
-      const gross = base + billing + point + lola + hero + conditionTotal + light + naver;
+      const gross = base + product + billing + point + lola + hero + conditionTotal + light + naver;
       const netBenefit = gross - interest;
 
       return {
         ...card,
         rowType:'normal',
         base,
+        product,
         billing,
         point,
         lola,
@@ -996,7 +1004,7 @@
     });
   }
 
-  function buildStrategyRows(amount, month, category, annualRate, flags){
+  function buildStrategyRows(amount, month, category, annualRate, flags, productCashback){
     if(flags.simple || !flags.split || amount <= 0) return [];
 
     return cards.filter(c => c.split && amount >= c.split.amount).map(card => {
@@ -1011,7 +1019,8 @@
       const conditionTotal = s.monthly * s.months;
       const light = card.type === 'samsung' && amount >= s.lightMin ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
-      const gross = base + conditionTotal + light + naver;
+      const product = Number(productCashback || 0);
+      const gross = base + product + conditionTotal + light + naver;
       const netBenefit = gross - interest;
       const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
       const strategyText = `${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balancePayText}`;
@@ -1021,6 +1030,7 @@
         name:`${card.name} · 분할전략`,
         rowType:'strategy',
         base,
+        product,
         billing:0,
         point:0,
         lola:0,
@@ -1053,6 +1063,7 @@
     const amount = Number(onlyNumber(val('amountInput')));
     const installmentRaw = val('installmentSelect', '');
     const month = installmentRaw === '' ? null : Number(installmentRaw);
+    const productCashback = Number(onlyNumber(val('productCashbackInput')));
     const category = val('categorySelect', 'normal');
     const annualRate = Number(val('annualRateInput', 19.5) || 0);
     const flags = {
@@ -1067,20 +1078,20 @@
       interest:checked('interestCheck', true),
       simple:checked('simpleModeCheck', false)
     };
-    return {amount, month, category, annualRate, flags};
+    return {amount, month, productCashback, category, annualRate, flags};
   }
 
   function calculate(){
-    const {amount, month, category, annualRate, flags} = getInputs();
+    const {amount, month, productCashback, category, annualRate, flags} = getInputs();
     const rows = [
-      ...buildBaseRows(amount, month, category, annualRate, flags),
-      ...buildStrategyRows(amount, month, category, annualRate, flags)
+      ...buildBaseRows(amount, month, category, annualRate, flags, productCashback),
+      ...buildStrategyRows(amount, month, category, annualRate, flags, productCashback)
     ]
       .filter(r => amount > 0)
       .sort((a,b) => b.netBenefit - a.netBenefit);
 
     currentRows = rows;
-    currentContext = {amount, month, category, annualRate, flags};
+    currentContext = {amount, month, productCashback, category, annualRate, flags};
     render(amount, month, category, annualRate, flags, rows);
   }
 
@@ -1137,6 +1148,7 @@
     const tags = [];
     if(best.rowType === 'strategy') tags.push('<span class="badge warn">분할전략</span>');
     if(best.conditionTotal > 0) tags.push('<span class="badge ok">사용조건부</span>');
+    if(best.product > 0) tags.push('<span class="badge ok">제품별 캐시백</span>');
     if(best.point > 0) tags.push('<span class="badge ok">포인트적립</span>');
     if(best.interest > 0) tags.push('<span class="badge warn">이자반영</span>');
     else tags.push('<span class="badge ok">무이자/일시불</span>');
@@ -1181,6 +1193,7 @@
         <div class="podium-sub">이자 반영 후 순혜택</div>
         <div class="podium-sub">실체감가 ${won(r.netCost)}</div>
         <div class="podium-mini">
+          ${r.product > 0 ? '<span>제품캐시백</span>' : ''}
           ${r.conditionTotal > 0 ? '<span>사용조건부</span>' : ''}
           ${r.rowType === 'strategy' ? '<span>분할전략</span>' : ''}
           ${r.interest === 0 ? '<span>무이자</span>' : ''}
@@ -1227,6 +1240,7 @@
         <button class="toggle-detail" onclick="toggleMobileDetail(${i})" type="button">혜택 세부항목 보기</button>
         <div class="mobile-card-grid detail-grid">
           ${r.base ? `<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>` : ''}
+          ${r.product ? `<div class="mobile-card-item"><div class="m-label">제품별 캐시백</div><div class="m-value">${won(r.product)}</div></div>` : ''}
           ${r.billing ? `<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>` : ''}
           ${r.point ? `<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>` : ''}
           ${r.lola ? `<div class="mobile-card-item"><div class="m-label">롤라머니</div><div class="m-value">${won(r.lola)}</div></div>` : ''}
@@ -1252,6 +1266,7 @@
           ${r.strategyText ? `<br><span class="small">${r.strategyText}</span>` : ''}
         </td>
         <td>${won(r.base)}</td>
+        <td>${won(r.product)}</td>
         <td>${won(r.billing)}</td>
         <td>${r.point > 0 ? `<b>${won(r.point)}</b><br><span class="small">일시불/유이자</span>` : won(0)}</td>
         <td>${won(r.lola)}</td>
@@ -1320,6 +1335,7 @@
       }
     };
     add('base','금액대 캐시백',row.base,'월간 금액대별 혜택 기준');
+    add('product','제품별 캐시백',row.product,'상품권·제조사 캐시백·품목별 추가 혜택 등 수기 입력분');
     add('billing','청구할인',row.billing,'카드 청구할인 적용분');
     add('point','포인트적립',row.point,'롯데 멤버스카드 일시불/유이자할부 결제 시 반영');
     add('lola','롤라머니',row.lola,'롯데 플랜카드 롤라머니 환산 혜택');
@@ -1344,7 +1360,7 @@
       <div class="print-preview-head">
         <div>
           <div class="print-preview-title">${safeText(row.name)}</div>
-          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
+          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
         </div>
       </div>
       <div class="print-editor-list">
@@ -1369,6 +1385,7 @@
         <div class="print-sheet-sub">${safeText(row.memo||'')}</div>
         <div class="print-sheet-grid">
           <div class="print-sheet-kpi"><div class="label">결제금액</div><div class="value">${won(currentContext.amount)}</div></div>
+          <div class="print-sheet-kpi"><div class="label">제품별 캐시백</div><div class="value">${won(row.product)}</div></div>
           <div class="print-sheet-kpi"><div class="label">총 혜택</div><div class="value">${won(row.gross)}</div></div>
           <div class="print-sheet-kpi"><div class="label">순혜택</div><div class="value">${won(row.netBenefit)}</div></div>
           <div class="print-sheet-kpi"><div class="label">실체감가</div><div class="value">${won(row.netCost)}</div></div>
@@ -1407,7 +1424,7 @@
   .print-sheet-sub{font-size:12px;color:#475569;margin-bottom:14px}
   .print-sheet-card{border:2px solid #111827;border-radius:14px;padding:14px;margin-bottom:12px;break-inside:avoid}
   .print-sheet-card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.04em}
-  .print-sheet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+  .print-sheet-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
   .print-sheet-kpi{border:1px solid #d1d5db;border-radius:10px;padding:8px}
   .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
   .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
@@ -1713,6 +1730,12 @@
 
   bindInput('amountInput', () => {
     const el = $('amountInput');
+    el.value = formatNumber(el.value);
+    calculate();
+  });
+
+  bindInput('productCashbackInput', () => {
+    const el = $('productCashbackInput');
     el.value = formatNumber(el.value);
     calculate();
   });
