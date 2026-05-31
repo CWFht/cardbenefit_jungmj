@@ -355,34 +355,47 @@
 
     .print-summary-modal .guide-panel{max-width:920px}
     .print-select-row{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}
-    .print-summary-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-    .print-preview-box{border:1px solid var(--line);border-radius:16px;background:#f8fafc;padding:12px;margin-top:12px}
-    .print-preview-head{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
+    .print-summary-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+    .print-preview-box{border:1px solid var(--line);border-radius:18px;background:#f8fafc;padding:14px;margin-top:12px}
+    .print-preview-head{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}
     .print-preview-title{font-size:18px;font-weight:950;letter-spacing:-.04em}
     .print-preview-meta{font-size:12px;color:var(--muted)}
-    .print-editor-list{display:grid;grid-template-columns:1fr;gap:8px}
-    .print-editor-row{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px}
-    .print-item-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:900}
-    .print-item-line span{white-space:nowrap;color:#1d4ed8;font-weight:950}
-    .print-item-detail{font-size:11px;color:#64748b;margin-top:3px}
-    .print-note-input{width:100%;min-height:42px;margin-top:8px;border:1px solid #d1d5db;border-radius:10px;padding:8px;font-size:12px;resize:vertical;background:#fff}
+    .print-editor-list{display:grid;grid-template-columns:1fr;gap:10px}
+    .print-editor-row,.print-benefit-row{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:12px;break-inside:avoid;position:relative;overflow:hidden}
+    .print-editor-row::before,.print-benefit-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#cbd5e1}
+    .tone-blue::before{background:#2563eb}.tone-green::before{background:#16a34a}.tone-violet::before{background:#7c3aed}.tone-orange::before{background:#ea580c}.tone-red::before{background:#dc2626}.tone-slate::before{background:#475569}
+    .print-item-top,.print-benefit-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .print-item-main,.print-benefit-main{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .print-item-icon,.print-benefit-icon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#eff6ff;font-size:16px;flex:0 0 34px}
+    .tone-green .print-item-icon,.tone-green .print-benefit-icon{background:#dcfce7}
+    .tone-violet .print-item-icon,.tone-violet .print-benefit-icon{background:#f3e8ff}
+    .tone-orange .print-item-icon,.tone-orange .print-benefit-icon{background:#ffedd5}
+    .tone-red .print-item-icon,.tone-red .print-benefit-icon{background:#fee2e2}
+    .tone-slate .print-item-icon,.tone-slate .print-benefit-icon{background:#e2e8f0}
+    .print-item-text,.print-benefit-text{min-width:0}
+    .print-item-label,.print-benefit-label{font-size:15px;font-weight:950;letter-spacing:-.03em;color:#0f172a}
+    .print-item-sub,.print-benefit-sub{font-size:11px;color:#64748b;margin-top:3px;line-height:1.4}
+    .print-item-amount,.print-benefit-amount{white-space:nowrap;border-radius:999px;padding:7px 10px;background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:950}
+    .tone-red .print-item-amount,.tone-red .print-benefit-amount{background:#fee2e2;color:#b91c1c}
+    .tone-slate .print-item-amount,.tone-slate .print-benefit-amount{background:#e2e8f0;color:#334155}
+    .print-item-tags,.print-benefit-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .print-tag{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 8px;background:#f1f5f9;color:#334155;font-size:10px;font-weight:850}
+    .print-note-label{font-size:11px;font-weight:900;color:#475569;margin-top:9px}
+    .print-note-input{width:100%;min-height:52px;margin-top:6px;border:1px solid #d1d5db;border-radius:12px;padding:10px;font-size:12px;resize:vertical;background:#fff}
     .print-summary-sheet{display:none;background:#fff;color:#111827;padding:0}
     .print-sheet-title{font-size:22px;font-weight:950;letter-spacing:-.05em;margin-bottom:6px}
     .print-sheet-sub{font-size:11px;color:#475569;margin-bottom:14px}
-    .print-sheet-card{border:2px solid #111827;border-radius:14px;padding:14px;margin-bottom:12px}
+    .print-sheet-card{border:2px solid #111827;border-radius:16px;padding:14px;margin-bottom:12px;background:linear-gradient(180deg,#fff,#f8fafc)}
     .print-sheet-card h2{margin:0 0 8px;font-size:20px;letter-spacing:-.04em}
     .print-sheet-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-    .print-sheet-kpi{border:1px solid #d1d5db;border-radius:10px;padding:8px}
+    .print-sheet-kpi{border:1px solid #d1d5db;border-radius:12px;padding:8px;background:#fff}
     .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
     .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
-    .print-benefit-list{display:grid;grid-template-columns:1fr;gap:7px}
-    .print-benefit-row{border:1px solid #d1d5db;border-radius:10px;padding:9px;break-inside:avoid}
-    .print-benefit-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:950}
-    .print-benefit-line .amount{white-space:nowrap;color:#111827}
-    .print-benefit-detail{font-size:10px;color:#64748b;margin-top:2px}
-    .print-benefit-note{margin-top:7px;border-top:1px dashed #cbd5e1;padding-top:6px;font-size:11px;min-height:24px;white-space:pre-wrap}
+    .print-benefit-list{display:grid;grid-template-columns:1fr;gap:9px}
+    .print-benefit-note{margin-top:9px;border-top:1px dashed #cbd5e1;padding-top:7px;font-size:11px;min-height:30px;white-space:pre-wrap;color:#334155}
     .print-benefit-note b{font-weight:950}
     .print-bottom-note{margin-top:12px;font-size:10px;color:#64748b;line-height:1.45}
+    .capture-render-stage{position:fixed;left:-100000px;top:0;width:860px;background:#fff;z-index:-1;pointer-events:none}
 
     @media print{
       body{background:#fff}
@@ -660,6 +673,7 @@
       <div id="printSummaryEditor" class="print-preview-box"></div>
       <div class="print-summary-actions">
         <button class="primary-btn" onclick="printSelectedCardSummary()">선택 카드 요약 인쇄</button>
+        <button class="sub-btn" onclick="saveSelectedCardSummaryAsImage()">이미지 저장하기</button>
         <button class="sub-btn" onclick="closePrintSummary()">취소</button>
       </div>
     </div>
@@ -683,6 +697,7 @@
     </div>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
   const $ = id => document.getElementById(id);
   const won = n => Math.round(Number(n || 0)).toLocaleString('ko-KR') + '원';
@@ -1326,12 +1341,37 @@
     return currentRows[idx] || null;
   }
 
+  function sanitizeFileName(name){
+    return String(name || '요약').replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_');
+  }
+
+  function getPrintItemMeta(key){
+    const map = {
+      base:{icon:'💳', tone:'blue', tags:['기본혜택','금액대']},
+      product:{icon:'🎁', tone:'green', tags:['제품혜택','수기입력']},
+      billing:{icon:'🧾', tone:'blue', tags:['청구할인']},
+      point:{icon:'⭐', tone:'violet', tags:['포인트']},
+      lola:{icon:'💰', tone:'orange', tags:['플랜혜택']},
+      hero:{icon:'🚀', tone:'orange', tags:['L.PAY','추가혜택']},
+      condition:{icon:'✅', tone:'green', tags:['사용조건부']},
+      light:{icon:'➕', tone:'blue', tags:['추가혜택']},
+      naver:{icon:'🟢', tone:'green', tags:['옵션혜택']},
+      installment:{icon:'🗓️', tone:'slate', tags:['할부조건']},
+      interest:{icon:'➖', tone:'red', tags:['비용차감']},
+      gross:{icon:'📦', tone:'blue', tags:['합계']},
+      netBenefit:{icon:'🏁', tone:'violet', tags:['최종결과']},
+      netCost:{icon:'🏷️', tone:'slate', tags:['체감금액']}
+    };
+    return map[key] || {icon:'•', tone:'slate', tags:[]};
+  }
+
   function getPrintBenefitItems(row){
     if(!row) return [];
     const items = [];
     const add = (key,label,value,detail='',negative=false) => {
       if(Number(value||0) !== 0 || key === 'installment' || key === 'netBenefit' || key === 'netCost'){
-        items.push({key,label,value:Number(value||0),detail,negative});
+        const meta = getPrintItemMeta(key);
+        items.push({key,label,value:Number(value||0),detail,negative,icon:meta.icon,tone:meta.tone,tags:meta.tags});
       }
     };
     add('base','금액대 캐시백',row.base,'월간 금액대별 혜택 기준');
@@ -1365,14 +1405,25 @@
       </div>
       <div class="print-editor-list">
         ${items.map((item,i)=>`
-          <div class="print-editor-row">
-            <div class="print-item-line"><b>${safeText(item.label)}</b><span>${item.key==='installment'?safeText(row.inst.status):(item.negative?'-':'')+won(item.value)}</span></div>
-            ${item.detail?`<div class="print-item-detail">${safeText(item.detail)}</div>`:''}
+          <div class="print-editor-row tone-${safeText(item.tone)}">
+            <div class="print-item-top">
+              <div class="print-item-main">
+                <div class="print-item-icon">${safeText(item.icon)}</div>
+                <div class="print-item-text">
+                  <div class="print-item-label">${safeText(item.label)}</div>
+                  ${item.detail?`<div class="print-item-sub">${safeText(item.detail)}</div>`:''}
+                </div>
+              </div>
+              <div class="print-item-amount">${item.key==='installment'?safeText(row.inst.status):(item.negative?'-':'')+won(item.value)}</div>
+            </div>
+            <div class="print-item-tags">${(item.tags||[]).map(tag=>`<span class="print-tag">${safeText(tag)}</span>`).join('')}</div>
+            <div class="print-note-label">특이사항 메모</div>
             <textarea class="print-note-input" data-print-note-index="${i}" placeholder="지급조건 / 지급시기 / 특이사항 메모 입력"></textarea>
           </div>
         `).join('')}
       </div>`;
   }
+
 
   function buildPrintSummaryMarkup(row, items, notes){
     const now = new Date();
@@ -1393,9 +1444,18 @@
       </div>
       <div class="print-benefit-list">
         ${items.map((item,i)=>`
-          <div class="print-benefit-row">
-            <div class="print-benefit-line"><span>${safeText(item.label)}</span><span class="amount">${item.key==='installment'?safeText(row.inst.status):(item.negative?'-':'')+won(item.value)}</span></div>
-            ${item.detail?`<div class="print-benefit-detail">${safeText(item.detail)}</div>`:''}
+          <div class="print-benefit-row tone-${safeText(item.tone)}">
+            <div class="print-benefit-top">
+              <div class="print-benefit-main">
+                <div class="print-benefit-icon">${safeText(item.icon)}</div>
+                <div class="print-benefit-text">
+                  <div class="print-benefit-label">${safeText(item.label)}</div>
+                  ${item.detail?`<div class="print-benefit-sub">${safeText(item.detail)}</div>`:''}
+                </div>
+              </div>
+              <div class="print-benefit-amount">${item.key==='installment'?safeText(row.inst.status):(item.negative?'-':'')+won(item.value)}</div>
+            </div>
+            <div class="print-benefit-tags">${(item.tags||[]).map(tag=>`<span class="print-tag">${safeText(tag)}</span>`).join('')}</div>
             <div class="print-benefit-note"><b>특이사항</b> ${safeText(notes[i]||'')}</div>
           </div>
         `).join('')}
@@ -1403,6 +1463,7 @@
       <div class="print-bottom-note">※ 본 출력물은 상담 시 입력한 결제금액/할부개월/반영 옵션을 기준으로 한 예상 비교 자료입니다. 실제 지급 조건, 지급일, 카드사 승인 조건은 행사 장표와 카드사 정책에 따라 최종 확인이 필요합니다.</div>
     `;
   }
+
 
   function renderPrintSummarySheet(row, items, notes){
     const sheet = $('printSummarySheet');
@@ -1422,18 +1483,28 @@
   .print-page{width:min(920px,100%);margin:0 auto;padding:18px}
   .print-sheet-title{font-size:24px;font-weight:950;letter-spacing:-.05em;margin-bottom:6px}
   .print-sheet-sub{font-size:12px;color:#475569;margin-bottom:14px}
-  .print-sheet-card{border:2px solid #111827;border-radius:14px;padding:14px;margin-bottom:12px;break-inside:avoid}
+  .print-sheet-card{border:2px solid #111827;border-radius:16px;padding:14px;margin-bottom:12px;break-inside:avoid;background:linear-gradient(180deg,#fff,#f8fafc)}
   .print-sheet-card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.04em}
   .print-sheet-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
-  .print-sheet-kpi{border:1px solid #d1d5db;border-radius:10px;padding:8px}
+  .print-sheet-kpi{border:1px solid #d1d5db;border-radius:12px;padding:8px;background:#fff}
   .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
   .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
-  .print-benefit-list{display:grid;grid-template-columns:1fr;gap:7px}
-  .print-benefit-row{border:1px solid #d1d5db;border-radius:10px;padding:9px;break-inside:avoid}
-  .print-benefit-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:950}
-  .print-benefit-line .amount{white-space:nowrap;color:#111827}
-  .print-benefit-detail{font-size:10px;color:#64748b;margin-top:2px}
-  .print-benefit-note{margin-top:7px;border-top:1px dashed #cbd5e1;padding-top:6px;font-size:11px;min-height:24px;white-space:pre-wrap}
+  .print-benefit-list{display:grid;grid-template-columns:1fr;gap:9px}
+  .print-benefit-row{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:12px;break-inside:avoid;position:relative;overflow:hidden}
+  .print-benefit-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#cbd5e1}
+  .tone-blue::before{background:#2563eb}.tone-green::before{background:#16a34a}.tone-violet::before{background:#7c3aed}.tone-orange::before{background:#ea580c}.tone-red::before{background:#dc2626}.tone-slate::before{background:#475569}
+  .print-benefit-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .print-benefit-main{display:flex;align-items:flex-start;gap:10px;min-width:0}
+  .print-benefit-icon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#eff6ff;font-size:16px;flex:0 0 34px}
+  .tone-green .print-benefit-icon{background:#dcfce7}.tone-violet .print-benefit-icon{background:#f3e8ff}.tone-orange .print-benefit-icon{background:#ffedd5}.tone-red .print-benefit-icon{background:#fee2e2}.tone-slate .print-benefit-icon{background:#e2e8f0}
+  .print-benefit-text{min-width:0}
+  .print-benefit-label{font-size:15px;font-weight:950;letter-spacing:-.03em;color:#0f172a}
+  .print-benefit-sub{font-size:11px;color:#64748b;margin-top:3px;line-height:1.4}
+  .print-benefit-amount{white-space:nowrap;border-radius:999px;padding:7px 10px;background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:950}
+  .tone-red .print-benefit-amount{background:#fee2e2;color:#b91c1c}.tone-slate .print-benefit-amount{background:#e2e8f0;color:#334155}
+  .print-benefit-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .print-tag{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 8px;background:#f1f5f9;color:#334155;font-size:10px;font-weight:850}
+  .print-benefit-note{margin-top:9px;border-top:1px dashed #cbd5e1;padding-top:7px;font-size:11px;min-height:30px;white-space:pre-wrap;color:#334155}
   .print-benefit-note b{font-weight:950}
   .print-bottom-note{margin-top:12px;font-size:10px;color:#64748b;line-height:1.45}
   @media print{
@@ -1469,6 +1540,36 @@
       }
     }, 350);
     return true;
+  }
+
+  async function saveSelectedCardSummaryAsImage(){
+    const row = selectedPrintRow();
+    if(!row) return;
+    const items = getPrintBenefitItems(row);
+    const notes = Array.from(document.querySelectorAll('[data-print-note-index]')).map(el=>el.value || '');
+    const markup = buildPrintSummaryMarkup(row, items, notes);
+    const stage = document.createElement('div');
+    stage.className = 'capture-render-stage';
+    stage.innerHTML = `<main class="print-page">${markup}</main>`;
+    document.body.appendChild(stage);
+    try{
+      if(typeof html2canvas !== 'function') throw new Error('html2canvas not loaded');
+      const target = stage.firstElementChild;
+      const canvas = await html2canvas(target, {scale:2, backgroundColor:'#ffffff', useCORS:true});
+      const a = document.createElement('a');
+      const date = new Date();
+      const stamp = `${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}`;
+      a.href = canvas.toDataURL('image/png');
+      a.download = `카드혜택요약_${sanitizeFileName(row.name)}_${stamp}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }catch(err){
+      console.error(err);
+      alert('이미지 저장에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }finally{
+      stage.remove();
+    }
   }
 
   function printSelectedCardSummary(){
