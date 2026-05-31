@@ -546,7 +546,7 @@
         <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
         <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
         <button class="full-btn accent" onclick="openCardIssueGuide()">제휴카드 발급 링크</button>
-        <button class="full-btn member" onclick="openMemberJoinGuide()">L.POINT 회원등록 링크</button>
+        <button class="full-btn member" onclick="openMemberJoinGuide()">회원등록 링크</button>
       </aside>
 
       <section class="panel">
@@ -707,7 +707,7 @@
   <div id="memberJoinModal" class="guide-modal" onclick="if(event.target.id==='memberJoinModal') closeMemberJoinGuide()">
     <div class="guide-panel">
       <div class="guide-head">
-        <h3>L.POINT 회원등록 링크</h3>
+        <h3>회원등록 링크</h3>
         <button class="close-btn" onclick="closeMemberJoinGuide()">닫기</button>
       </div>
       <div id="memberJoinToast" class="issue-toast"></div>
@@ -1901,11 +1901,11 @@
   const memberJoinLinks = [
     {
       id:'lpoint_join',
-      name:'L.POINT 회원가입',
+      name:'하이마트 회원등록/로그인',
       icon:'👤',
       image:'lpoint-join-image.png',
-      url:'https://members.lpoint.com/exView/join/mbrJoin_01_001',
-      desc:'회원등록이 안 되어 있는 고객용 L.POINT 회원가입 링크'
+      url:'https://secure.e-himart.co.kr/app/login/login?returnUrl=/app/mypage/mypageMain',
+      desc:'회원등록 또는 로그인 후 마이페이지로 이동하는 링크'
     },
     {
       id:'lpoint_mobile_card',
