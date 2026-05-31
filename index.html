@@ -1358,11 +1358,10 @@
       </div>`;
   }
 
-  function renderPrintSummarySheet(row, items, notes){
-    const sheet = $('printSummarySheet');
+  function buildPrintSummaryMarkup(row, items, notes){
     const now = new Date();
     const dateText = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
-    sheet.innerHTML = `
+    return `
       <div class="print-sheet-title">카드 혜택 상담 요약</div>
       <div class="print-sheet-sub">출력일 ${dateText} · 롯데하이마트 카드 판촉 혜택 비교툴</div>
       <div class="print-sheet-card">
@@ -1388,15 +1387,90 @@
     `;
   }
 
+  function renderPrintSummarySheet(row, items, notes){
+    const sheet = $('printSummarySheet');
+    if(sheet) sheet.innerHTML = buildPrintSummaryMarkup(row, items, notes);
+  }
+
+  function buildStandalonePrintHtml(markup){
+    return `<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>카드 혜택 상담 요약</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#111827;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;line-height:1.45}
+  .print-page{width:min(920px,100%);margin:0 auto;padding:18px}
+  .print-sheet-title{font-size:24px;font-weight:950;letter-spacing:-.05em;margin-bottom:6px}
+  .print-sheet-sub{font-size:12px;color:#475569;margin-bottom:14px}
+  .print-sheet-card{border:2px solid #111827;border-radius:14px;padding:14px;margin-bottom:12px;break-inside:avoid}
+  .print-sheet-card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.04em}
+  .print-sheet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+  .print-sheet-kpi{border:1px solid #d1d5db;border-radius:10px;padding:8px}
+  .print-sheet-kpi .label{font-size:10px;color:#64748b;font-weight:800}
+  .print-sheet-kpi .value{font-size:14px;font-weight:950;margin-top:2px}
+  .print-benefit-list{display:grid;grid-template-columns:1fr;gap:7px}
+  .print-benefit-row{border:1px solid #d1d5db;border-radius:10px;padding:9px;break-inside:avoid}
+  .print-benefit-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:950}
+  .print-benefit-line .amount{white-space:nowrap;color:#111827}
+  .print-benefit-detail{font-size:10px;color:#64748b;margin-top:2px}
+  .print-benefit-note{margin-top:7px;border-top:1px dashed #cbd5e1;padding-top:6px;font-size:11px;min-height:24px;white-space:pre-wrap}
+  .print-benefit-note b{font-weight:950}
+  .print-bottom-note{margin-top:12px;font-size:10px;color:#64748b;line-height:1.45}
+  @media print{
+    @page{size:A4;margin:12mm}
+    .print-page{width:100%;padding:0}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media(max-width:680px){
+    .print-page{padding:14px}
+    .print-sheet-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+  <main class="print-page">${markup}</main>
+</body>
+</html>`;
+  }
+
+  function openStandalonePrintPage(markup){
+    const printWindow = window.open('', '_blank');
+    if(!printWindow || !printWindow.document) return false;
+    printWindow.document.open();
+    printWindow.document.write(buildStandalonePrintHtml(markup));
+    printWindow.document.close();
+    closePrintSummary();
+    setTimeout(() => {
+      try{
+        printWindow.focus();
+        printWindow.print();
+      }catch(e){
+        alert('새로 열린 요약 페이지에서 브라우저 메뉴의 인쇄를 선택해주세요.');
+      }
+    }, 350);
+    return true;
+  }
+
   function printSelectedCardSummary(){
     const row = selectedPrintRow();
     if(!row) return;
     const items = getPrintBenefitItems(row);
     const notes = Array.from(document.querySelectorAll('[data-print-note-index]')).map(el=>el.value || '');
+    const markup = buildPrintSummaryMarkup(row, items, notes);
+
+    if(openStandalonePrintPage(markup)) return;
+
+    // 팝업이 차단된 환경을 위한 현재 페이지 fallback
+    const originalTitle = document.title;
     renderPrintSummarySheet(row, items, notes);
+    document.title = `카드 혜택 상담 요약 - ${row.name}`;
     document.body.classList.add('print-summary-mode');
     closePrintSummary();
-    setTimeout(()=>window.print(), 80);
+    setTimeout(()=>window.print(), 150);
+    setTimeout(()=>{document.title = originalTitle;}, 1200);
   }
 
   window.addEventListener('afterprint', () => {
