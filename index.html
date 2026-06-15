@@ -85,6 +85,18 @@
     .checks{display:grid;grid-template-columns:1fr;gap:4px;margin-top:8px}
     .checkbox-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#374151;padding:4px 0}
     .checkbox-row input{width:17px;height:17px;padding:0;margin:0;accent-color:var(--primary)}
+    .samsung-reward-box{margin-top:10px;border:1px solid #fde68a;border-radius:16px;background:#fffbeb;padding:11px}
+    .samsung-reward-box .checkbox-row{padding:0 0 6px;color:#92400e;font-weight:900}
+    .samsung-reward-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px}
+    .samsung-reward-grid label{margin:0 0 5px;color:#92400e}
+    .reward-preview{font-size:12px;font-weight:950;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:9px;margin-top:8px;line-height:1.35}
+    .lg-reward-box{margin-top:10px;border:1px solid #bbf7d0;border-radius:16px;background:#f0fdf4;padding:11px}
+    .lg-reward-box .checkbox-row{padding:0 0 6px;color:#166534;font-weight:900}
+    .lg-reward-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px}
+    .lg-reward-grid label{margin:0 0 5px;color:#166534}
+    .lg-preview{font-size:12px;font-weight:950;color:#166534;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:12px;padding:9px;margin-top:8px;line-height:1.35}
+    .more-results-wrap{display:flex;justify-content:center;margin-top:12px}
+    .more-results-wrap button{min-width:210px;background:#f1f5f9;color:#334155;border:1px solid #d1d5db}
 
     .button-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
     button{border:0;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:900;cursor:pointer}
@@ -144,7 +156,13 @@
     .kpi.green .value{color:#166534}
     .kpi.red .value{color:#991b1b}
 
-    .strategy-guide{display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-bottom:10px;color:#9a3412;font-size:12px}
+    .strategy-guide{display:none;background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:0;margin-bottom:10px;color:#9a3412;font-size:12px;overflow:hidden}
+    .strategy-guide details{padding:0}
+    .strategy-guide summary{cursor:pointer;list-style:none;padding:12px 14px;font-weight:950;color:#7c2d12;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .strategy-guide summary::-webkit-details-marker{display:none}
+    .strategy-guide summary::after{content:'펼치기';font-size:11px;color:#c2410c;background:#ffedd5;border:1px solid #fed7aa;border-radius:999px;padding:4px 8px;white-space:nowrap}
+    .strategy-guide details[open] summary::after{content:'접기'}
+    .strategy-guide-body{padding:0 14px 13px;color:#9a3412;line-height:1.5}
     .strategy-guide b{color:#7c2d12}
 
     .table-wrap{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:#fff}
@@ -155,6 +173,7 @@
     tr.rank-2 td{background:#f8fafc}
     tr.rank-3 td{background:#fff7f2}
     tr.strategy td{background:#f5f3ff}
+    tr.full24 td{background:#ecfeff}
     .rank-pill{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 9px;border-radius:999px;background:#eef2ff;color:#1e3a8a;font-weight:950;font-size:12px}
     .rank-pill.gold{background:var(--gold);color:#fff;box-shadow:0 4px 12px rgba(244,197,66,.28)}
     .rank-pill.silver{background:var(--silver);color:#fff;box-shadow:0 4px 12px rgba(148,163,184,.25)}
@@ -508,6 +527,28 @@
         <input id="productCashbackInput" inputmode="numeric" value="0" placeholder="예: 100,000" />
         <div class="hint">상품권, 제조사 캐시백, 품목별 추가 혜택처럼 카드와 별도로 발생하는 제품 혜택을 입력합니다. 모든 카드 비교와 요약 인쇄에 동일하게 반영됩니다.</div>
 
+        <div class="samsung-reward-box">
+          <div class="checkbox-row"><input id="samsungRewardCheck" type="checkbox"><span>삼성제품 리워드 적용</span></div>
+          <div class="samsung-reward-grid">
+            <div>
+              <label for="samsungRewardBaseInput">삼성제품 결제금액</label>
+              <input id="samsungRewardBaseInput" inputmode="numeric" value="0" placeholder="체크 시 결제금액 자동 입력" />
+            </div>
+          </div>
+          <div id="samsungRewardPreview" class="reward-preview">삼성제품 체크 시 결제금액의 20%를 디지털 온누리 상품권 리워드로 계산합니다.</div>
+        </div>
+
+        <div class="lg-reward-box">
+          <div class="checkbox-row"><input id="lgInstantCheck" type="checkbox"><span>LG제품 즉시할인 적용</span></div>
+          <div class="lg-reward-grid">
+            <div>
+              <label for="lgInstantBaseInput">LG제품 행사 기준금액</label>
+              <input id="lgInstantBaseInput" inputmode="numeric" value="0" placeholder="체크 시 결제금액 자동 입력" />
+            </div>
+          </div>
+          <div id="lgInstantPreview" class="lg-preview">LG제품 체크 시 롯데 멤버스카드 금액대별 캐시백만큼 즉시할인을 계산합니다. 할인 후 결제금액이 해당 구간을 유지해야 적용됩니다.</div>
+        </div>
+
         <label for="annualRateInput">일반 유이자 예상 연이율</label>
         <input id="annualRateInput" inputmode="decimal" value="19.5" />
         <div class="hint">무이자/고객유이자 조건이 없는 경우, 혜택 차감 전 결제원금 기준으로 예상 이자를 계산합니다.</div>
@@ -532,7 +573,7 @@
             <div class="checkbox-row"><input id="superHeroCheck" type="checkbox" checked><span>슈퍼히어로 L.PAY 추가 캐시백 포함</span></div>
             <div class="checkbox-row"><input id="memberHiddenCheck" type="checkbox" checked><span>멤버스 히든 조건부 포함</span></div>
             <div class="checkbox-row"><input id="monthlySpend30Check" type="checkbox" checked><span>월 30만원 이상 사용조건 가능</span></div>
-            <div class="checkbox-row"><input id="splitStrategyCheck" type="checkbox" checked><span>우리/삼성 분할결제 전략 표시</span></div>
+            <div class="checkbox-row"><input id="splitStrategyCheck" type="checkbox" checked><span>우리/삼성 24개월 상담전략 표시</span></div>
             <div class="checkbox-row"><input id="naverPayCheck" type="checkbox"><span>네이버페이/QR 추가혜택 포함</span></div>
             <div class="checkbox-row"><input id="interestCheck" type="checkbox" checked><span>유이자/예상 이자비용 반영</span></div>
             <div class="checkbox-row"><input id="simpleModeCheck" type="checkbox"><span>금액대 캐시백만 비교</span></div>
@@ -553,14 +594,16 @@
         <details class="info-box">
           <summary>계산 기준 보기</summary>
           <div style="margin-top:10px;">
-            ① 제품별 캐시백은 상품권·제조사 캐시백 등 카드와 별도로 발생하는 혜택으로 모든 카드 비교에 동일 반영<br>
-            ② 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
-            ③ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
-            ④ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
-            ⑤ 멤버스 히든은 최초 40만원 이상 결제 + 월 30만원 이상 사용 시 1.1만원 × 36개월 반영<br>
-            ⑥ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 24개월은 1.3만원 × 24개월 반영<br>
-            ⑦ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외<br>
-            ⑧ 우리/삼성은 최소금액만 24개월로 분리 결제하는 전략 행을 별도 표시
+            ① 계산 기준은 접혀 있는 상태가 기본이며, 필요할 때만 펼쳐 확인합니다.<br>
+            ② 제품별 캐시백은 상품권·제조사 캐시백 등 카드와 별도로 발생하는 혜택으로 모든 카드 비교에 동일 반영<br>
+            ③ 삼성제품 리워드는 체크 시 삼성제품 결제금액의 20%를 디지털 온누리 상품권 지급 혜택으로 반영<br>
+            ④ LG제품 즉시할인은 롯데 멤버스카드 금액대별 캐시백과 동일한 금액을 즉시할인으로 반영하되, 할인 후 결제금액이 해당 금액대 구간을 유지해야 적용<br>
+            ⑤ 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
+            ⑥ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
+            ⑦ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
+            ⑧ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 24개월은 1.3만원 × 24개월 반영<br>
+            ⑨ 삼성/우리 제휴카드는 기존 분할전략과 함께 전체금액 24개월 이자상쇄형 상담 시나리오도 함께 표시<br>
+            ⑩ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외
           </div>
         </details>
 
@@ -591,6 +634,8 @@
                   <th>카드명</th>
                   <th>금액대 캐시백</th>
                   <th>제품별 캐시백</th>
+                  <th>삼성 리워드</th>
+                  <th>LG 즉시할인</th>
                   <th>청구할인</th>
                   <th>포인트적립</th>
                   <th>롤라머니</th>
@@ -610,6 +655,7 @@
             </table>
           </div>
         </div>
+        <div id="moreResultsWrap" class="more-results-wrap"></div>
       </section>
     </main>
   </div>
@@ -792,6 +838,9 @@
   let currentRows = [];
   let currentContext = {amount:0, month:0, category:'normal', annualRate:19.5, flags:{}};
   let currentQrViewerUrl = '';
+  let showAllResults = false;
+  let samsungRewardAmountEdited = false;
+  let lgInstantAmountEdited = false;
 
   const standardTiers = [
     {min:3000000, benefit:150000},
@@ -979,6 +1028,24 @@
     return 0;
   }
 
+  function lgInstantDiscountInfo(baseAmount){
+    const base = Number(baseAmount || 0);
+    let selected = {tier:0, discount:0, payment:base, label:'조건 미달'};
+    memberTiers.forEach(t => {
+      const requiredBeforeDiscount = t.min + t.benefit;
+      if(base >= requiredBeforeDiscount){
+        selected = {
+          tier:t.min,
+          discount:t.benefit,
+          payment:Math.max(base - t.benefit, 0),
+          requiredBeforeDiscount,
+          label:`${won(t.min)} 구간 즉시할인`
+        };
+      }
+    });
+    return selected;
+  }
+
   function billingDiscount(card, amount, flags){
     if(flags.simple || !flags.billing || !card.billingDiscount) return 0;
     return Math.min(amount * card.billingDiscount.rate, card.billingDiscount.cap);
@@ -1065,7 +1132,7 @@
     return {status:'일반 유이자 예상', label:`예상 연 ${annualRate}%`, interest, className:'interest'};
   }
 
-  function buildBaseRows(amount, month, category, annualRate, flags, productCashback){
+  function buildBaseRows(amount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, originalAmount){
     return cards.map(card => {
       const inst = getInstallmentInfo(card, amount, month, category, annualRate, flags);
       const base = baseCashback(card, amount);
@@ -1079,8 +1146,11 @@
       const light = lightBenefit(card, amount, flags);
       const naver = naverPayBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
+      const samsungRewardAmount = Number(samsungReward || 0);
+      const lgInstant = Number(lgInstantDiscount || 0);
+      const original = Number(originalAmount || amount);
       const interest = inst.interest;
-      const gross = base + product + billing + point + lola + hero + conditionTotal + light + naver;
+      const gross = base + product + samsungRewardAmount + lgInstant + billing + point + lola + hero + conditionTotal + light + naver;
       const netBenefit = gross - interest;
 
       return {
@@ -1088,6 +1158,8 @@
         rowType:'normal',
         base,
         product,
+        samsungReward:samsungRewardAmount,
+        lgInstant,
         billing,
         point,
         lola,
@@ -1101,13 +1173,13 @@
         interest,
         gross,
         netBenefit,
-        netCost:Math.max(amount - netBenefit, 0),
+        netCost:Math.max(original - netBenefit, 0),
         strategyText:''
       };
     });
   }
 
-  function buildStrategyRows(amount, month, category, annualRate, flags, productCashback){
+  function buildStrategyRows(amount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, originalAmount){
     if(flags.simple || !flags.split || amount <= 0) return [];
 
     return cards.filter(c => c.split && amount >= c.split.amount).map(card => {
@@ -1123,7 +1195,10 @@
       const light = card.type === 'samsung' && amount >= s.lightMin ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
-      const gross = base + product + conditionTotal + light + naver;
+      const samsungRewardAmount = Number(samsungReward || 0);
+      const lgInstant = Number(lgInstantDiscount || 0);
+      const original = Number(originalAmount || amount);
+      const gross = base + product + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
       const netBenefit = gross - interest;
       const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
       const strategyText = `${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balancePayText}`;
@@ -1134,6 +1209,8 @@
         rowType:'strategy',
         base,
         product,
+        samsungReward:samsungRewardAmount,
+        lgInstant,
         billing:0,
         point:0,
         lola:0,
@@ -1155,18 +1232,85 @@
         interest,
         gross,
         netBenefit,
-        netCost:Math.max(amount - netBenefit, 0),
+        netCost:Math.max(original - netBenefit, 0),
         strategyText,
         memo:'잔액 결제개월은 현재 선택한 할부개월을 기준으로 무이자/유이자 여부와 예상 이자를 함께 계산합니다.'
       };
     });
   }
 
+  function buildFull24OffsetRows(amount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, originalAmount){
+    if(flags.simple || !flags.split || !flags.monthly || amount <= 0 || month === 24) return [];
+
+    return cards.filter(c => c.split && c.cond && amount >= c.cond.min).map(card => {
+      const s = card.split;
+      const base = baseCashback(card, amount);
+      const full24Interest = flags.interest ? amount * s.rate : 0;
+      const conditionTotal = s.monthly * s.months;
+      const light = card.type === 'samsung' && amount >= s.lightMin ? s.lightBenefit : 0;
+      const naver = naverPayBenefit(card, amount, flags);
+      const product = Number(productCashback || 0);
+      const samsungRewardAmount = Number(samsungReward || 0);
+      const lgInstant = Number(lgInstantDiscount || 0);
+      const original = Number(originalAmount || amount);
+      const gross = base + product + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
+      const netBenefit = gross - full24Interest;
+      const offsetBenefit = conditionTotal + light;
+      const offsetResult = offsetBenefit - full24Interest;
+      const offsetText = offsetResult >= 0 ? `이자 상쇄 후 ${won(offsetResult)} 여유` : `이자 상쇄 후 ${won(Math.abs(offsetResult))} 부족`;
+      const extraText = card.type === 'samsung' ? '월 사용혜택 31.2만원 + 라이트할부 10만원을 함께 고려하는 장기할부 선택지입니다.' : '월 사용혜택 38.4만원으로 24개월 이자를 상쇄하는 장기할부 선택지입니다.';
+      const strategyText = `전체금액 ${won(amount)} 24개월 · 예상이자 ${won(full24Interest)} · 이자상쇄혜택 ${won(offsetBenefit)} · ${offsetText}`;
+
+      return {
+        ...card,
+        name:`${card.name} · 전체24개월 상쇄형`,
+        rowType:'full24',
+        base,
+        product,
+        samsungReward:samsungRewardAmount,
+        lgInstant,
+        billing:0,
+        point:0,
+        lola:0,
+        hero:0,
+        hidden:0,
+        cond:conditionTotal,
+        conditionTotal,
+        light,
+        naver,
+        inst:{
+          status:'전체 24개월',
+          label:`전체 결제금액 24개월 고객유이자 ${Math.round(s.rate * 1000) / 10}% · ${offsetText}`,
+          interest:full24Interest,
+          className:'cond'
+        },
+        full24Interest,
+        offsetBenefit,
+        offsetResult,
+        interest:full24Interest,
+        gross,
+        netBenefit,
+        netCost:Math.max(original - netBenefit, 0),
+        strategyText,
+        memo:`전체 금액을 24개월로 나누되 카드 사용조건 혜택으로 이자를 상쇄하는 상담용 시나리오입니다. ${extraText}`
+      };
+    });
+  }
+
+
   function getInputs(){
     const amount = Number(onlyNumber(val('amountInput')));
     const installmentRaw = val('installmentSelect', '');
     const month = installmentRaw === '' ? null : Number(installmentRaw);
     const productCashback = Number(onlyNumber(val('productCashbackInput')));
+    const samsungRewardEnabled = checked('samsungRewardCheck', false);
+    const samsungRewardBase = Number(onlyNumber(val('samsungRewardBaseInput')));
+    const samsungReward = samsungRewardEnabled ? Math.round(samsungRewardBase * 0.2) : 0;
+    const lgInstantEnabled = checked('lgInstantCheck', false);
+    const lgInstantBase = Number(onlyNumber(val('lgInstantBaseInput')));
+    const lgInstantInfo = lgInstantEnabled ? lgInstantDiscountInfo(lgInstantBase) : {tier:0, discount:0, payment:lgInstantBase, label:'미적용'};
+    const lgInstantDiscount = lgInstantEnabled ? lgInstantInfo.discount : 0;
+    const paymentAmount = Math.max(amount - lgInstantDiscount, 0);
     const category = val('categorySelect', 'normal');
     const annualRate = Number(val('annualRateInput', 19.5) || 0);
     const flags = {
@@ -1181,20 +1325,24 @@
       interest:checked('interestCheck', true),
       simple:checked('simpleModeCheck', false)
     };
-    return {amount, month, productCashback, category, annualRate, flags};
+    return {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
   }
 
   function calculate(){
-    const {amount, month, productCashback, category, annualRate, flags} = getInputs();
+    showAllResults = false;
+    updateSamsungRewardPreview();
+    updateLgInstantPreview();
+    const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs();
     const rows = [
-      ...buildBaseRows(amount, month, category, annualRate, flags, productCashback),
-      ...buildStrategyRows(amount, month, category, annualRate, flags, productCashback)
+      ...buildBaseRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
+      ...buildStrategyRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
+      ...buildFull24OffsetRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount)
     ]
       .filter(r => amount > 0)
       .sort((a,b) => b.netBenefit - a.netBenefit);
 
     currentRows = rows;
-    currentContext = {amount, month, productCashback, category, annualRate, flags};
+    currentContext = {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
     render(amount, month, category, annualRate, flags, rows);
   }
 
@@ -1220,11 +1368,12 @@
     renderKpi(best, amount, rows);
     renderMobile(rows);
     renderTable(rows);
+    renderMoreToggle(rows);
   }
 
   function renderStrategyGuide(rows){
     const box = $('strategyGuide');
-    const strategies = rows.filter(r => r.rowType === 'strategy').slice(0,2);
+    const strategies = rows.filter(r => r.rowType === 'strategy' || r.rowType === 'full24').slice(0,4);
 
     if(!strategies.length){
       box.style.display = 'none';
@@ -1232,11 +1381,23 @@
       return;
     }
 
-    box.style.display = 'block';
-    box.innerHTML = '<b>분할결제 전략 제안</b><br>' + strategies.map(s => {
+    const strategyHtml = strategies.map(s => {
+      if(s.rowType === 'full24'){
+        const offsetText = s.offsetResult >= 0 ? `상쇄 후 여유 ${won(s.offsetResult)}` : `상쇄 후 부족 ${won(Math.abs(s.offsetResult))}`;
+        return `${s.name}: ${s.strategyText}<br><span class="small">전체금액 24개월 예상이자 ${won(s.full24Interest || s.interest)}, 월사용/라이트 상쇄혜택 ${won(s.offsetBenefit || 0)}, ${offsetText}</span>`;
+      }
       return `${s.name}: ${s.strategyText}<br><span class="small">예상 이자 ${won(s.interest)} = 24개월분 ${won(s.splitInterest || 0)} + 잔액분 ${won(s.balanceInterest || 0)}, 조건부/추가 혜택 ${won(s.conditionTotal + s.light)}</span>`;
     }).join('<br><br>');
+
+    box.style.display = 'block';
+    box.innerHTML = `
+      <details>
+        <summary>24개월 상담전략 제안</summary>
+        <div class="strategy-guide-body">${strategyHtml}</div>
+      </details>
+    `;
   }
+
 
   function renderRecommend(best, amount){
     const box = $('recommendBox');
@@ -1250,8 +1411,11 @@
     box.className = 'recommend-card';
     const tags = [];
     if(best.rowType === 'strategy') tags.push('<span class="badge warn">분할전략</span>');
+    if(best.rowType === 'full24') tags.push('<span class="badge warn">전체24개월 상쇄형</span>');
     if(best.conditionTotal > 0) tags.push('<span class="badge ok">사용조건부</span>');
     if(best.product > 0) tags.push('<span class="badge ok">제품별 캐시백</span>');
+    if(best.samsungReward > 0) tags.push('<span class="badge ok">삼성 리워드</span>');
+    if(best.lgInstant > 0) tags.push('<span class="badge ok">LG 즉시할인</span>');
     if(best.point > 0) tags.push('<span class="badge ok">포인트적립</span>');
     if(best.interest > 0) tags.push('<span class="badge warn">이자반영</span>');
     else tags.push('<span class="badge ok">무이자/일시불</span>');
@@ -1297,8 +1461,11 @@
         <div class="podium-sub">실체감가 ${won(r.netCost)}</div>
         <div class="podium-mini">
           ${r.product > 0 ? '<span>제품캐시백</span>' : ''}
+          ${r.samsungReward > 0 ? '<span>삼성리워드</span>' : ''}
+          ${r.lgInstant > 0 ? '<span>LG즉시할인</span>' : ''}
           ${r.conditionTotal > 0 ? '<span>사용조건부</span>' : ''}
           ${r.rowType === 'strategy' ? '<span>분할전략</span>' : ''}
+          ${r.rowType === 'full24' ? '<span>전체24개월</span>' : ''}
           ${r.interest === 0 ? '<span>무이자</span>' : ''}
         </div>
       </div>
@@ -1315,8 +1482,9 @@
 
   function renderMobile(rows){
     const box = $('mobileResults');
+    const visibleRows = showAllResults ? rows : rows.slice(0,3);
 
-    box.innerHTML = rows.map((r,i) => `
+    box.innerHTML = visibleRows.map((r,i) => `
       <div class="mobile-result-card ${i===0?'rank1':i===1?'rank2':i===2?'rank3':''}" id="mobileCard${i}">
         <div class="mobile-head">
           <div>${medalBadge(i)}</div>
@@ -1344,12 +1512,15 @@
         <div class="mobile-card-grid detail-grid">
           ${r.base ? `<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>` : ''}
           ${r.product ? `<div class="mobile-card-item"><div class="m-label">제품별 캐시백</div><div class="m-value">${won(r.product)}</div></div>` : ''}
+          ${r.samsungReward ? `<div class="mobile-card-item"><div class="m-label">삼성 리워드</div><div class="m-value">${won(r.samsungReward)}</div></div>` : ''}
+          ${r.lgInstant ? `<div class="mobile-card-item"><div class="m-label">LG 즉시할인</div><div class="m-value">${won(r.lgInstant)}</div></div>` : ''}
           ${r.billing ? `<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>` : ''}
           ${r.point ? `<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>` : ''}
           ${r.lola ? `<div class="mobile-card-item"><div class="m-label">롤라머니</div><div class="m-value">${won(r.lola)}</div></div>` : ''}
           ${r.hero ? `<div class="mobile-card-item"><div class="m-label">슈퍼히어로</div><div class="m-value">${won(r.hero)}</div></div>` : ''}
           ${r.conditionTotal ? `<div class="mobile-card-item"><div class="m-label">사용조건부</div><div class="m-value">${won(r.conditionTotal)}</div></div>` : ''}
           ${r.light ? `<div class="mobile-card-item"><div class="m-label">라이트/추가</div><div class="m-value">${won(r.light)}</div></div>` : ''}
+          ${r.rowType === 'full24' ? `<div class="mobile-card-item"><div class="m-label">이자상쇄</div><div class="m-value">${r.offsetResult >= 0 ? '+' : '-'}${won(Math.abs(r.offsetResult || 0))}</div></div>` : ''}
         </div>
         <div class="mobile-card-note">
           ${r.inst.label}${r.strategyText ? '<br>' + r.strategyText : ''}<br>${r.memo || ''}
@@ -1360,9 +1531,10 @@
 
   function renderTable(rows){
     const body = $('resultBody');
+    const visibleRows = showAllResults ? rows : rows.slice(0,3);
 
-    body.innerHTML = rows.map((r,i) => `
-      <tr class="${rankClass(i)} ${r.rowType === 'strategy' ? 'strategy' : ''}">
+    body.innerHTML = visibleRows.map((r,i) => `
+      <tr class="${rankClass(i)} ${r.rowType === 'strategy' ? 'strategy' : ''} ${r.rowType === 'full24' ? 'full24' : ''}">
         <td>${medalBadge(i)}</td>
         <td>
           <b>${r.name}</b>
@@ -1370,6 +1542,8 @@
         </td>
         <td>${won(r.base)}</td>
         <td>${won(r.product)}</td>
+        <td>${won(r.samsungReward || 0)}</td>
+        <td>${won(r.lgInstant || 0)}</td>
         <td>${won(r.billing)}</td>
         <td>${r.point > 0 ? `<b>${won(r.point)}</b><br><span class="small">일시불/유이자</span>` : won(0)}</td>
         <td>${won(r.lola)}</td>
@@ -1392,6 +1566,24 @@
         <td><span class="small">${r.memo || ''}</span></td>
       </tr>
     `).join('');
+  }
+
+  function renderMoreToggle(rows){
+    const wrap = $('moreResultsWrap');
+    if(!wrap) return;
+    if(!rows || rows.length <= 3){
+      wrap.innerHTML = '';
+      return;
+    }
+    const hiddenCount = rows.length - 3;
+    wrap.innerHTML = `<button type="button" onclick="toggleMoreResults()">${showAllResults ? '4위 이하 접기' : `4위 이하 ${hiddenCount}개 더보기`}</button>`;
+  }
+
+  function toggleMoreResults(){
+    showAllResults = !showAllResults;
+    renderMobile(currentRows);
+    renderTable(currentRows);
+    renderMoreToggle(currentRows);
   }
 
   function toggleMobileDetail(i){
@@ -1437,12 +1629,15 @@
     const map = {
       base:{icon:'💳', tone:'blue', tags:['기본혜택','금액대']},
       product:{icon:'🎁', tone:'green', tags:['제품혜택','수기입력']},
+      samsungReward:{icon:'🏅', tone:'orange', tags:['삼성리워드','온누리']},
+      lgInstant:{icon:'🟢', tone:'green', tags:['LG즉시할인','멤버스기준']},
       billing:{icon:'🧾', tone:'blue', tags:['청구할인']},
       point:{icon:'⭐', tone:'violet', tags:['포인트']},
       lola:{icon:'💰', tone:'orange', tags:['플랜혜택']},
       hero:{icon:'🚀', tone:'orange', tags:['L.PAY','추가혜택']},
       condition:{icon:'✅', tone:'green', tags:['사용조건부']},
       light:{icon:'➕', tone:'blue', tags:['추가혜택']},
+      offset:{icon:'⚖️', tone:'green', tags:['24개월','이자상쇄']},
       naver:{icon:'🟢', tone:'green', tags:['옵션혜택']},
       installment:{icon:'🗓️', tone:'slate', tags:['할부조건']},
       interest:{icon:'➖', tone:'red', tags:['비용차감']},
@@ -1464,15 +1659,18 @@
     };
     add('base','금액대 캐시백',row.base,'월간 금액대별 혜택 기준');
     add('product','제품별 캐시백',row.product,'상품권·제조사 캐시백·품목별 추가 혜택 등 수기 입력분');
+    add('samsungReward','삼성 리워드',row.samsungReward,'삼성제품 결제금액의 20% · 디지털 온누리 상품권 지급');
+    add('lgInstant','LG 즉시할인',row.lgInstant,'LG제품 프로모션 · 롯데 멤버스카드 금액대별 캐시백과 동일 금액 즉시할인');
     add('billing','청구할인',row.billing,'카드 청구할인 적용분');
     add('point','포인트적립',row.point,'롯데 멤버스카드 일시불/유이자할부 결제 시 반영');
     add('lola','롤라머니',row.lola,'롯데 플랜카드 롤라머니 환산 혜택');
     add('hero','슈퍼히어로/L.PAY',row.hero,'슈퍼히어로 모델 + L.PAY 등록/결제 조건');
     add('condition','사용조건부 혜택',row.conditionTotal,`${row.hidden?`멤버스 히든 ${won(row.hidden)} `:''}${row.cond?`월 사용조건 ${won(row.cond)}`:''}`.trim());
     add('light','라이트/추가 혜택',row.light,'삼성제휴 라이트할부 등 추가 혜택');
+    if(row.rowType === 'full24') add('offset','24개월 이자상쇄 결과',Math.abs(row.offsetResult || 0),row.offsetResult >= 0 ? '월 사용혜택/라이트 혜택이 예상 이자를 초과합니다.' : '월 사용혜택/라이트 혜택으로 이자를 일부 상쇄한 뒤 남는 부담입니다.',row.offsetResult < 0);
     add('naver','네이버페이/QR 추가혜택',row.naver,'옵션 선택 시 반영');
     add('installment','할부상태',0,`${row.inst.status} · ${row.inst.label}${row.strategyText?` · ${row.strategyText}`:''}`);
-    add('interest','이자비용 차감',row.interest,row.splitInterest?`24개월분 ${won(row.splitInterest||0)} + 잔액분 ${won(row.balanceInterest||0)}`:'혜택 차감 전 결제원금 기준 예상',true);
+    add('interest','이자비용 차감',row.interest,row.full24Interest?`전체금액 24개월 예상이자 ${won(row.full24Interest)} · 이자상쇄혜택 ${won(row.offsetBenefit || 0)}`:(row.splitInterest?`24개월분 ${won(row.splitInterest||0)} + 잔액분 ${won(row.balanceInterest||0)}`:'혜택 차감 전 결제원금 기준 예상'),true);
     add('gross','총 혜택',row.gross,'이자 차감 전 혜택 합계');
     add('netBenefit','최종 순혜택',row.netBenefit,'총 혜택에서 예상 이자비용 차감');
     add('netCost','실체감가',row.netCost,'결제금액 - 순혜택');
@@ -1488,7 +1686,7 @@
       <div class="print-preview-head">
         <div>
           <div class="print-preview-title">${safeText(row.name)}</div>
-          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
+          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.lgInstantDiscount ? ` · LG 할인 후 카드결제기준 ${won(currentContext.paymentAmount)}` : ''}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''}${currentContext.samsungReward ? ` · 삼성 리워드 ${won(currentContext.samsungReward)}` : ''}${currentContext.lgInstantDiscount ? ` · LG 즉시할인 ${won(currentContext.lgInstantDiscount)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
         </div>
       </div>
       <div class="print-editor-list">
@@ -1524,7 +1722,7 @@
         <div class="print-sheet-sub">${safeText(row.memo||'')}</div>
         <div class="print-sheet-grid">
           <div class="print-sheet-kpi"><div class="label">결제금액</div><div class="value">${won(currentContext.amount)}</div></div>
-          <div class="print-sheet-kpi"><div class="label">제품별 캐시백</div><div class="value">${won(row.product)}</div></div>
+          <div class="print-sheet-kpi"><div class="label">제품/브랜드 혜택</div><div class="value">${won((row.product||0) + (row.samsungReward||0) + (row.lgInstant||0))}</div></div>
           <div class="print-sheet-kpi"><div class="label">총 혜택</div><div class="value">${won(row.gross)}</div></div>
           <div class="print-sheet-kpi"><div class="label">순혜택</div><div class="value">${won(row.netBenefit)}</div></div>
           <div class="print-sheet-kpi"><div class="label">실체감가</div><div class="value">${won(row.netCost)}</div></div>
@@ -2067,15 +2265,97 @@
     if(el) el.addEventListener('change', fn);
   };
 
+  function syncSamsungRewardBase(force=false){
+    const check = $('samsungRewardCheck');
+    const input = $('samsungRewardBaseInput');
+    const amountInput = $('amountInput');
+    if(!check || !input || !amountInput || !check.checked) return;
+    if(force || !samsungRewardAmountEdited){
+      input.value = amountInput.value || '0';
+    }
+  }
+
+  function updateSamsungRewardPreview(){
+    const preview = $('samsungRewardPreview');
+    if(!preview) return;
+    const enabled = checked('samsungRewardCheck', false);
+    const base = Number(onlyNumber(val('samsungRewardBaseInput')));
+    const reward = enabled ? Math.round(base * 0.2) : 0;
+    preview.innerHTML = enabled
+      ? `디지털 온누리 상품권 리워드 예상: <b>${won(reward)}</b> <span style="font-weight:800;color:#92400e;">(삼성제품 결제금액 ${won(base)} × 20%)</span>`
+      : '삼성제품 체크 시 결제금액의 20%를 디지털 온누리 상품권 리워드로 계산합니다.';
+  }
+
+  function syncLgInstantBase(force=false){
+    const check = $('lgInstantCheck');
+    const input = $('lgInstantBaseInput');
+    const amountInput = $('amountInput');
+    if(!check || !input || !amountInput || !check.checked) return;
+    if(force || !lgInstantAmountEdited){
+      input.value = amountInput.value || '0';
+    }
+  }
+
+  function updateLgInstantPreview(){
+    const preview = $('lgInstantPreview');
+    if(!preview) return;
+    const enabled = checked('lgInstantCheck', false);
+    const base = Number(onlyNumber(val('lgInstantBaseInput')));
+    const info = enabled ? lgInstantDiscountInfo(base) : {tier:0, discount:0, payment:base};
+    if(!enabled){
+      preview.innerHTML = 'LG제품 체크 시 롯데 멤버스카드 금액대별 캐시백만큼 즉시할인을 계산합니다. 할인 후 결제금액이 해당 구간을 유지해야 적용됩니다.';
+      return;
+    }
+    preview.innerHTML = info.discount > 0
+      ? `LG 즉시할인 예상: <b>${won(info.discount)}</b> <span style="font-weight:800;color:#166534;">(${won(info.tier)} 구간 · 할인 후 결제기준 ${won(info.payment)})</span>`
+      : `현재 금액은 LG 즉시할인 조건 미달입니다. <span style="font-weight:800;color:#166534;">300만원 구간은 3,150,000원 이상부터 15만원 즉시할인</span>으로 계산됩니다.`;
+  }
+
   bindInput('amountInput', () => {
     const el = $('amountInput');
     el.value = formatNumber(el.value);
+    syncSamsungRewardBase(false);
+    syncLgInstantBase(false);
     calculate();
   });
 
   bindInput('productCashbackInput', () => {
     const el = $('productCashbackInput');
     el.value = formatNumber(el.value);
+    calculate();
+  });
+
+  bindChange('samsungRewardCheck', () => {
+    if(checked('samsungRewardCheck', false)){
+      samsungRewardAmountEdited = false;
+      syncSamsungRewardBase(true);
+    }
+    updateSamsungRewardPreview();
+    calculate();
+  });
+
+  bindInput('samsungRewardBaseInput', () => {
+    const el = $('samsungRewardBaseInput');
+    el.value = formatNumber(el.value);
+    samsungRewardAmountEdited = true;
+    updateSamsungRewardPreview();
+    calculate();
+  });
+
+  bindChange('lgInstantCheck', () => {
+    if(checked('lgInstantCheck', false)){
+      lgInstantAmountEdited = false;
+      syncLgInstantBase(true);
+    }
+    updateLgInstantPreview();
+    calculate();
+  });
+
+  bindInput('lgInstantBaseInput', () => {
+    const el = $('lgInstantBaseInput');
+    el.value = formatNumber(el.value);
+    lgInstantAmountEdited = true;
+    updateLgInstantPreview();
     calculate();
   });
 
