@@ -601,7 +601,7 @@
             ⑤ 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
             ⑥ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
             ⑦ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
-            ⑧ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 24개월은 1.3만원 × 24개월 반영<br>
+            ⑧ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 라이트할부는 1만원 × 24개월, 구독결제는 1.3만원 × 24개월 반영<br>
             ⑨ 삼성/우리 제휴카드는 기존 분할전략과 함께 전체금액 24개월 이자상쇄형 상담 시나리오도 함께 표시<br>
             ⑩ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외
           </div>
@@ -680,7 +680,7 @@
             <tr><td>롯데 플랜카드</td><td>100만원 이상 2~5개월 무이자</td><td>멤버스와 다르게 100만원 기준으로 반영</td></tr>
             <tr><td>롯데 클래스카드</td><td>100만원 이상 2~5개월 무이자 기준</td><td>금액대 캐시백 없이 청구할인 중심</td></tr>
             <tr><td>우리 일반/제휴</td><td>2~3개월 무이자, 제휴 24개월 고객유이자 6.0%</td><td>우리 일반은 금액대 캐시백 없음, 우리제휴 24개월은 이자비용 반영</td></tr>
-            <tr><td>삼성 제휴</td><td>2~3개월 무이자, 24개월 고객유이자 6.5%</td><td>24개월 이자비용 + 사용조건부 캐시백 반영</td></tr>
+            <tr><td>삼성 제휴</td><td>2~3개월 무이자, 24개월 고객유이자 6.5%</td><td>라이트할부 월사용 1만원×24개월, 구독결제 1.3만원×24개월. 라이트할부 추가 10만원은 합산 300만원 이상 결제 시 반영</td></tr>
             <tr><td>KB국민 일반</td><td>2~3개월 무이자, 500만원 이상 추가혜택</td><td>500만원 이상 구간부터 반영</td></tr>
             <tr><td>신한 제휴/일반</td><td>2~3개월 무이자 중심</td><td>금액대 혜택 + 무이자 상태 반영</td></tr>
             <tr><td>36/48/60개월</td><td>구독한정 또는 특수 조건으로 분리</td><td>일반 비교에서는 무이자 제외</td></tr>
@@ -965,15 +965,15 @@
       cashbackType:'tier',
       tiers:standardTiers,
       supportsNaverPay:false,
-      cond:{monthly:13000, months:[24], min:300000, label:'월30만원 이상 사용'},
-      light:{min:3000000, benefit:100000, label:'300만원 이상 라이트할부 추가'},
-      split:{amount:240000, rate:.065, monthly:13000, months:24, lightMin:3000000, lightBenefit:100000, label:'24만원만 24개월 고객유이자 6.5%'},
+      cond:{monthly:10000, lightMonthly:10000, subscriptionMonthly:13000, months:[24], min:300000, label:'라이트할부 월30만원 이상 1만원 · 구독결제 1.3만원'},
+      light:{min:3000000, benefit:100000, label:'라이트할부 이용 + 합산 300만원 이상 추가'},
+      split:{amount:240000, rate:.065, monthly:10000, subscriptionMonthly:13000, months:24, lightMin:3000000, lightBenefit:100000, label:'24만원만 24개월 고객유이자 6.5%'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
         {type:'customerInterest', months:[24], rate:.065, min:300000, label:'24개월 고객유이자 6.5%'}
       ],
-      memo:'24개월 조건부 + 300만원 이상 추가 10만원 혜택 확인.'
+      memo:'라이트할부는 월30만원 사용 시 1만원×24개월, 구독결제는 1.3만원×24개월 기준. 라이트할부 추가 10만원은 합산 300만원 이상 결제 시만 반영.'
     },
     {
       name:'신한제휴카드',
@@ -1078,14 +1078,34 @@
     return amount >= card.hidden.min ? card.hidden.monthly * card.hidden.months : 0;
   }
 
-  function conditionalBenefit(card, amount, month, flags){
-    if(flags.simple || !flags.monthly || !card.cond) return 0;
-    if(!card.cond.months.includes(month) || amount < card.cond.min) return 0;
-    return card.cond.monthly * month;
+  function conditionalMonthly(card, category){
+    if(!card || !card.cond) return 0;
+    if(card.name === '삼성제휴카드'){
+      return category === 'subscription' ? (card.cond.subscriptionMonthly || 13000) : (card.cond.lightMonthly || card.cond.monthly || 10000);
+    }
+    return card.cond.monthly || 0;
   }
 
-  function lightBenefit(card, amount, flags){
+  function samsungUsageDetail(card, category){
+    if(!card || card.name !== '삼성제휴카드') return '';
+    return category === 'subscription' ? '구독결제 월 1.3만원 × 24개월' : '라이트할부 월 1만원 × 24개월';
+  }
+
+  function isSamsungLightEligible(card, amount, category){
+    return !!(card && card.name === '삼성제휴카드' && category !== 'subscription' && card.light && amount >= card.light.min);
+  }
+
+  function conditionalBenefit(card, amount, month, flags, category){
+    if(flags.simple || !flags.monthly || !card.cond) return 0;
+    if(!card.cond.months.includes(month) || amount < card.cond.min) return 0;
+    return conditionalMonthly(card, category) * month;
+  }
+
+  function lightBenefit(card, amount, flags, month, category){
     if(flags.simple || !card.light) return 0;
+    if(card.name === '삼성제휴카드'){
+      return month === 24 && isSamsungLightEligible(card, amount, category) ? card.light.benefit : 0;
+    }
     return amount >= card.light.min ? card.light.benefit : 0;
   }
 
@@ -1141,9 +1161,9 @@
       const lola = lolaMoney(card, amount, flags);
       const hero = superHero(card, amount, flags);
       const hidden = hiddenBenefit(card, amount, flags);
-      const cond = conditionalBenefit(card, amount, month, flags);
+      const cond = conditionalBenefit(card, amount, month, flags, category);
       const conditionTotal = hidden + cond;
-      const light = lightBenefit(card, amount, flags);
+      const light = lightBenefit(card, amount, flags, month, category);
       const naver = naverPayBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
@@ -1191,8 +1211,9 @@
       const splitInterest = flags.interest ? s.amount * s.rate : 0;
       const balanceInterest = flags.interest ? balanceInst.interest : 0;
       const interest = splitInterest + balanceInterest;
-      const conditionTotal = s.monthly * s.months;
-      const light = card.type === 'samsung' && amount >= s.lightMin ? s.lightBenefit : 0;
+      const conditionMonthly = conditionalMonthly(card, category) || s.monthly;
+      const conditionTotal = conditionMonthly * s.months;
+      const light = isSamsungLightEligible(card, amount, category) ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
@@ -1201,7 +1222,9 @@
       const gross = base + product + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
       const netBenefit = gross - interest;
       const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
-      const strategyText = `${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balancePayText}`;
+      const usageDetail = samsungUsageDetail(card, category);
+      const lightDetail = card.name === '삼성제휴카드' ? (light ? '라이트할부 추가 10만원 반영' : '합산 300만원 미만 또는 구독결제로 라이트할부 추가 10만원 미반영') : '';
+      const strategyText = `${won(s.amount)} 24개월 + 잔액 ${won(balance)} ${balancePayText}${usageDetail ? ` · ${usageDetail}` : ''}${lightDetail ? ` · ${lightDetail}` : ''}`;
 
       return {
         ...card,
@@ -1246,8 +1269,9 @@
       const s = card.split;
       const base = baseCashback(card, amount);
       const full24Interest = flags.interest ? amount * s.rate : 0;
-      const conditionTotal = s.monthly * s.months;
-      const light = card.type === 'samsung' && amount >= s.lightMin ? s.lightBenefit : 0;
+      const conditionMonthly = conditionalMonthly(card, category) || s.monthly;
+      const conditionTotal = conditionMonthly * s.months;
+      const light = isSamsungLightEligible(card, amount, category) ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
@@ -1258,7 +1282,9 @@
       const offsetBenefit = conditionTotal + light;
       const offsetResult = offsetBenefit - full24Interest;
       const offsetText = offsetResult >= 0 ? `이자 상쇄 후 ${won(offsetResult)} 여유` : `이자 상쇄 후 ${won(Math.abs(offsetResult))} 부족`;
-      const extraText = card.type === 'samsung' ? '월 사용혜택 31.2만원 + 라이트할부 10만원을 함께 고려하는 장기할부 선택지입니다.' : '월 사용혜택 38.4만원으로 24개월 이자를 상쇄하는 장기할부 선택지입니다.';
+      const usageDetail = samsungUsageDetail(card, category);
+      const lightDetail = card.name === '삼성제휴카드' ? (light ? '라이트할부 추가 10만원 반영' : '합산 300만원 미만 또는 구독결제로 라이트할부 추가 10만원 미반영') : '';
+      const extraText = card.name === '삼성제휴카드' ? `${usageDetail}${lightDetail ? ` · ${lightDetail}` : ''}을 함께 고려하는 장기할부 선택지입니다.` : '월 사용혜택 38.4만원으로 24개월 이자를 상쇄하는 장기할부 선택지입니다.';
       const strategyText = `전체금액 ${won(amount)} 24개월 · 예상이자 ${won(full24Interest)} · 이자상쇄혜택 ${won(offsetBenefit)} · ${offsetText}`;
 
       return {
@@ -1384,9 +1410,9 @@
     const strategyHtml = strategies.map(s => {
       if(s.rowType === 'full24'){
         const offsetText = s.offsetResult >= 0 ? `상쇄 후 여유 ${won(s.offsetResult)}` : `상쇄 후 부족 ${won(Math.abs(s.offsetResult))}`;
-        return `${s.name}: ${s.strategyText}<br><span class="small">전체금액 24개월 예상이자 ${won(s.full24Interest || s.interest)}, 월사용/라이트 상쇄혜택 ${won(s.offsetBenefit || 0)}, ${offsetText}</span>`;
+        return `${s.name}: ${s.strategyText}<br><span class="small">전체금액 24개월 예상이자 ${won(s.full24Interest || s.interest)}, 월사용/라이트 상쇄혜택 ${won(s.offsetBenefit || 0)}, ${offsetText}${s.name.includes('삼성제휴') ? ' · 라이트할부 월1만원 기준, 구독결제만 월1.3만원 기준' : ''}</span>`;
       }
-      return `${s.name}: ${s.strategyText}<br><span class="small">예상 이자 ${won(s.interest)} = 24개월분 ${won(s.splitInterest || 0)} + 잔액분 ${won(s.balanceInterest || 0)}, 조건부/추가 혜택 ${won(s.conditionTotal + s.light)}</span>`;
+      return `${s.name}: ${s.strategyText}<br><span class="small">예상 이자 ${won(s.interest)} = 24개월분 ${won(s.splitInterest || 0)} + 잔액분 ${won(s.balanceInterest || 0)}, 조건부/추가 혜택 ${won(s.conditionTotal + s.light)}${s.name.includes('삼성제휴') ? ' · 라이트할부 월1만원 기준, 구독결제만 월1.3만원 기준' : ''}</span>`;
     }).join('<br><br>');
 
     box.style.display = 'block';
@@ -1665,8 +1691,8 @@
     add('point','포인트적립',row.point,'롯데 멤버스카드 일시불/유이자할부 결제 시 반영');
     add('lola','롤라머니',row.lola,'롯데 플랜카드 롤라머니 환산 혜택');
     add('hero','슈퍼히어로/L.PAY',row.hero,'슈퍼히어로 모델 + L.PAY 등록/결제 조건');
-    add('condition','사용조건부 혜택',row.conditionTotal,`${row.hidden?`멤버스 히든 ${won(row.hidden)} `:''}${row.cond?`월 사용조건 ${won(row.cond)}`:''}`.trim());
-    add('light','라이트/추가 혜택',row.light,'삼성제휴 라이트할부 등 추가 혜택');
+    add('condition','사용조건부 혜택',row.conditionTotal,`${row.hidden?`멤버스 히든 ${won(row.hidden)} `:''}${row.cond?`월 사용조건 ${won(row.cond)}${row.name.includes('삼성제휴') ? ' · 라이트할부 1만원/월, 구독결제 1.3만원/월 기준' : ''}`:''}`.trim());
+    add('light','라이트/추가 혜택',row.light,'삼성제휴 라이트할부 이용 및 합산 300만원 이상 결제 시 추가 10만원');
     if(row.rowType === 'full24') add('offset','24개월 이자상쇄 결과',Math.abs(row.offsetResult || 0),row.offsetResult >= 0 ? '월 사용혜택/라이트 혜택이 예상 이자를 초과합니다.' : '월 사용혜택/라이트 혜택으로 이자를 일부 상쇄한 뒤 남는 부담입니다.',row.offsetResult < 0);
     add('naver','네이버페이/QR 추가혜택',row.naver,'옵션 선택 시 반영');
     add('installment','할부상태',0,`${row.inst.status} · ${row.inst.label}${row.strategyText?` · ${row.strategyText}`:''}`);
