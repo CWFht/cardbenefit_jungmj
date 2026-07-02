@@ -609,7 +609,6 @@
             <div class="checkbox-row"><input id="memberPointCheck" type="checkbox" checked><span>멤버스 포인트적립 포함</span></div>
             <div class="checkbox-row"><input id="lolaCheck" type="checkbox" checked><span>플랜 롤라머니 7% 포함</span></div>
             <div class="checkbox-row"><input id="superHeroCheck" type="checkbox" checked><span>슈퍼히어로 L.PAY 추가 캐시백 포함</span></div>
-            <div class="checkbox-row"><input id="memberHiddenCheck" type="checkbox" checked><span>멤버스 히든 조건부 포함</span></div>
             <div class="checkbox-row"><input id="monthlySpend30Check" type="checkbox" checked><span>월 30만원 이상 사용조건 가능</span></div>
             <div class="checkbox-row"><input id="splitStrategyCheck" type="checkbox" checked><span>우리/삼성 24개월 상담전략 표시</span></div>
             <div class="checkbox-row"><input id="naverPayCheck" type="checkbox"><span>네이버페이/QR 추가혜택 포함</span></div>
@@ -940,14 +939,13 @@
       memberPoint:{specialRate:.01, specialCap:50000, baseRate:.005},
       superHeroLpay:true,
       supportsNaverPay:true,
-      hidden:{min:400000, monthly:11000, months:36, label:'최초 40만원 이상 + 월30만원 사용'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3,4,5], min:50000, label:'5만원 이상 2~5개월 무이자'},
         {type:'free', months:[12], min:1000000, label:'100만원 이상 12개월 무이자'},
         {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
       ],
-      memo:'300만원 구간부터 금액대 캐시백 반영. 일시불/유이자할부 시 포인트적립, L.PAY 슈퍼히어로 추가 + 히든 조건부가 핵심.'
+      memo:'300만원 구간부터 금액대 캐시백 반영. 일시불/유이자할부 시 포인트적립과 L.PAY 슈퍼히어로 추가 혜택을 확인.'
     },
     {
       name:'롯데 플랜카드',
@@ -1130,11 +1128,6 @@
     if(amount >= 1000000) return 30000;
     if(amount >= 200000) return 10000;
     return 0;
-  }
-
-  function hiddenBenefit(card, amount, flags){
-    if(flags.simple || !flags.hidden || !flags.monthly || !card.hidden) return 0;
-    return amount >= card.hidden.min ? card.hidden.monthly * card.hidden.months : 0;
   }
 
   function conditionalMonthly(card, category){
@@ -1375,9 +1368,8 @@
       const point = memberPoint(card, amount, inst, flags);
       const lola = lolaMoney(card, amount, flags);
       const hero = superHero(card, amount, flags);
-      const hidden = hiddenBenefit(card, amount, flags);
       const cond = conditionalBenefit(card, amount, month, flags, category);
-      const conditionTotal = hidden + cond;
+      const conditionTotal = cond;
       const light = lightBenefit(card, amount, flags, month, category);
       const naver = naverPayBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
@@ -1403,7 +1395,6 @@
         point,
         lola,
         hero,
-        hidden,
         cond,
         conditionTotal,
         light,
@@ -1571,7 +1562,6 @@
       point:checked('memberPointCheck', true),
       lola:checked('lolaCheck', true),
       hero:checked('superHeroCheck', true),
-      hidden:checked('memberHiddenCheck', true),
       monthly:checked('monthlySpend30Check', true),
       split:checked('splitStrategyCheck', true),
       naver:checked('naverPayCheck', false),
@@ -1807,7 +1797,6 @@
         <td>${won(r.hero)}</td>
         <td>
           ${won(r.conditionTotal)}
-          ${r.hidden ? `<br><span class="small">멤버스 ${won(r.hidden)}</span>` : ''}
           ${r.cond ? `<br><span class="small">월사용 ${won(r.cond)}</span>` : ''}
         </td>
         <td>${won(r.light)}</td>
@@ -1924,7 +1913,7 @@
     add('point','포인트적립',row.point,'롯데 멤버스카드 일시불/유이자할부 결제 시 반영');
     add('lola','롤라머니',row.lola,'롯데 플랜카드 롤라머니 환산 혜택');
     add('hero','슈퍼히어로/L.PAY',row.hero,'슈퍼히어로 모델 + L.PAY 등록/결제 조건');
-    add('condition','사용조건부 혜택',row.conditionTotal,`${row.hidden?`멤버스 히든 ${won(row.hidden)} `:''}${row.cond?`월 사용조건 ${won(row.cond)}${row.name.includes('삼성제휴') ? ' · 라이트할부 1만원/월, 구독결제 1.3만원/월 기준' : ''}`:''}`.trim());
+    add('condition','사용조건부 혜택',row.conditionTotal,`${row.cond?`월 사용조건 ${won(row.cond)}${row.name.includes('삼성제휴') ? ' · 라이트할부 1만원/월, 구독결제 1.3만원/월 기준' : ''}`:''}`.trim());
     add('light','라이트/추가 혜택',row.light,'삼성제휴 라이트할부 이용 및 합산 300만원 이상 결제 시 추가 10만원');
     if(row.rowType === 'full24') add('offset','24개월 이자상쇄 결과',Math.abs(row.offsetResult || 0),row.offsetResult >= 0 ? '월 사용혜택/라이트 혜택이 예상 이자를 초과합니다.' : '월 사용혜택/라이트 혜택으로 이자를 일부 상쇄한 뒤 남는 부담입니다.',row.offsetResult < 0);
     add('naver','네이버페이/QR 추가혜택',row.naver,'옵션 선택 시 반영');
@@ -2645,7 +2634,6 @@
     'memberPointCheck',
     'lolaCheck',
     'superHeroCheck',
-    'memberHiddenCheck',
     'monthlySpend30Check',
     'splitStrategyCheck',
     'naverPayCheck',
