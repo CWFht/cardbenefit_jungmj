@@ -48,7 +48,9 @@
       box-shadow:var(--shadow);
       margin-bottom:10px;
     }
-    .hero h1{margin:0 0 4px;font-size:21px;letter-spacing:-.05em}
+    .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+    .hero h1{margin:0;font-size:21px;letter-spacing:-.05em}
+    .version-badge{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:950;letter-spacing:-.02em;box-shadow:0 8px 18px rgba(15,23,42,.18)}
     .hero p{margin:0;color:rgba(255,255,255,.82);font-size:12px;line-height:1.35}
 
     .grid{display:grid;grid-template-columns:1fr;gap:10px}.grid > *{min-width:0}
@@ -384,6 +386,7 @@
       .app{padding:18px 16px 60px}
       .hero{border-radius:24px;padding:26px 24px;margin-bottom:16px}
       .hero h1{font-size:38px}
+      .version-badge{font-size:13px;padding:8px 12px}
       .hero p{font-size:15px;line-height:1.5}
       .grid{grid-template-columns:360px 1fr;gap:16px}
       .sticky{position:sticky;top:16px;align-self:start}
@@ -414,6 +417,7 @@
       .app{max-width:100%;padding:12px 10px 52px}
       .hero{padding:18px 18px;border-radius:20px;margin-bottom:12px}
       .hero h1{font-size:30px}
+      .version-badge{font-size:12px;padding:7px 10px}
       .hero p{font-size:13px}
       .grid{grid-template-columns:320px minmax(0,1fr);gap:12px}
       .panel{padding:14px;border-radius:18px}
@@ -521,7 +525,10 @@
 <body>
   <div class="app">
     <header class="hero">
-      <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
+      <div class="hero-top">
+        <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
+        <div class="version-badge" title="현재 적용 버전">7월 v1</div>
+      </div>
       <p>결제금액과 할부개월을 입력하면 카드별 캐시백·청구할인·포인트·조건부 혜택·예상 이자를 한 번에 비교합니다.</p>
     </header>
 
