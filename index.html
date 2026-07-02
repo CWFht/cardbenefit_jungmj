@@ -51,8 +51,8 @@
     .hero h1{margin:0 0 4px;font-size:21px;letter-spacing:-.05em}
     .hero p{margin:0;color:rgba(255,255,255,.82);font-size:12px;line-height:1.35}
 
-    .grid{display:grid;grid-template-columns:1fr;gap:10px}
-    .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:12px}
+    .grid{display:grid;grid-template-columns:1fr;gap:10px}.grid > *{min-width:0}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:12px;min-width:0}
     .sticky{position:static}
 
     .section-title{font-size:15px;font-weight:950;margin:0 0 10px;letter-spacing:-.04em}
@@ -115,6 +115,7 @@
     .promo-guide-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}.promo-guide-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px}
     .promo-guide-card h4{margin:0 0 4px;font-size:14px;letter-spacing:-.03em}.promo-guide-card p{margin:0 0 10px;font-size:12px;color:#64748b;line-height:1.4}.promo-guide-card button{width:100%;background:#111827;color:#fff;font-size:13px;padding:10px}
     .more-results-wrap{display:flex;justify-content:center;margin-top:12px}
+    .more-results-wrap.compact{margin-top:-2px;margin-bottom:12px}
     .more-results-wrap button{min-width:210px;background:#f1f5f9;color:#334155;border:1px solid #d1d5db}
 
     .button-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -391,7 +392,7 @@
       .rate-grid{grid-template-columns:repeat(5,1fr)}
       .recommend-card{grid-template-columns:1fr auto;padding:18px;border-radius:22px}
       .big-number{text-align:right;font-size:32px}
-      .top3-podium{grid-template-columns:1.15fr 1fr 1fr;gap:12px;margin-bottom:16px}
+      .top3-podium{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:16px}
       .podium-card{border-radius:22px;padding:17px 16px}
       .podium-name{font-size:17px}
       .podium-value{font-size:23px}
@@ -409,7 +410,23 @@
       .image-viewer-modal.zoom .image-viewer-body img{width:1500px;max-width:none}
     }
 
-
+    @media(min-width:981px) and (max-width:1180px){
+      .app{max-width:100%;padding:12px 10px 52px}
+      .hero{padding:18px 18px;border-radius:20px;margin-bottom:12px}
+      .hero h1{font-size:30px}
+      .hero p{font-size:13px}
+      .grid{grid-template-columns:320px minmax(0,1fr);gap:12px}
+      .panel{padding:14px;border-radius:18px}
+      .sticky{top:10px}
+      .top3-podium{grid-template-columns:1fr;gap:10px}
+      .podium-card{min-width:0}
+      .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .rate-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .button-row,.model-promo-actions,.chart-actions{grid-template-columns:1fr}
+      .recommend-card{grid-template-columns:1fr;gap:8px}
+      .big-number{text-align:left;font-size:28px}
+      table{min-width:1180px}
+    }
 
     .print-summary-modal .guide-panel{max-width:920px}
     .print-select-row{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}
@@ -649,6 +666,7 @@
         <div id="strategyGuide" class="strategy-guide"></div>
         <div id="recommendBox" class="recommend-card empty"></div>
         <div id="top3Podium" class="top3-podium"></div>
+        <div id="topMoreResultsWrap" class="more-results-wrap compact"></div>
 
         <div class="kpi-grid">
           <div class="kpi blue"><div class="label">결제금액</div><div id="kpiAmount" class="value">0원</div></div>
@@ -665,6 +683,7 @@
 
         <div class="desktop-only">
           <h2 class="section-title">카드별 상세 혜택 비교</h2>
+          <div class="hint" style="margin:-4px 0 8px;">기본은 1~3위만 표시됩니다. 전체 후보 보기를 누르면 4위 이하 카드까지 펼쳐집니다.</div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -718,11 +737,12 @@
           <tbody>
             <tr><td>롯데 멤버스카드</td><td>5만원 이상 2~5개월 무이자, 100만원 이상 12개월 무이자</td><td>멤버스 전용 조건으로 반영</td></tr>
             <tr><td>롯데 플랜카드</td><td>100만원 이상 2~5개월 무이자</td><td>멤버스와 다르게 100만원 기준으로 반영</td></tr>
-            <tr><td>롯데 클래스카드</td><td>100만원 이상 2~5개월 무이자 기준</td><td>금액대 캐시백 없이 청구할인 중심</td></tr>
-            <tr><td>우리 일반/제휴</td><td>2~3개월 무이자, 제휴 24개월 고객유이자 6.0%</td><td>우리 일반은 금액대 캐시백 없음, 우리제휴 24개월은 이자비용 반영</td></tr>
+            <tr><td>롯데 클래스카드</td><td>5만원 이상 2~5개월 무이자 기준</td><td>금액대 캐시백 없이 청구할인 중심</td></tr>
+            <tr><td>우리 일반/제휴</td><td>2~6개월 무이자, 제휴 24개월 고객유이자 6.0%</td><td>우리 일반은 금액대 캐시백 없음, 우리제휴 24개월은 이자비용 반영</td></tr>
             <tr><td>삼성 제휴</td><td>2~3개월 무이자, 24개월 고객유이자 6.5%</td><td>라이트할부 월사용 1만원×24개월, 구독결제 1.3만원×24개월. 라이트할부 추가 10만원은 합산 300만원 이상 결제 시 반영</td></tr>
-            <tr><td>KB국민 일반</td><td>2~3개월 무이자, 500만원 이상 추가혜택</td><td>500만원 이상 구간부터 반영</td></tr>
+            <tr><td>KB국민 일반</td><td>2~5개월 무이자, 500만원 이상 추가혜택</td><td>500만원 이상 구간부터 반영</td></tr>
             <tr><td>신한 제휴/일반</td><td>2~3개월 무이자 중심</td><td>금액대 혜택 + 무이자 상태 반영</td></tr>
+            <tr><td>그 외 카드</td><td>현대/광주/하나/NH농협/삼성/BC는 2~3개월 무이자 기준</td><td>현재 비교 카드 외 일반 무이자 안내 기준</td></tr>
             <tr><td>36/48/60개월</td><td>구독한정 또는 특수 조건으로 분리</td><td>일반 비교에서는 무이자 제외</td></tr>
           </tbody>
         </table>
@@ -985,10 +1005,10 @@
       supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
-        {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
+        {type:'free', months:[2,3,4,5], min:50000, label:'5만원 이상 2~5개월 무이자'},
         {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독 시 조건부 캐시백 별도'}
       ],
-      memo:'금액대별 캐시백 없음. 청구할인 5% 최대 5만원만 일반 구매 반영.'
+      memo:'금액대별 캐시백 없음. 5만원 이상 2~5개월 무이자와 청구할인 5% 최대 5만원 중심.'
     },
     {
       name:'우리 일반카드',
@@ -997,9 +1017,9 @@
       supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
-        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
+        {type:'free', months:[2,3,4,5,6], min:0, label:'2~6개월 무이자'}
       ],
-      memo:'제휴카드가 아닌 우리 일반카드는 금액대별 캐시백 없음. 무이자 비교군.'
+      memo:'제휴카드가 아닌 우리 일반카드는 금액대별 캐시백 없음. 2~6개월 무이자 비교군.'
     },
     {
       name:'우리제휴카드',
@@ -1011,10 +1031,10 @@
       split:{amount:390000, rate:.06, monthly:16000, months:24, label:'39만원만 24개월 고객유이자 6.0%'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
-        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
+        {type:'free', months:[2,3,4,5,6], min:0, label:'2~6개월 무이자'},
         {type:'customerInterest', months:[24], rate:.06, min:300000, label:'24개월 고객유이자 6.0%'}
       ],
-      memo:'24개월 사용조건부 혜택이 크지만 고객유이자 발생. 분할전략 권장.'
+      memo:'2~6개월 무이자 가능. 24개월 사용조건부 혜택은 고객유이자 발생으로 분할전략 권장.'
     },
     {
       name:'삼성제휴카드',
@@ -1065,9 +1085,9 @@
       supportsNaverPay:false,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
-        {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
+        {type:'free', months:[2,3,4,5], min:0, label:'2~5개월 무이자'}
       ],
-      memo:'500만원 이상부터 추가혜택 반영.'
+      memo:'2~5개월 무이자. 500만원 이상부터 추가혜택 반영.'
     }
   ];
 
@@ -1603,6 +1623,13 @@
     return '';
   }
 
+  function podiumMeta(i){
+    if(i === 0) return {emoji:'🥇', cls:'rank1', label:'1위 BEST'};
+    if(i === 1) return {emoji:'🥈', cls:'rank2', label:'2위 GOOD'};
+    if(i === 2) return {emoji:'🥉', cls:'rank3', label:'3위 CHECK'};
+    return {emoji:'🏷️', cls:'', label:`${i + 1}위 후보`};
+  }
+
   function render(amount, month, category, annualRate, flags, rows){
     const best = rows[0];
     renderStrategyGuide(rows);
@@ -1680,26 +1707,22 @@
 
   function renderTop3(rows){
     const box = $('top3Podium');
-    const top3 = rows.slice(0,3);
+    const visibleRows = showAllResults ? rows : rows.slice(0,3);
 
-    if(!top3.length){
+    if(!visibleRows.length){
       box.innerHTML = '';
       return;
     }
 
-    const medals = [
-      {emoji:'🥇', cls:'rank1', label:'1위 BEST'},
-      {emoji:'🥈', cls:'rank2', label:'2위 GOOD'},
-      {emoji:'🥉', cls:'rank3', label:'3위 CHECK'}
-    ];
-
-    box.innerHTML = top3.map((r,i) => `
-      <div class="podium-card ${medals[i].cls}">
+    box.innerHTML = visibleRows.map((r,i) => {
+      const meta = podiumMeta(i);
+      return `
+      <div class="podium-card ${meta.cls}">
         <div class="podium-top">
-          <div class="podium-medal">${medals[i].emoji}</div>
-          <div class="podium-label">${medals[i].label}</div>
+          <div class="podium-medal">${meta.emoji}</div>
+          <div class="podium-label">${meta.label}</div>
         </div>
-        <div class="podium-name">${r.name}</div>
+        <div class="podium-name" title="${safeText(r.name)}">${r.name}</div>
         <div class="podium-value">${won(r.netBenefit)}</div>
         <div class="podium-sub">이자 반영 후 순혜택</div>
         <div class="podium-sub">실체감가 ${won(r.netCost)}</div>
@@ -1714,7 +1737,8 @@
           ${r.interest === 0 ? '<span>무이자</span>' : ''}
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   function renderKpi(best, amount, rows){
@@ -1815,18 +1839,21 @@
   }
 
   function renderMoreToggle(rows){
-    const wrap = $('moreResultsWrap');
-    if(!wrap) return;
+    const wraps = [$('topMoreResultsWrap'), $('moreResultsWrap')].filter(Boolean);
+    if(!wraps.length) return;
     if(!rows || rows.length <= 3){
-      wrap.innerHTML = '';
+      wraps.forEach(wrap => wrap.innerHTML = '');
       return;
     }
     const hiddenCount = rows.length - 3;
-    wrap.innerHTML = `<button type="button" onclick="toggleMoreResults()">${showAllResults ? '4위 이하 접기' : `4위 이하 ${hiddenCount}개 더보기`}</button>`;
+    const label = showAllResults ? '1~3위만 보기' : `전체 후보 보기 · 4위 이하 ${hiddenCount}개`;
+    const html = `<button type="button" onclick="toggleMoreResults()">${label}</button>`;
+    wraps.forEach(wrap => wrap.innerHTML = html);
   }
 
   function toggleMoreResults(){
     showAllResults = !showAllResults;
+    renderTop3(currentRows);
     renderMobile(currentRows);
     renderTable(currentRows);
     renderMoreToggle(currentRows);
