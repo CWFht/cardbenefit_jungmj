@@ -95,6 +95,25 @@
     .lg-reward-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px}
     .lg-reward-grid label{margin:0 0 5px;color:#166534}
     .lg-preview{font-size:12px;font-weight:950;color:#166534;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:12px;padding:9px;margin-top:8px;line-height:1.35}
+
+    .model-promo-box{margin-top:10px;border:1px solid #c4b5fd;border-radius:16px;background:#f5f3ff;padding:11px}
+    .model-promo-head{font-size:13px;font-weight:950;color:#5b21b6;margin-bottom:4px;letter-spacing:-.03em}
+    .model-promo-box .hint{color:#6d28d9}
+    .model-promo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .model-promo-btn{background:#6d28d9;color:#fff;padding:10px 12px;font-size:12px}
+    .model-promo-btn.sub{background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe}
+    .model-promo-results,.model-promo-selected{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+    .promo-result-card,.promo-selected-card{background:#fff;border:1px solid #ddd6fe;border-radius:14px;padding:10px}
+    .promo-result-top,.promo-selected-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .promo-result-name,.promo-selected-name{font-size:13px;font-weight:950;letter-spacing:-.03em;color:#1f2937}
+    .promo-result-meta,.promo-selected-meta{font-size:11px;color:#6b7280;margin-top:3px;line-height:1.35}
+    .promo-amount{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;background:#dcfce7;color:#166534;font-size:12px;font-weight:950;white-space:nowrap}
+    .promo-amount.card-only{background:#eff6ff;color:#1d4ed8}.promo-amount.warn{background:#ffedd5;color:#9a3412}
+    .promo-mini-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}.promo-mini-tags span{font-size:10px;font-weight:850;color:#334155;background:#f1f5f9;border-radius:999px;padding:3px 6px}
+    .promo-result-card button,.promo-selected-card button{margin-top:8px;width:100%;padding:9px 10px;font-size:12px;background:#6d28d9;color:#fff}
+    .promo-selected-card button.remove{background:#fee2e2;color:#991b1b}.promo-empty{font-size:11px;color:#6b7280;background:#fff;border:1px dashed #c4b5fd;border-radius:12px;padding:9px;margin-top:8px;line-height:1.4}
+    .promo-guide-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}.promo-guide-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px}
+    .promo-guide-card h4{margin:0 0 4px;font-size:14px;letter-spacing:-.03em}.promo-guide-card p{margin:0 0 10px;font-size:12px;color:#64748b;line-height:1.4}.promo-guide-card button{width:100%;background:#111827;color:#fff;font-size:13px;padding:10px}
     .more-results-wrap{display:flex;justify-content:center;margin-top:12px}
     .more-results-wrap button{min-width:210px;background:#f1f5f9;color:#334155;border:1px solid #d1d5db}
 
@@ -549,6 +568,25 @@
           <div id="lgInstantPreview" class="lg-preview">LG제품 체크 시 롯데 멤버스카드 금액대별 캐시백만큼 즉시할인을 계산합니다. 할인 후 결제금액이 해당 구간을 유지해야 적용됩니다.</div>
         </div>
 
+
+
+        <div class="model-promo-box">
+          <div class="model-promo-head">모델별 단독/슈퍼히어로 혜택 확인</div>
+          <div class="hint">모델명 일부만 입력해도 후보를 보여줍니다. 선택한 혜택은 적용 가능한 카드 결과에만 반영됩니다.</div>
+          <label for="modelPromoSearchInput">모델명 일부 입력</label>
+          <input id="modelPromoSearchInput" placeholder="예: M876G, W2520, KQ83, S26 Plus" />
+          <label for="galaxyPromoSelect">갤럭시 자급제 빠른 선택</label>
+          <select id="galaxyPromoSelect"><option value="">갤럭시 모델 선택</option></select>
+          <div class="checkbox-row"><input id="promoLpayCheck" type="checkbox" checked><span>슈퍼히어로 엘페이 추가 혜택 포함</span></div>
+          <div class="model-promo-actions">
+            <button class="model-promo-btn" onclick="renderModelPromoResults()" type="button">모델 혜택 확인</button>
+            <button class="model-promo-btn sub" onclick="openModelPromoGuide()" type="button">원본 장표 보기</button>
+          </div>
+          <div id="modelPromoResults" class="model-promo-results"></div>
+          <div id="selectedModelPromos" class="model-promo-selected"></div>
+          <div class="promo-empty">수기 제품별 캐시백과 달리, 여기서 적용한 모델 혜택은 해당 제휴카드에만 자동 반영됩니다.</div>
+        </div>
+
         <label for="annualRateInput">일반 유이자 예상 연이율</label>
         <input id="annualRateInput" inputmode="decimal" value="19.5" />
         <div class="hint">무이자/고객유이자 조건이 없는 경우, 혜택 차감 전 결제원금 기준으로 예상 이자를 계산합니다.</div>
@@ -586,6 +624,7 @@
         </div>
         <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
         <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
+        <button class="full-btn secondary" onclick="openModelPromoGuide()">모델별 캐시백 장표 보기</button>
         <button class="full-btn accent" onclick="openCardIssueGuide()">제휴카드 발급 링크</button>
         <button class="full-btn member" onclick="openMemberJoinGuide()">회원등록 링크</button>
       </aside>
@@ -600,10 +639,11 @@
             ④ LG제품 즉시할인은 롯데 멤버스카드 금액대별 캐시백과 동일한 금액을 즉시할인으로 반영하되, 할인 후 결제금액이 해당 금액대 구간을 유지해야 적용<br>
             ⑤ 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
             ⑥ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
-            ⑦ 슈퍼히어로 모델은 롯데 멤버스/플랜 L.PAY 등록 후 결제 시 20/100/300만원 구간별 1/3/5만원 추가<br>
-            ⑧ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 라이트할부는 1만원 × 24개월, 구독결제는 1.3만원 × 24개월 반영<br>
-            ⑨ 삼성/우리 제휴카드는 기존 분할전략과 함께 전체금액 24개월 이자상쇄형 상담 시나리오도 함께 표시<br>
-            ⑩ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외
+            ⑦ 모델별 단독 캐시백은 검색 후 적용한 경우 해당 제휴카드 결과에만 반영<br>
+            ⑧ 슈퍼히어로 엘페이 추가 혜택은 체크 시 롯데 멤버스/플랜 조건에만 별도 반영<br>
+            ⑨ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 라이트할부는 1만원 × 24개월, 구독결제는 1.3만원 × 24개월 반영<br>
+            ⑩ 삼성/우리 제휴카드는 기존 분할전략과 함께 전체금액 24개월 이자상쇄형 상담 시나리오도 함께 표시<br>
+            ⑪ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외
           </div>
         </details>
 
@@ -634,6 +674,7 @@
                   <th>카드명</th>
                   <th>금액대 캐시백</th>
                   <th>제품별 캐시백</th>
+                  <th>모델단독</th>
                   <th>삼성 리워드</th>
                   <th>LG 즉시할인</th>
                   <th>청구할인</th>
@@ -737,6 +778,18 @@
     </div>
   </div>
 
+
+
+  <div id="modelPromoGuideModal" class="guide-modal" onclick="if(event.target.id==='modelPromoGuideModal') closeModelPromoGuide()">
+    <div class="guide-panel">
+      <div class="guide-head">
+        <h3>모델별 캐시백/엘페이 원본 장표</h3>
+        <button class="close-btn" onclick="closeModelPromoGuide()">닫기</button>
+      </div>
+      <div class="guide-note">모델별 혜택은 행사기간, HLM 기준 1인 1회, 대상 카드, 수금/승인 조건이 다릅니다. 상담 전 원본 장표를 함께 확인해주세요.</div>
+      <div class="promo-guide-grid" id="modelPromoGuideGrid"></div>
+    </div>
+  </div>
 
 
   <div id="cardIssueModal" class="guide-modal" onclick="if(event.target.id==='cardIssueModal') closeCardIssueGuide()">
@@ -871,6 +924,12 @@
     {min:20000000, benefit:1000000}
   ];
 
+  const promoChartItems = [{"id": "superhero", "title": "슈퍼히어로 모델 프로모션", "file": "promo-superhero-models.png", "desc": "대형가전 캐시백, 생활주방/스마트 즉시할인, 롯데제휴 엘페이 추가 혜택 확인"}, {"id": "samsung_samsung", "title": "삼성전자 × 삼성제휴카드 단독 캐시백", "file": "promo-samsung-samsungcard-models.png", "desc": "하이마트 삼성카드 결제 시 적용되는 삼성전자 모델별 단독 캐시백"}, {"id": "lg_shinhan", "title": "LG전자 × 신한제휴카드 단독 캐시백", "file": "promo-lg-shinhancard-models.png", "desc": "하이마트 신한카드 결제 시 적용되는 LG전자 모델별 단독 캐시백"}, {"id": "galaxy_shinhan", "title": "갤럭시 자급제 × 신한제휴카드 단독 캐시백", "file": "promo-galaxy-shinhancard-models.png", "desc": "갤럭시 자급제 모델별 신한제휴카드 단독 캐시백"}];
+
+  const modelPromoItems = [{"id": "sh_rm70f64r1x", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "RM70F64R1X", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_m626gbb032", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "M626GBB032.AKOR", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_t876mee1s1", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "T876MEE1S1.CKOR", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_s836mqq022", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "S836MQQ022.CKOR", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_d604mee52", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "D604MEE52.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_rm80f91l1xj", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "RM80F91L1XJ", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_rm70f90q2a", "group": "슈퍼히어로 대형가전", "product": "냉장고", "model": "RM70F90Q2A", "amount": 50000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_z490meef11", "group": "슈퍼히어로 대형가전", "product": "김치냉장고", "model": "Z490MEEF11.AKOR", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_z386gbb241", "group": "슈퍼히어로 대형가전", "product": "김치냉장고", "model": "Z386GBB241.AKOR", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_z225mee151", "group": "슈퍼히어로 대형가전", "product": "김치냉장고", "model": "Z225MEE151.AKOR", "amount": 40000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_rq33db7411w6", "group": "슈퍼히어로 대형가전", "product": "김치냉장고", "model": "RQ33DB7411W6", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_ckr_bffd1230geg", "group": "슈퍼히어로 대형가전", "product": "김치냉장고", "model": "CKR-BFFD1230GEG", "amount": 30000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 10000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_af70f19d11wrs", "group": "슈퍼히어로 대형가전", "product": "에어컨", "model": "AF70F19D11WRS", "amount": 50000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_af90h19d24grs", "group": "슈퍼히어로 대형가전", "product": "에어컨", "model": "AF90H19D24GRS", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_fq18gv3eb2", "group": "슈퍼히어로 대형가전", "product": "에어컨", "model": "FQ18GV3EB2.AKOR", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_easb0181raamdg", "group": "슈퍼히어로 대형가전", "product": "에어컨", "model": "EASB-0181RAAMDG", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_oled77b5hna", "group": "슈퍼히어로 대형가전", "product": "TV", "model": "OLED77B5HNA.AKRG", "amount": 50000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_ku75mh80afxkr", "group": "슈퍼히어로 대형가전", "product": "TV", "model": "KU75MH80AFXKR", "amount": 50000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_dec32h100", "group": "슈퍼히어로 대형가전", "product": "TV", "model": "DEC32H100", "amount": 20000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "즉시할인"}, {"id": "sh_w2520whm", "group": "슈퍼히어로 대형가전", "product": "세탁건조기", "model": "W2520WHM.AKOR2", "amount": 160000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_wh90f2522bbhy", "group": "슈퍼히어로 대형가전", "product": "세탁건조기", "model": "WH90F2522BBHY", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_rg20en", "group": "슈퍼히어로 대형가전", "product": "세탁건조기", "model": "RG20EN.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_wd80h25bhy", "group": "슈퍼히어로 대형가전", "product": "세탁건조기", "model": "WD80H25BHY", "amount": 100000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 50000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_sc5gmr81s", "group": "슈퍼히어로 대형가전", "product": "의류관리기", "model": "SC5GMR81S.AKOR", "amount": 40000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_df80h24r1c", "group": "슈퍼히어로 대형가전", "product": "의류관리기", "model": "DF80H24R1C", "amount": 80000, "payType": "캐시백", "appliesTo": ["롯데 멤버스카드", "롯데 플랜카드", "신한제휴카드", "삼성제휴카드"], "lpay": 30000, "note": "대형가전 캐시백 · 엘페이 추가 롯데제휴 한정"}, {"id": "sh_small_0", "group": "슈퍼히어로 생활주방/스마트", "product": "헤어뷰티", "model": "AIRWRAPNEWORIGIN(Y26)", "amount": 20000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_1", "group": "슈퍼히어로 생활주방/스마트", "product": "헤어뷰티", "model": "SUPERSONICBUCO(Y26)", "amount": 20000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_2", "group": "슈퍼히어로 생활주방/스마트", "product": "헤어뷰티", "model": "CBD-AHDB20LK", "amount": 10000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_3", "group": "슈퍼히어로 생활주방/스마트", "product": "헤어뷰티", "model": "UN-A7621", "amount": 3000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_4", "group": "슈퍼히어로 생활주방/스마트", "product": "맨즈뷰티", "model": "X-9001", "amount": 10000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_5", "group": "슈퍼히어로 생활주방/스마트", "product": "맨즈뷰티", "model": "73-G82010CC_CCR4", "amount": 40000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_6", "group": "슈퍼히어로 생활주방/스마트", "product": "여름제품", "model": "AM07WS(Y24)", "amount": 15000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_7", "group": "슈퍼히어로 생활주방/스마트", "product": "여름제품", "model": "CDHB-200AXLWWXH", "amount": 20000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_8", "group": "슈퍼히어로 생활주방/스마트", "product": "여름제품", "model": "DXTM120-NEK", "amount": 5000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_9", "group": "슈퍼히어로 생활주방/스마트", "product": "공기청정기", "model": "AS186HWWA.AKOR", "amount": 10000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_10", "group": "슈퍼히어로 생활주방/스마트", "product": "커피머신", "model": "GCV6-KR-WH", "amount": 5000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_11", "group": "슈퍼히어로 생활주방/스마트", "product": "믹서기/블렌더", "model": "BN500KR", "amount": 10000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_12", "group": "슈퍼히어로 생활주방/스마트", "product": "믹서기/블렌더", "model": "BC251KRGY", "amount": 10000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_13", "group": "슈퍼히어로 생활주방/스마트", "product": "복합오븐", "model": "CMW-C3020OEGW", "amount": 5000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_14", "group": "슈퍼히어로 생활주방/스마트", "product": "전기레인지", "model": "BEI3ASMLE.AKOR", "amount": 30000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_15", "group": "슈퍼히어로 생활주방/스마트", "product": "전기레인지", "model": "CC80H63U1HS", "amount": 30000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_16", "group": "슈퍼히어로 생활주방/스마트", "product": "식기세척기", "model": "DUE6BGH1E.AKOR", "amount": 60000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_17", "group": "슈퍼히어로 생활주방/스마트", "product": "식기세척기", "model": "DW90F79F1UAP", "amount": 60000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_18", "group": "슈퍼히어로 생활주방/스마트", "product": "전기밥솥", "model": "CRP-FHTR0610FLB", "amount": 37000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_19", "group": "슈퍼히어로 생활주방/스마트", "product": "음식물처리기", "model": "CFD-FFF201DCGW", "amount": 20000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_20", "group": "슈퍼히어로 생활주방/스마트", "product": "키보드/마우스", "model": "COX_SCARLET_GR", "amount": 11500, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "sh_small_21", "group": "슈퍼히어로 생활주방/스마트", "product": "애플주변기기", "model": "MFHP4KH/A", "amount": 10000, "payType": "즉시할인", "appliesTo": "all", "lpay": 0, "note": "생활주방/스마트 즉시할인"}, {"id": "ss_kq83", "group": "삼성전자 × 삼성제휴카드", "product": "TV", "model": "KQ83SF90AEXKR", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_kmr75", "group": "삼성전자 × 삼성제휴카드", "product": "TV", "model": "KMR75RH85AFXKR", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_kq77sh", "group": "삼성전자 × 삼성제휴카드", "product": "TV", "model": "KQ77SH90AFXKR", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_kq77sf", "group": "삼성전자 × 삼성제휴카드", "product": "TV", "model": "KQ77SF95AFXKR", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_ku85", "group": "삼성전자 × 삼성제휴카드", "product": "TV", "model": "KU85MH80AFXKR", "amount": 60000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_rm80", "group": "삼성전자 × 삼성제휴카드", "product": "냉장고", "model": "RM80F91K1X", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_rm70f64", "group": "삼성전자 × 삼성제휴카드", "product": "냉장고", "model": "RM70F64M2X", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_rm70f91", "group": "삼성전자 × 삼성제휴카드", "product": "냉장고", "model": "RM70F91R1A", "amount": 60000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_rwp70", "group": "삼성전자 × 삼성제휴카드", "product": "정수기", "model": "RWP70F15ANW", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_rk70f42", "group": "삼성전자 × 삼성제휴카드", "product": "김치냉장고", "model": "RK70F42F2X", "amount": 60000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_rk70f49", "group": "삼성전자 × 삼성제휴카드", "product": "김치냉장고", "model": "RK70F49D1A", "amount": 60000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_wd90h25", "group": "삼성전자 × 삼성제휴카드", "product": "세탁/건조기", "model": "WD90H25AHS", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_wd90f25", "group": "삼성전자 × 삼성제휴카드", "product": "세탁/건조기", "model": "WD90F25AHY", "amount": 90000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_df90", "group": "삼성전자 × 삼성제휴카드", "product": "의류관리기", "model": "DF90H24R4D", "amount": 60000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_dw90", "group": "삼성전자 × 삼성제휴카드", "product": "식기세척기", "model": "DW90F79F1U01", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_nz63", "group": "삼성전자 × 삼성제휴카드", "product": "전기레인지", "model": "NZ63DB553CFT", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_vr90", "group": "삼성전자 × 삼성제휴카드", "product": "청소기", "model": "VR90F01SAG", "amount": 60000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_vs28", "group": "삼성전자 × 삼성제휴카드", "product": "청소기", "model": "VS28D950ACB", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_ap90h10", "group": "삼성전자 × 삼성제휴카드", "product": "공청기", "model": "AP90H10198MDD", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_ap90h03", "group": "삼성전자 × 삼성제휴카드", "product": "공청기", "model": "AP90H03163EGD", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "ss_ay70", "group": "삼성전자 × 삼성제휴카드", "product": "제습기", "model": "AY70H21100GVD", "amount": 30000, "payType": "캐시백", "appliesTo": ["삼성제휴카드"], "lpay": 0, "note": "삼성제휴카드 단독"}, {"id": "lg_m876gga", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "M876GGA231.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_m876gqq", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "M876GQQ231.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_g646gbb031", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "G646GBB031.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_g646gbb032", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "G646GBB032.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_m626", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "M626GBB032.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_h876", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "H876GAG111.CKOR", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_t876", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "T876MEE1S1.CKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_t875", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "T875MEE111.CKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_s836", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "S836MQQ022.CKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_jm616", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "(J)M616GBB0J1.AKOR", "amount": 150000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_jh875", "group": "LG전자 × 신한제휴카드", "product": "냉장고", "model": "(J)H875GCB111.CKOR", "amount": 150000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_z495", "group": "LG전자 × 신한제휴카드", "product": "김치냉장고", "model": "Z495GBB251.AKOR", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_sq11", "group": "LG전자 × 신한제휴카드", "product": "에어컨", "model": "SQ11GK1WES.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_fq18", "group": "LG전자 × 신한제휴카드", "product": "에어컨", "model": "FQ18GV5BA2.AKOR", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_85qned92", "group": "LG전자 × 신한제휴카드", "product": "TV", "model": "85QNED92AGA.AKRQ", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_85qned91", "group": "LG전자 × 신한제휴카드", "product": "TV", "model": "85QNED91BKA.AKRQ", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_oled65", "group": "LG전자 × 신한제휴카드", "product": "TV", "model": "OLED65B5HNA.AKRG", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_oled83", "group": "LG전자 × 신한제휴카드", "product": "TV", "model": "OLED83C6FNA.AKRG", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_fx25v", "group": "LG전자 × 신한제휴카드", "product": "세탁기", "model": "FX25VSR.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_fx25g", "group": "LG전자 × 신한제휴카드", "product": "세탁기", "model": "FX25GSR.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_fx25gf", "group": "LG전자 × 신한제휴카드", "product": "세탁기", "model": "FX25GF.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_rd21", "group": "LG전자 × 신한제휴카드", "product": "건조기", "model": "RD21EN.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_rg20", "group": "LG전자 × 신한제휴카드", "product": "건조기", "model": "RG20EN.AKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_w2520", "group": "LG전자 × 신한제휴카드", "product": "워시타워", "model": "W2520WHM.AKOR2", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_jw2520", "group": "LG전자 × 신한제휴카드", "product": "워시타워", "model": "(J)W2520WHM.AKOR", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_jwa2323", "group": "LG전자 × 신한제휴카드", "product": "워시타워", "model": "(J)WA2323GEHN.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_wl22", "group": "LG전자 × 신한제휴카드", "product": "워시타워", "model": "WL22GEHU.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_fh25", "group": "LG전자 × 신한제휴카드", "product": "워시콤보", "model": "FH25EA.AKOR", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_fc2521", "group": "LG전자 × 신한제휴카드", "product": "워시콤보", "model": "FC2521SX6C.AKOR", "amount": 120000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_sc5msr", "group": "LG전자 × 신한제휴카드", "product": "스타일러", "model": "SC5MSR40S.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_sc5gmr", "group": "LG전자 × 신한제휴카드", "product": "스타일러", "model": "SC5GMR61S.BKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_sc5mbr", "group": "LG전자 × 신한제휴카드", "product": "스타일러", "model": "SC5MBR61S.BKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_a720", "group": "LG전자 × 신한제휴카드", "product": "청소기", "model": "A720WA.CKOR", "amount": 30000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_as356", "group": "LG전자 × 신한제휴카드", "product": "공청기", "model": "AS356NSHH.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_due5", "group": "LG전자 × 신한제휴카드", "product": "식기세척기", "model": "DUE5BGE.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_bei3", "group": "LG전자 × 신한제휴카드", "product": "전기레인지", "model": "BEI3AMB4E.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_wd523", "group": "LG전자 × 신한제휴카드", "product": "정수기", "model": "WD523VCT.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_wu923", "group": "LG전자 × 신한제휴카드", "product": "정수기", "model": "WU923AS.AKOR", "amount": 60000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_15z90", "group": "LG전자 × 신한제휴카드", "product": "PC", "model": "15Z90T-G.AA5MK", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_16z95_as50", "group": "LG전자 × 신한제휴카드", "product": "PC", "model": "16Z95U-G.AS50K", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "lg_16z95_as5", "group": "LG전자 × 신한제휴카드", "product": "PC", "model": "16Z95U-G.AS5MK", "amount": 90000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독"}, {"id": "gx_s25_edge_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 엣지 256GB", "amount": 149600, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1496000}, {"id": "gx_s25_edge_512", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 엣지 512GB", "amount": 174900, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1749000}, {"id": "gx_s25_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 256GB", "amount": 115500, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1155000}, {"id": "gx_s25_512", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 512GB", "amount": 129800, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1298000}, {"id": "gx_s25_plus_512", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 Plus 512GB", "amount": 149600, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1496000}, {"id": "gx_s25_plus_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 Plus 256GB", "amount": 135300, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1353000}, {"id": "gx_s25_ultra_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S25 Ultra 256GB", "amount": 169800, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1698000}, {"id": "gx_s26_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S26 256GB Sky Blue", "amount": 85000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1210000}, {"id": "gx_s26_512", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S26 512GB Sky Blue", "amount": 98000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1400000}, {"id": "gx_s26_plus_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S26 Plus 256GB Sky Blue", "amount": 101000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1430000}, {"id": "gx_s26_plus_512", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S26 Plus 512GB Sky Blue", "amount": 113000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1610000}, {"id": "gx_s26_ultra_256", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S26 Ultra 256GB Sky Blue", "amount": 121000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1724000}, {"id": "gx_s26_ultra_512", "group": "갤럭시 자급제 × 신한제휴카드", "product": "모바일", "model": "갤럭시 S26 Ultra 512GB Sky Blue", "amount": 138000, "payType": "캐시백", "appliesTo": ["신한제휴카드"], "lpay": 0, "note": "신한제휴카드 단독 · 상품가액 50% 초과 수금 필요", "price": 1970000}];
+
+  let selectedModelPromoIds = new Set();
+
   const cards = [
     {
       name:'롯데 멤버스카드',
@@ -949,7 +1008,7 @@
       type:'woori',
       cashbackType:'tier',
       tiers:standardTiers,
-      supportsNaverPay:false,
+      supportsNaverPay:true,
       cond:{monthly:16000, months:[24,36], min:300000, label:'월30만원 이상 사용'},
       split:{amount:390000, rate:.06, monthly:16000, months:24, label:'39만원만 24개월 고객유이자 6.0%'},
       installmentRules:[
@@ -964,7 +1023,7 @@
       type:'samsung',
       cashbackType:'tier',
       tiers:standardTiers,
-      supportsNaverPay:false,
+      supportsNaverPay:true,
       cond:{monthly:10000, lightMonthly:10000, subscriptionMonthly:13000, months:[24], min:300000, label:'라이트할부 월30만원 이상 1만원 · 구독결제 1.3만원'},
       light:{min:3000000, benefit:100000, label:'라이트할부 이용 + 합산 300만원 이상 추가'},
       split:{amount:240000, rate:.065, monthly:10000, subscriptionMonthly:13000, months:24, lightMin:3000000, lightBenefit:100000, label:'24만원만 24개월 고객유이자 6.5%'},
@@ -980,7 +1039,7 @@
       type:'shinhan',
       cashbackType:'tier',
       tiers:standardTiers,
-      supportsNaverPay:false,
+      supportsNaverPay:true,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
@@ -1111,9 +1170,165 @@
 
   function naverPayBenefit(card, amount, flags){
     if(flags.simple || !flags.naver || !card.supportsNaverPay) return 0;
-    if(amount >= 3000000) return 30000;
-    if(amount >= 1000000) return 10000;
+    if(amount >= 10000000) return 100000;
+    if(amount >= 5000000) return 50000;
     return 0;
+  }
+
+  function normalizePromoText(value){
+    return String(value || '').toUpperCase().replace(/\s+/g,'').replace(/[.\-_/()]/g,'');
+  }
+
+  function findModelPromo(id){
+    return modelPromoItems.find(item => item.id === id);
+  }
+
+  function cardNameKey(card){
+    return String(card && card.name ? card.name : '').replace(/ · .+$/,'');
+  }
+
+  function promoAppliesToCard(card, item){
+    if(!item) return false;
+    if(item.appliesTo === 'all') return true;
+    return Array.isArray(item.appliesTo) && item.appliesTo.includes(cardNameKey(card));
+  }
+
+  function promoLpayAppliesToCard(card, item){
+    if(!item || !item.lpay || !checked('promoLpayCheck', true)) return false;
+    return ['롯데 멤버스카드','롯데 플랜카드'].includes(cardNameKey(card));
+  }
+
+  function selectedModelPromos(){
+    return Array.from(selectedModelPromoIds).map(findModelPromo).filter(Boolean);
+  }
+
+  function modelPromoBenefit(card){
+    const selected = selectedModelPromos();
+    let base = 0;
+    let lpay = 0;
+    const labels = [];
+    selected.forEach(item => {
+      if(promoAppliesToCard(card, item)){
+        base += Number(item.amount || 0);
+        labels.push(`${item.model} ${won(item.amount)}`);
+      }
+      if(promoLpayAppliesToCard(card, item)){
+        lpay += Number(item.lpay || 0);
+        labels.push(`${item.model} 엘페이 ${won(item.lpay)}`);
+      }
+    });
+    return {base, lpay, total:base + lpay, labels};
+  }
+
+  function promoEligibleText(item){
+    if(!item) return '';
+    if(item.appliesTo === 'all') return '전 카드 공통 즉시할인';
+    return (item.appliesTo || []).join(', ');
+  }
+
+  function promoSearchMatches(item, query){
+    const q = normalizePromoText(query);
+    if(!q) return false;
+    const hay = normalizePromoText([item.model,item.product,item.group,item.note].join(' '));
+    return hay.includes(q);
+  }
+
+  function renderModelPromoResults(){
+    const box = $('modelPromoResults');
+    if(!box) return;
+    const query = val('modelPromoSearchInput','').trim();
+    const q = normalizePromoText(query);
+    if(q.length < 2){
+      box.innerHTML = '<div class="promo-empty">모델명 일부를 2글자 이상 입력하면 후보가 표시됩니다.</div>';
+      renderSelectedModelPromos();
+      return;
+    }
+    const results = modelPromoItems.filter(item => promoSearchMatches(item, query)).slice(0, 12);
+    if(!results.length){
+      box.innerHTML = '<div class="promo-empty">일치하는 모델 혜택을 찾지 못했습니다. 원본 장표 또는 모델코드를 다시 확인해주세요.</div>';
+      renderSelectedModelPromos();
+      return;
+    }
+    box.innerHTML = results.map(item => {
+      const selected = selectedModelPromoIds.has(item.id);
+      return `<div class="promo-result-card">
+        <div class="promo-result-top">
+          <div>
+            <div class="promo-result-name">${safeText(item.model)}</div>
+            <div class="promo-result-meta">${safeText(item.product)} · ${safeText(item.group)} · ${safeText(item.payType)}</div>
+          </div>
+          <div class="promo-amount ${item.appliesTo === 'all' ? '' : 'card-only'}">${won(item.amount)}</div>
+        </div>
+        <div class="promo-mini-tags"><span>적용: ${safeText(promoEligibleText(item))}</span>${item.lpay ? `<span>엘페이 추가 ${won(item.lpay)}</span>` : ''}${item.price ? `<span>상품가액 ${won(item.price)}</span>` : ''}</div>
+        <div class="promo-result-meta">${safeText(item.note || '')}</div>
+        <button type="button" onclick="applyModelPromo('${safeText(item.id)}')">${selected ? '이미 적용됨' : '이 혜택 적용하기'}</button>
+      </div>`;
+    }).join('');
+    renderSelectedModelPromos();
+  }
+
+  function renderSelectedModelPromos(){
+    const box = $('selectedModelPromos');
+    if(!box) return;
+    const selected = selectedModelPromos();
+    if(!selected.length){
+      box.innerHTML = '';
+      return;
+    }
+    box.innerHTML = selected.map(item => `
+      <div class="promo-selected-card">
+        <div class="promo-selected-top">
+          <div>
+            <div class="promo-selected-name">적용중 · ${safeText(item.model)}</div>
+            <div class="promo-selected-meta">${safeText(item.group)} · ${safeText(promoEligibleText(item))}</div>
+          </div>
+          <div class="promo-amount warn">${won(item.amount + (checked('promoLpayCheck', true) ? (item.lpay || 0) : 0))}</div>
+        </div>
+        <div class="promo-mini-tags"><span>기본 ${won(item.amount)}</span>${item.lpay ? `<span>엘페이 ${won(item.lpay)}</span>` : ''}</div>
+        <button class="remove" type="button" onclick="removeModelPromo('${safeText(item.id)}')">적용 해제</button>
+      </div>
+    `).join('');
+  }
+
+  function applyModelPromo(id){
+    if(!findModelPromo(id)) return;
+    selectedModelPromoIds.add(id);
+    renderModelPromoResults();
+    calculate();
+  }
+
+  function removeModelPromo(id){
+    selectedModelPromoIds.delete(id);
+    renderModelPromoResults();
+    calculate();
+  }
+
+  function setupGalaxyPromoSelect(){
+    const select = $('galaxyPromoSelect');
+    if(!select) return;
+    const items = modelPromoItems.filter(item => item.group === '갤럭시 자급제 × 신한제휴카드');
+    select.innerHTML = '<option value="">갤럭시 모델 선택</option>' + items.map(item => `<option value="${safeText(item.id)}">${safeText(item.model)} · ${won(item.amount)}</option>`).join('');
+  }
+
+  function openModelPromoGuide(){
+    renderModelPromoGuide();
+    $('modelPromoGuideModal').classList.add('open');
+  }
+
+  function closeModelPromoGuide(){
+    $('modelPromoGuideModal').classList.remove('open');
+  }
+
+  function renderModelPromoGuide(){
+    const grid = $('modelPromoGuideGrid');
+    if(!grid) return;
+    grid.innerHTML = promoChartItems.map(item => `
+      <div class="promo-guide-card">
+        <h4>${safeText(item.title)}</h4>
+        <p>${safeText(item.desc)}<br><b>파일명:</b> ${safeText(item.file)}</p>
+        <button type="button" onclick="openImageViewer('${safeText(item.file)}','${safeText(item.title)}')">원본 장표 크게 보기</button>
+      </div>
+    `).join('');
   }
 
   function estimateInterest(amount, month, annualRate){
@@ -1168,9 +1383,11 @@
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
       const lgInstant = Number(lgInstantDiscount || 0);
+      const modelPromoInfo = modelPromoBenefit(card);
+      const modelPromo = modelPromoInfo.total;
       const original = Number(originalAmount || amount);
       const interest = inst.interest;
-      const gross = base + product + samsungRewardAmount + lgInstant + billing + point + lola + hero + conditionTotal + light + naver;
+      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + billing + point + lola + hero + conditionTotal + light + naver;
       const netBenefit = gross - interest;
 
       return {
@@ -1178,6 +1395,8 @@
         rowType:'normal',
         base,
         product,
+        modelPromo,
+        modelPromoInfo,
         samsungReward:samsungRewardAmount,
         lgInstant,
         billing,
@@ -1218,8 +1437,10 @@
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
       const lgInstant = Number(lgInstantDiscount || 0);
+      const modelPromoInfo = modelPromoBenefit(card);
+      const modelPromo = modelPromoInfo.total;
       const original = Number(originalAmount || amount);
-      const gross = base + product + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
+      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
       const netBenefit = gross - interest;
       const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
       const usageDetail = samsungUsageDetail(card, category);
@@ -1232,6 +1453,8 @@
         rowType:'strategy',
         base,
         product,
+        modelPromo,
+        modelPromoInfo,
         samsungReward:samsungRewardAmount,
         lgInstant,
         billing:0,
@@ -1276,8 +1499,10 @@
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
       const lgInstant = Number(lgInstantDiscount || 0);
+      const modelPromoInfo = modelPromoBenefit(card);
+      const modelPromo = modelPromoInfo.total;
       const original = Number(originalAmount || amount);
-      const gross = base + product + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
+      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
       const netBenefit = gross - full24Interest;
       const offsetBenefit = conditionTotal + light;
       const offsetResult = offsetBenefit - full24Interest;
@@ -1293,6 +1518,8 @@
         rowType:'full24',
         base,
         product,
+        modelPromo,
+        modelPromoInfo,
         samsungReward:samsungRewardAmount,
         lgInstant,
         billing:0,
@@ -1368,7 +1595,7 @@
       .sort((a,b) => b.netBenefit - a.netBenefit);
 
     currentRows = rows;
-    currentContext = {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
+    currentContext = {amount, paymentAmount, month, productCashback, modelPromoTotal:rows.reduce((sum,r)=>Math.max(sum, r.modelPromo || 0),0), samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
     render(amount, month, category, annualRate, flags, rows);
   }
 
@@ -1440,6 +1667,7 @@
     if(best.rowType === 'full24') tags.push('<span class="badge warn">전체24개월 상쇄형</span>');
     if(best.conditionTotal > 0) tags.push('<span class="badge ok">사용조건부</span>');
     if(best.product > 0) tags.push('<span class="badge ok">제품별 캐시백</span>');
+    if(best.modelPromo > 0) tags.push('<span class="badge ok">모델단독</span>');
     if(best.samsungReward > 0) tags.push('<span class="badge ok">삼성 리워드</span>');
     if(best.lgInstant > 0) tags.push('<span class="badge ok">LG 즉시할인</span>');
     if(best.point > 0) tags.push('<span class="badge ok">포인트적립</span>');
@@ -1487,6 +1715,7 @@
         <div class="podium-sub">실체감가 ${won(r.netCost)}</div>
         <div class="podium-mini">
           ${r.product > 0 ? '<span>제품캐시백</span>' : ''}
+          ${r.modelPromo > 0 ? '<span>모델단독</span>' : ''}
           ${r.samsungReward > 0 ? '<span>삼성리워드</span>' : ''}
           ${r.lgInstant > 0 ? '<span>LG즉시할인</span>' : ''}
           ${r.conditionTotal > 0 ? '<span>사용조건부</span>' : ''}
@@ -1538,6 +1767,7 @@
         <div class="mobile-card-grid detail-grid">
           ${r.base ? `<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>` : ''}
           ${r.product ? `<div class="mobile-card-item"><div class="m-label">제품별 캐시백</div><div class="m-value">${won(r.product)}</div></div>` : ''}
+          ${r.modelPromo ? `<div class="mobile-card-item"><div class="m-label">모델단독</div><div class="m-value">${won(r.modelPromo)}</div></div>` : ''}
           ${r.samsungReward ? `<div class="mobile-card-item"><div class="m-label">삼성 리워드</div><div class="m-value">${won(r.samsungReward)}</div></div>` : ''}
           ${r.lgInstant ? `<div class="mobile-card-item"><div class="m-label">LG 즉시할인</div><div class="m-value">${won(r.lgInstant)}</div></div>` : ''}
           ${r.billing ? `<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>` : ''}
@@ -1568,6 +1798,7 @@
         </td>
         <td>${won(r.base)}</td>
         <td>${won(r.product)}</td>
+        <td>${won(r.modelPromo || 0)}</td>
         <td>${won(r.samsungReward || 0)}</td>
         <td>${won(r.lgInstant || 0)}</td>
         <td>${won(r.billing)}</td>
@@ -1665,6 +1896,7 @@
       light:{icon:'➕', tone:'blue', tags:['추가혜택']},
       offset:{icon:'⚖️', tone:'green', tags:['24개월','이자상쇄']},
       naver:{icon:'🟢', tone:'green', tags:['옵션혜택']},
+      modelPromo:{icon:'🎯', tone:'violet', tags:['모델단독','카드별']},
       installment:{icon:'🗓️', tone:'slate', tags:['할부조건']},
       interest:{icon:'➖', tone:'red', tags:['비용차감']},
       gross:{icon:'📦', tone:'blue', tags:['합계']},
@@ -1685,6 +1917,7 @@
     };
     add('base','금액대 캐시백',row.base,'월간 금액대별 혜택 기준');
     add('product','제품별 캐시백',row.product,'상품권·제조사 캐시백·품목별 추가 혜택 등 수기 입력분');
+    add('modelPromo','모델별 단독 캐시백',row.modelPromo,(row.modelPromoInfo && row.modelPromoInfo.labels && row.modelPromoInfo.labels.length) ? row.modelPromoInfo.labels.join(' · ') : '검색으로 적용한 모델 혜택 · 적용 카드에만 반영');
     add('samsungReward','삼성 리워드',row.samsungReward,'삼성제품 결제금액의 20% · 디지털 온누리 상품권 지급');
     add('lgInstant','LG 즉시할인',row.lgInstant,'LG제품 프로모션 · 롯데 멤버스카드 금액대별 캐시백과 동일 금액 즉시할인');
     add('billing','청구할인',row.billing,'카드 청구할인 적용분');
@@ -1712,7 +1945,7 @@
       <div class="print-preview-head">
         <div>
           <div class="print-preview-title">${safeText(row.name)}</div>
-          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.lgInstantDiscount ? ` · LG 할인 후 카드결제기준 ${won(currentContext.paymentAmount)}` : ''}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''}${currentContext.samsungReward ? ` · 삼성 리워드 ${won(currentContext.samsungReward)}` : ''}${currentContext.lgInstantDiscount ? ` · LG 즉시할인 ${won(currentContext.lgInstantDiscount)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
+          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.lgInstantDiscount ? ` · LG 할인 후 카드결제기준 ${won(currentContext.paymentAmount)}` : ''}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''}${currentContext.modelPromoTotal ? ` · 모델단독 ${won(currentContext.modelPromoTotal)}` : ''}${currentContext.samsungReward ? ` · 삼성 리워드 ${won(currentContext.samsungReward)}` : ''}${currentContext.lgInstantDiscount ? ` · LG 즉시할인 ${won(currentContext.lgInstantDiscount)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
         </div>
       </div>
       <div class="print-editor-list">
@@ -2385,6 +2618,25 @@
     calculate();
   });
 
+
+  bindInput('modelPromoSearchInput', () => {
+    const select = $('galaxyPromoSelect');
+    if(select) select.value = '';
+    renderModelPromoResults();
+  });
+
+  bindChange('galaxyPromoSelect', () => {
+    const id = val('galaxyPromoSelect','');
+    const item = findModelPromo(id);
+    if(item && $('modelPromoSearchInput')) $('modelPromoSearchInput').value = item.model;
+    renderModelPromoResults();
+  });
+
+  bindChange('promoLpayCheck', () => {
+    renderSelectedModelPromos();
+    calculate();
+  });
+
   [
     'installmentSelect',
     'categorySelect',
@@ -2401,6 +2653,10 @@
     'simpleModeCheck'
   ].forEach(id => bindChange(id, calculate));
 
+  setupGalaxyPromoSelect();
+  renderModelPromoResults();
+  updateSamsungRewardPreview();
+  updateLgInstantPreview();
   calculate();
 </script>
 </body>
