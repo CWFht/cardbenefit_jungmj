@@ -92,11 +92,6 @@
     .samsung-reward-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px}
     .samsung-reward-grid label{margin:0 0 5px;color:#92400e}
     .reward-preview{font-size:12px;font-weight:950;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:9px;margin-top:8px;line-height:1.35}
-    .lg-reward-box{margin-top:10px;border:1px solid #bbf7d0;border-radius:16px;background:#f0fdf4;padding:11px}
-    .lg-reward-box .checkbox-row{padding:0 0 6px;color:#166534;font-weight:900}
-    .lg-reward-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px}
-    .lg-reward-grid label{margin:0 0 5px;color:#166534}
-    .lg-preview{font-size:12px;font-weight:950;color:#166534;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:12px;padding:9px;margin-top:8px;line-height:1.35}
 
     .model-promo-box{margin-top:10px;border:1px solid #c4b5fd;border-radius:16px;background:#f5f3ff;padding:11px}
     .model-promo-head{font-size:13px;font-weight:950;color:#5b21b6;margin-bottom:4px;letter-spacing:-.03em}
@@ -527,7 +522,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">7월 v2</div>
+        <div class="version-badge" title="현재 적용 버전">7월 v4</div>
       </div>
       <p>결제금액과 할부개월을 입력하면 카드별 캐시백·청구할인·포인트·조건부 혜택·예상 이자를 한 번에 비교합니다.</p>
     </header>
@@ -569,18 +564,6 @@
         <label for="productCashbackInput">제품별 캐시백 혜택</label>
         <input id="productCashbackInput" inputmode="numeric" value="0" placeholder="예: 100,000" />
         <div class="hint">상품권, 제조사 캐시백, 품목별 추가 혜택처럼 카드와 별도로 발생하는 제품 혜택을 입력합니다. 모든 카드 비교와 요약 인쇄에 동일하게 반영됩니다.</div>
-
-
-        <div class="lg-reward-box">
-          <div class="checkbox-row"><input id="lgInstantCheck" type="checkbox"><span>LG 더블업 행사 적용 (~7/13)</span></div>
-          <div class="lg-reward-grid">
-            <div>
-              <label for="lgInstantBaseInput">LG제품 행사 기준금액</label>
-              <input id="lgInstantBaseInput" inputmode="numeric" value="0" placeholder="체크 시 결제금액 자동 입력" />
-            </div>
-          </div>
-          <div id="lgInstantPreview" class="lg-preview">LG 더블업 행사(~7/13) 체크 시 롯데 멤버스카드 금액대별 캐시백만큼 즉시할인을 계산합니다. 할인 후 결제금액이 해당 구간을 유지해야 적용됩니다.</div>
-        </div>
 
 
 
@@ -648,14 +631,13 @@
           <div style="margin-top:10px;">
             ① 계산 기준은 접혀 있는 상태가 기본이며, 필요할 때만 펼쳐 확인합니다.<br>
             ② 제품별 캐시백은 상품권·제조사 캐시백 등 카드와 별도로 발생하는 혜택으로 모든 카드 비교에 동일 반영<br>
-            ③ LG 더블업 행사(~7/13)는 롯데 멤버스카드 금액대별 캐시백과 동일한 금액을 즉시할인으로 반영하되, 할인 후 결제금액이 해당 금액대 구간을 유지해야 적용<br>
-            ④ 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
-            ⑤ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
-            ⑥ 모델별 단독 캐시백은 검색 후 적용한 경우 해당 제휴카드 결과에만 반영<br>
-            ⑦ 슈퍼히어로 엘페이 추가 혜택은 체크 시 롯데 멤버스/플랜 조건에만 별도 반영<br>
-            ⑧ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 라이트할부는 1만원 × 24개월, 구독결제는 1.3만원 × 24개월 반영<br>
-            ⑨ 삼성/우리 제휴카드는 기존 분할전략과 함께 전체금액 24개월 이자상쇄형 상담 시나리오도 함께 표시<br>
-            ⑩ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외
+            ③ 롯데 클래스카드와 우리 일반카드는 금액대별 캐시백 제외<br>
+            ④ 롯데 멤버스카드는 일시불 또는 유이자할부 결제 시 특별적립 1%(최대 5만원) + 기본적립 0.5% 반영<br>
+            ⑤ 모델별 단독 캐시백은 검색 후 적용한 경우 해당 제휴카드 결과에만 반영<br>
+            ⑥ 슈퍼히어로 엘페이 추가 혜택은 체크 시 롯데 멤버스/플랜 조건에만 별도 반영<br>
+            ⑦ 우리제휴 24개월은 월 30만원 이상 사용 시 1.6만원 × 24개월, 삼성제휴 라이트할부는 1만원 × 24개월, 구독결제는 1.3만원 × 24개월 반영<br>
+            ⑧ 삼성/우리 제휴카드는 기존 분할전략과 함께 전체금액 24개월 이자상쇄형 상담 시나리오도 함께 표시<br>
+            ⑨ 구독 구매로 분리되는 36개월 무이자는 일반 비교에서는 제외
           </div>
         </details>
 
@@ -689,7 +671,6 @@
                   <th>금액대 캐시백</th>
                   <th>제품별 캐시백</th>
                   <th>모델단독</th>
-                  <th>LG 더블업</th>
                   <th>청구할인</th>
                   <th>포인트적립</th>
                   <th>롤라머니</th>
@@ -907,7 +888,6 @@
   let currentQrViewerUrl = '';
   let showAllResults = false;
   let samsungRewardAmountEdited = false;
-  let lgInstantAmountEdited = false;
 
   const standardTiers = [
     {min:3000000, benefit:150000},
@@ -1565,11 +1545,11 @@
     const samsungRewardEnabled = false;
     const samsungRewardBase = 0;
     const samsungReward = 0;
-    const lgInstantEnabled = checked('lgInstantCheck', false);
-    const lgInstantBase = Number(onlyNumber(val('lgInstantBaseInput')));
-    const lgInstantInfo = lgInstantEnabled ? lgInstantDiscountInfo(lgInstantBase) : {tier:0, discount:0, payment:lgInstantBase, label:'미적용'};
-    const lgInstantDiscount = lgInstantEnabled ? lgInstantInfo.discount : 0;
-    const paymentAmount = Math.max(amount - lgInstantDiscount, 0);
+    const lgInstantEnabled = false;
+    const lgInstantBase = 0;
+    const lgInstantInfo = {tier:0, discount:0, payment:amount, label:'종료'};
+    const lgInstantDiscount = 0;
+    const paymentAmount = amount;
     const category = val('categorySelect', 'normal');
     const annualRate = Number(val('annualRateInput', 19.5) || 0);
     const flags = {
@@ -1589,7 +1569,6 @@
   function calculate(){
     showAllResults = false;
     updateSamsungRewardPreview();
-    updateLgInstantPreview();
     const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs();
     const rows = [
       ...buildBaseRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
@@ -1680,7 +1659,6 @@
     if(best.conditionTotal > 0) tags.push('<span class="badge ok">사용조건부</span>');
     if(best.product > 0) tags.push('<span class="badge ok">제품별 캐시백</span>');
     if(best.modelPromo > 0) tags.push('<span class="badge ok">모델단독</span>');
-    if(best.lgInstant > 0) tags.push('<span class="badge ok">LG 더블업</span>');
     if(best.point > 0) tags.push('<span class="badge ok">포인트적립</span>');
     if(best.interest > 0) tags.push('<span class="badge warn">이자반영</span>');
     else tags.push('<span class="badge ok">무이자/일시불</span>');
@@ -1723,7 +1701,6 @@
         <div class="podium-mini">
           ${r.product > 0 ? '<span>제품캐시백</span>' : ''}
           ${r.modelPromo > 0 ? '<span>모델단독</span>' : ''}
-          ${r.lgInstant > 0 ? '<span>LG더블업</span>' : ''}
           ${r.conditionTotal > 0 ? '<span>사용조건부</span>' : ''}
           ${r.rowType === 'strategy' ? '<span>분할전략</span>' : ''}
           ${r.rowType === 'full24' ? '<span>전체24개월</span>' : ''}
@@ -1775,7 +1752,6 @@
           ${r.base ? `<div class="mobile-card-item"><div class="m-label">금액대</div><div class="m-value">${won(r.base)}</div></div>` : ''}
           ${r.product ? `<div class="mobile-card-item"><div class="m-label">제품별 캐시백</div><div class="m-value">${won(r.product)}</div></div>` : ''}
           ${r.modelPromo ? `<div class="mobile-card-item"><div class="m-label">모델단독</div><div class="m-value">${won(r.modelPromo)}</div></div>` : ''}
-          ${r.lgInstant ? `<div class="mobile-card-item"><div class="m-label">LG 더블업</div><div class="m-value">${won(r.lgInstant)}</div></div>` : ''}
           ${r.billing ? `<div class="mobile-card-item"><div class="m-label">청구할인</div><div class="m-value">${won(r.billing)}</div></div>` : ''}
           ${r.point ? `<div class="mobile-card-item"><div class="m-label">포인트</div><div class="m-value">${won(r.point)}</div></div>` : ''}
           ${r.lola ? `<div class="mobile-card-item"><div class="m-label">롤라머니</div><div class="m-value">${won(r.lola)}</div></div>` : ''}
@@ -1805,7 +1781,6 @@
         <td>${won(r.base)}</td>
         <td>${won(r.product)}</td>
         <td>${won(r.modelPromo || 0)}</td>
-        <td>${won(r.lgInstant || 0)}</td>
         <td>${won(r.billing)}</td>
         <td>${r.point > 0 ? `<b>${won(r.point)}</b><br><span class="small">일시불/유이자</span>` : won(0)}</td>
         <td>${won(r.lola)}</td>
@@ -1893,7 +1868,6 @@
     const map = {
       base:{icon:'💳', tone:'blue', tags:['기본혜택','금액대']},
       product:{icon:'🎁', tone:'green', tags:['제품혜택','수기입력']},
-      lgInstant:{icon:'🟢', tone:'green', tags:['LG즉시할인','멤버스기준']},
       billing:{icon:'🧾', tone:'blue', tags:['청구할인']},
       point:{icon:'⭐', tone:'violet', tags:['포인트']},
       lola:{icon:'💰', tone:'orange', tags:['플랜혜택']},
@@ -1924,7 +1898,6 @@
     add('base','금액대 캐시백',row.base,'월간 금액대별 혜택 기준');
     add('product','제품별 캐시백',row.product,'상품권·제조사 캐시백·품목별 추가 혜택 등 수기 입력분');
     add('modelPromo','모델별 단독 캐시백',row.modelPromo,(row.modelPromoInfo && row.modelPromoInfo.labels && row.modelPromoInfo.labels.length) ? row.modelPromoInfo.labels.join(' · ') : '검색으로 적용한 모델 혜택 · 적용 카드에만 반영');
-    add('lgInstant','LG 더블업 즉시할인',row.lgInstant,'LG 더블업 행사(~7/13) · 롯데 멤버스카드 금액대별 캐시백과 동일 금액 즉시할인');
     add('billing','청구할인',row.billing,'카드 청구할인 적용분');
     add('point','포인트적립',row.point,'롯데 멤버스카드 일시불/유이자할부 결제 시 반영');
     add('lola','롤라머니',row.lola,'롯데 플랜카드 롤라머니 환산 혜택');
@@ -1950,7 +1923,7 @@
       <div class="print-preview-head">
         <div>
           <div class="print-preview-title">${safeText(row.name)}</div>
-          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.lgInstantDiscount ? ` · LG 더블업 후 카드결제기준 ${won(currentContext.paymentAmount)}` : ''}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''}${currentContext.modelPromoTotal ? ` · 모델단독 ${won(currentContext.modelPromoTotal)}` : ''}${currentContext.lgInstantDiscount ? ` · LG 더블업 ${won(currentContext.lgInstantDiscount)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
+          <div class="print-preview-meta">결제금액 ${won(currentContext.amount)}${currentContext.productCashback ? ` · 제품별 캐시백 ${won(currentContext.productCashback)}` : ''}${currentContext.modelPromoTotal ? ` · 모델단독 ${won(currentContext.modelPromoTotal)}` : ''} · ${row.inst.status} · 순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}</div>
         </div>
       </div>
       <div class="print-editor-list">
@@ -1986,7 +1959,7 @@
         <div class="print-sheet-sub">${safeText(row.memo||'')}</div>
         <div class="print-sheet-grid">
           <div class="print-sheet-kpi"><div class="label">결제금액</div><div class="value">${won(currentContext.amount)}</div></div>
-          <div class="print-sheet-kpi"><div class="label">제품/브랜드 혜택</div><div class="value">${won((row.product||0) + (row.lgInstant||0))}</div></div>
+          <div class="print-sheet-kpi"><div class="label">제품/브랜드 혜택</div><div class="value">${won((row.product||0))}</div></div>
           <div class="print-sheet-kpi"><div class="label">총 혜택</div><div class="value">${won(row.gross)}</div></div>
           <div class="print-sheet-kpi"><div class="label">순혜택</div><div class="value">${won(row.netBenefit)}</div></div>
           <div class="print-sheet-kpi"><div class="label">실체감가</div><div class="value">${won(row.netCost)}</div></div>
@@ -2377,6 +2350,14 @@
       desc:'회원등록 또는 로그인 후 마이페이지로 이동하는 링크'
     },
     {
+      id:'samsung_reward_event',
+      name:'이벤트',
+      icon:'🎁',
+      image:'samsung-reward-event-qr.png',
+      url:'https://m.site.naver.com/29QIv',
+      desc:'선풍기 특가 QR코드 · 삼성리워드 신청 링크'
+    },
+    {
       id:'lpoint_mobile_card',
       name:'L.POINT 모바일카드/등록',
       icon:'📱',
@@ -2550,36 +2531,11 @@
       : '삼성제품 체크 시 결제금액의 20%를 디지털 온누리 상품권 리워드로 계산합니다.';
   }
 
-  function syncLgInstantBase(force=false){
-    const check = $('lgInstantCheck');
-    const input = $('lgInstantBaseInput');
-    const amountInput = $('amountInput');
-    if(!check || !input || !amountInput || !check.checked) return;
-    if(force || !lgInstantAmountEdited){
-      input.value = amountInput.value || '0';
-    }
-  }
-
-  function updateLgInstantPreview(){
-    const preview = $('lgInstantPreview');
-    if(!preview) return;
-    const enabled = checked('lgInstantCheck', false);
-    const base = Number(onlyNumber(val('lgInstantBaseInput')));
-    const info = enabled ? lgInstantDiscountInfo(base) : {tier:0, discount:0, payment:base};
-    if(!enabled){
-      preview.innerHTML = 'LG 더블업 행사(~7/13) 체크 시 롯데 멤버스카드 금액대별 캐시백만큼 즉시할인을 계산합니다. 할인 후 결제금액이 해당 구간을 유지해야 적용됩니다.';
-      return;
-    }
-    preview.innerHTML = info.discount > 0
-      ? `LG 더블업 즉시할인 예상: <b>${won(info.discount)}</b> <span style="font-weight:800;color:#166534;">(${won(info.tier)} 구간 · 할인 후 결제기준 ${won(info.payment)})</span>`
-      : `현재 금액은 LG 더블업 즉시할인 조건 미달입니다. <span style="font-weight:800;color:#166534;">300만원 구간은 3,150,000원 이상부터 15만원 즉시할인</span>으로 계산됩니다.`;
-  }
 
   bindInput('amountInput', () => {
     const el = $('amountInput');
     el.value = formatNumber(el.value);
     syncSamsungRewardBase(false);
-    syncLgInstantBase(false);
     calculate();
   });
 
@@ -2603,23 +2559,6 @@
     el.value = formatNumber(el.value);
     samsungRewardAmountEdited = true;
     updateSamsungRewardPreview();
-    calculate();
-  });
-
-  bindChange('lgInstantCheck', () => {
-    if(checked('lgInstantCheck', false)){
-      lgInstantAmountEdited = false;
-      syncLgInstantBase(true);
-    }
-    updateLgInstantPreview();
-    calculate();
-  });
-
-  bindInput('lgInstantBaseInput', () => {
-    const el = $('lgInstantBaseInput');
-    el.value = formatNumber(el.value);
-    lgInstantAmountEdited = true;
-    updateLgInstantPreview();
     calculate();
   });
 
