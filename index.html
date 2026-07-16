@@ -356,6 +356,22 @@
     .member-link-img{width:100%;height:100%;max-height:128px;object-fit:contain;border-radius:14px;display:block}
     .member-icon-wrap{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#dcfce7);display:flex;align-items:center;justify-content:center;font-size:30px;border:1px solid #dbeafe}
     .full-btn.member{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+
+    .quick-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .quick-tool-grid .full-btn{margin-top:0}
+    .full-btn.reward{background:linear-gradient(135deg,#f97316,#c2410c);color:#fff}
+    .full-btn.chatbot{background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff}
+    .reward-qr-panel{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}
+    .reward-qr-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px;box-shadow:0 8px 18px rgba(15,23,42,.05)}
+    .reward-title{font-size:18px;font-weight:950;letter-spacing:-.04em;margin-bottom:4px}
+    .reward-desc{font-size:12px;color:#64748b;line-height:1.45;margin-bottom:10px}
+    .reward-qr-img{width:180px;height:180px;object-fit:contain;border:1px solid #e5e7eb;border-radius:18px;background:#fff;padding:8px;cursor:zoom-in}
+    .chatbot-box{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}
+    .chatbot-examples{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 12px}
+    .chatbot-chip{border:1px solid #ddd6fe;background:#f5f3ff;color:#5b21b6;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:850;cursor:pointer}
+    .chatbot-answer{white-space:pre-wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:16px;padding:12px;font-size:13px;line-height:1.55;color:#1f2937;margin-top:10px;min-height:88px}
+    .chatbot-warning{font-size:11px;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:9px;margin-top:10px;line-height:1.4}
+    @media(min-width:981px){.reward-qr-panel{grid-template-columns:280px 1fr}.reward-qr-img{width:220px;height:220px}.quick-tool-grid{grid-template-columns:repeat(2,1fr)}}
     @media(min-width:981px){.member-card{grid-template-columns:1fr}.member-image-wrap{width:100%;min-height:168px}.member-link-img{max-height:188px}.member-icon-wrap{width:86px;height:86px;font-size:34px}}
     @media(min-width:981px){
       .issue-card-grid{grid-template-columns:repeat(4,1fr)}
@@ -522,7 +538,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">7월 v4</div>
+        <div class="version-badge" title="현재 적용 버전">7월 v5</div>
       </div>
       <p>결제금액과 할부개월을 입력하면 카드별 캐시백·청구할인·포인트·조건부 혜택·예상 이자를 한 번에 비교합니다.</p>
     </header>
@@ -621,8 +637,12 @@
         <button class="full-btn" onclick="openInstallmentGuide()">카드 무이자 행사 보기</button>
         <button class="full-btn secondary" onclick="openAmountBenefitGuide()">월간 금액대별 혜택 보기</button>
         <button class="full-btn secondary" onclick="openModelPromoGuide()">모델별 캐시백 장표 보기</button>
-        <button class="full-btn accent" onclick="openCardIssueGuide()">제휴카드 발급 링크</button>
-        <button class="full-btn member" onclick="openMemberJoinGuide()">회원등록 링크</button>
+        <div class="quick-tool-grid">
+          <button class="full-btn member" onclick="openMemberJoinGuide()">회원등록/신규혜택</button>
+          <button class="full-btn accent" onclick="openCardIssueGuide()">제휴카드 발급</button>
+          <button class="full-btn reward" onclick="openSamsungRewardGuide()">삼성 리워드 신청</button>
+          <button class="full-btn chatbot" onclick="openPromoChatbot()">판촉 챗봇</button>
+        </div>
       </aside>
 
       <section class="panel">
@@ -806,6 +826,56 @@
       </div>
       <div id="memberJoinToast" class="issue-toast"></div>
       <div id="memberJoinGrid" class="issue-card-grid"></div>
+    </div>
+  </div>
+
+  <div id="samsungRewardModal" class="guide-modal" onclick="if(event.target.id==='samsungRewardModal') closeSamsungRewardGuide()">
+    <div class="guide-panel">
+      <div class="guide-head">
+        <h3>삼성 리워드 신청</h3>
+        <button class="close-btn" onclick="closeSamsungRewardGuide()">닫기</button>
+      </div>
+      <div id="samsungRewardToast" class="issue-toast"></div>
+      <div class="reward-qr-panel">
+        <div class="reward-qr-card" style="text-align:center">
+          <img class="reward-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=10&data=https%3A%2F%2Fm.site.naver.com%2F29QIv" alt="삼성 리워드 신청 QR" onclick="openQrViewer('삼성 리워드 신청 QR','https://m.site.naver.com/29QIv')" />
+        </div>
+        <div class="reward-qr-card">
+          <div class="reward-title">삼성 리워드 신청</div>
+          <div class="reward-desc">고객이 삼성 리워드 신청 페이지로 바로 접속할 수 있는 QR/링크입니다. 행사 적용 여부는 실제 행사기간과 신청조건을 별도 확인하세요.</div>
+          <div class="issue-url-text">https://m.site.naver.com/29QIv</div>
+          <div class="issue-actions" style="margin-top:10px">
+            <button class="issue-open" onclick="openSamsungRewardUrl()">링크 열기</button>
+            <button class="issue-copy" onclick="copySamsungRewardUrl()">URL 복사</button>
+            <button class="issue-copy" onclick="copySamsungRewardQr()">QR 링크 복사</button>
+            <button class="issue-open" onclick="openQrViewer('삼성 리워드 신청 QR','https://m.site.naver.com/29QIv')">QR 확대보기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="promoChatbotModal" class="guide-modal" onclick="if(event.target.id==='promoChatbotModal') closePromoChatbot()">
+    <div class="guide-panel">
+      <div class="guide-head">
+        <h3>판촉 챗봇</h3>
+        <button class="close-btn" onclick="closePromoChatbot()">닫기</button>
+      </div>
+      <div class="chatbot-box">
+        <label for="promoChatInput" style="margin-top:0">무엇이 궁금하세요?</label>
+        <input id="promoChatInput" placeholder="예: 우리카드 무이자, M876G 혜택, 삼성 24개월, 네이버페이 조건" onkeydown="if(event.key==='Enter') answerPromoChat()" />
+        <div class="chatbot-examples">
+          <span class="chatbot-chip" onclick="askPromoChat('우리카드 무이자 몇 개월이야?')">우리 무이자</span>
+          <span class="chatbot-chip" onclick="askPromoChat('국민카드 무이자')">국민 무이자</span>
+          <span class="chatbot-chip" onclick="askPromoChat('삼성제휴 24개월 혜택')">삼성 24개월</span>
+          <span class="chatbot-chip" onclick="askPromoChat('M876G 혜택 있어?')">M876G 혜택</span>
+          <span class="chatbot-chip" onclick="askPromoChat('갤럭시 S26 Plus 256GB 캐시백')">갤럭시 캐시백</span>
+          <span class="chatbot-chip" onclick="askPromoChat('네이버페이 조건')">네이버페이</span>
+        </div>
+        <button class="primary-btn" type="button" onclick="answerPromoChat()">질문하기</button>
+        <div id="promoChatAnswer" class="chatbot-answer">등록된 7월 판촉 데이터 기준으로만 답변합니다. 원본 장표와 다를 경우 원본 장표를 우선 확인해주세요.</div>
+        <div class="chatbot-warning">※ 이 챗봇은 현재 툴에 내장된 판촉 데이터만 검색합니다. 애매한 조건은 원본 장표와 카드사/행사 공지를 최종 확인하세요.</div>
+      </div>
     </div>
   </div>
 
@@ -2350,12 +2420,12 @@
       desc:'회원등록 또는 로그인 후 마이페이지로 이동하는 링크'
     },
     {
-      id:'samsung_reward_event',
-      name:'이벤트',
+      id:'new_member_benefit',
+      name:'신규회원혜택',
       icon:'🎁',
-      image:'samsung-reward-event-qr.png',
-      url:'https://m.site.naver.com/29QIv',
-      desc:'선풍기 특가 QR코드 · 삼성리워드 신청 링크'
+      image:'new-member-benefit-qr.png',
+      url:'',
+      desc:'선풍기 특가 QR코드 이미지'
     },
     {
       id:'lpoint_mobile_card',
@@ -2374,30 +2444,36 @@
   function renderMemberJoinLinks(){
     const grid = $('memberJoinGrid');
     if(!grid) return;
-    grid.innerHTML = memberJoinLinks.map(link => `
+    grid.innerHTML = memberJoinLinks.map(link => {
+      const hasUrl = !!link.url;
+      return `
       <div class="issue-card member-card">
         <div class="member-image-wrap">
-          <img class="member-link-img" src="${safeText(link.image)}" alt="${safeText(link.name)} 이미지" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <img class="member-link-img" src="${safeText(link.image)}" alt="${safeText(link.name)} 이미지" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" onclick="${hasUrl ? '' : `openImageViewer('${safeText(link.image)}','${safeText(link.name)}')`}" />
           <div class="member-icon-wrap" style="display:none">${safeText(link.icon)}</div>
         </div>
         <div class="issue-content">
           <div class="issue-title">${safeText(link.name)}</div>
           <div class="issue-desc">${safeText(link.desc)}</div>
           <div class="issue-qr-row">
-            <img class="issue-qr" src="${qrUrl(link.url)}" alt="${safeText(link.name)} QR코드" onclick="openQrViewer('${safeText(link.name)} QR','${safeText(link.url)}')" />
+            ${hasUrl ? `<img class="issue-qr" src="${qrUrl(link.url)}" alt="${safeText(link.name)} QR코드" onclick="openQrViewer('${safeText(link.name)} QR','${safeText(link.url)}')" />` : `<img class="issue-qr" src="${safeText(link.image)}" alt="${safeText(link.name)} QR 이미지" onclick="openImageViewer('${safeText(link.image)}','${safeText(link.name)}')" />`}
             <div style="flex:1;min-width:120px;">
-              <div class="issue-url-text">${safeText(link.url)}</div>
+              <div class="issue-url-text">${hasUrl ? safeText(link.url) : '이미지 QR을 스캔해 확인하세요.'}</div>
             </div>
           </div>
           <div class="issue-actions">
-            <button class="issue-open" onclick="openMemberJoinUrl('${safeText(link.id)}')">링크 열기</button>
-            <button class="issue-copy" onclick="copyMemberJoinUrl('${safeText(link.id)}')">URL 복사</button>
-            <button class="issue-copy" onclick="copyMemberJoinQr('${safeText(link.id)}')">QR 링크 복사</button>
-            <button class="issue-open" onclick="openQrViewer('${safeText(link.name)} QR','${safeText(link.url)}')">QR 확대보기</button>
+            ${hasUrl ? `
+              <button class="issue-open" onclick="openMemberJoinUrl('${safeText(link.id)}')">링크 열기</button>
+              <button class="issue-copy" onclick="copyMemberJoinUrl('${safeText(link.id)}')">URL 복사</button>
+              <button class="issue-copy" onclick="copyMemberJoinQr('${safeText(link.id)}')">QR 링크 복사</button>
+              <button class="issue-open" onclick="openQrViewer('${safeText(link.name)} QR','${safeText(link.url)}')">QR 확대보기</button>
+            ` : `
+              <button class="issue-open" onclick="openImageViewer('${safeText(link.image)}','${safeText(link.name)}')">이미지 확대보기</button>
+            `}
           </div>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   }
 
   function showMemberJoinToast(message){
@@ -2436,6 +2512,123 @@
 
   function closeMemberJoinGuide(){
     $('memberJoinModal').classList.remove('open');
+  }
+
+  const samsungRewardApplyUrl = 'https://m.site.naver.com/29QIv';
+
+  function openSamsungRewardGuide(){
+    $('samsungRewardModal').classList.add('open');
+  }
+
+  function closeSamsungRewardGuide(){
+    $('samsungRewardModal').classList.remove('open');
+  }
+
+  function showSamsungRewardToast(message){
+    const toast = $('samsungRewardToast');
+    if(!toast) return;
+    toast.textContent = message;
+    toast.classList.add('open');
+    clearTimeout(showSamsungRewardToast.timer);
+    showSamsungRewardToast.timer = setTimeout(()=>toast.classList.remove('open'), 1800);
+  }
+
+  function openSamsungRewardUrl(){
+    window.open(samsungRewardApplyUrl, '_blank', 'noopener');
+  }
+
+  async function copySamsungRewardUrl(){
+    const ok = await copyText(samsungRewardApplyUrl);
+    showSamsungRewardToast(ok ? '삼성 리워드 신청 URL을 복사했습니다.' : '복사에 실패했습니다.');
+  }
+
+  async function copySamsungRewardQr(){
+    const ok = await copyText(qrUrl(samsungRewardApplyUrl));
+    showSamsungRewardToast(ok ? 'QR 이미지 링크를 복사했습니다.' : '복사에 실패했습니다.');
+  }
+
+  function openPromoChatbot(){
+    $('promoChatbotModal').classList.add('open');
+    setTimeout(()=>{ const input=$('promoChatInput'); if(input) input.focus(); }, 80);
+  }
+
+  function closePromoChatbot(){
+    $('promoChatbotModal').classList.remove('open');
+  }
+
+  function askPromoChat(q){
+    const input = $('promoChatInput');
+    if(input) input.value = q;
+    answerPromoChat();
+  }
+
+  function promoChatNormalize(v){
+    return String(v || '').toLowerCase().replace(/\s+/g,'').replace(/[.\-_/()]/g,'');
+  }
+
+  function answerPromoChat(){
+    const input = $('promoChatInput');
+    const answer = $('promoChatAnswer');
+    if(!answer) return;
+    const q = input ? input.value.trim() : '';
+    const nq = promoChatNormalize(q);
+    if(!q){
+      answer.textContent = '질문을 입력해주세요. 예: 우리카드 무이자, M876G 혜택, 삼성제휴 24개월, 네이버페이 조건';
+      return;
+    }
+
+    if(nq.includes('무이자') || nq.includes('할부')){
+      if(nq.includes('우리')){
+        answer.textContent = '우리카드 무이자 기준\n- 우리 일반카드: 2~6개월 무이자\n- 우리제휴카드: 2~6개월 무이자\n- 우리제휴 24개월은 고객유이자 6.0% 기준이며, 월 30만원 이상 사용조건 혜택과 함께 상담합니다.';
+        return;
+      }
+      if(nq.includes('국민') || nq.includes('kb')){
+        answer.textContent = 'KB국민 일반카드 기준\n- 2~5개월 무이자\n- 금액대별 추가혜택은 500만원 이상 구간부터 반영됩니다.';
+        return;
+      }
+      if(nq.includes('롯데') || nq.includes('멤버스') || nq.includes('플랜') || nq.includes('클래스')){
+        answer.textContent = '롯데카드 무이자 기준\n- 롯데 멤버스카드: 5만원 이상 2~5개월, 100만원 이상 12개월 무이자\n- 롯데 플랜카드/W카드: 100만원 이상 2~5개월 무이자\n- 롯데 클래스카드: 5만원 이상 2~5개월 무이자\n- 플랜/일반카드는 12개월 무이자 대상이 아닙니다.';
+        return;
+      }
+      if(nq.includes('삼성')){
+        answer.textContent = '삼성카드 무이자/24개월 기준\n- 삼성제휴카드: 2~3개월 무이자\n- 24개월은 고객유이자 6.5% 기준\n- 라이트할부 월 30만원 사용 시 1만원 × 24개월\n- 라이트할부 이용 + 합산 300만원 이상 결제 시 추가 10만원\n- 구독결제는 월 1.3만원 × 24개월 기준입니다.';
+        return;
+      }
+      if(nq.includes('신한')){
+        answer.textContent = '신한카드 기준\n- 신한제휴/일반은 2~3개월 무이자 중심으로 반영되어 있습니다.\n- 모델별 단독 캐시백은 신한제휴카드 결제 조건일 때만 해당 카드 결과에 반영됩니다.';
+        return;
+      }
+      answer.textContent = '기본 무이자 요약\n- 우리: 2~6개월\n- KB국민: 2~5개월\n- 롯데 멤버스: 5만원 이상 2~5개월, 100만원 이상 12개월\n- 롯데 플랜/W: 100만원 이상 2~5개월\n- 삼성/신한/현대/광주/하나/NH농협/BC: 주로 2~3개월 기준\n원본 장표도 함께 확인해주세요.';
+      return;
+    }
+
+    if(nq.includes('삼성') && (nq.includes('24') || nq.includes('라이트') || nq.includes('제휴'))){
+      answer.textContent = '삼성제휴카드 24개월 상담 기준\n- 24개월 고객유이자 6.5%\n- 라이트할부 기준: 월 30만원 이상 사용 시 10,000원 × 24개월\n- 라이트할부 이용 및 합산 결제금액 300만원 이상 시 추가 100,000원\n- 구독결제 기준: 월 30만원 이상 사용 시 13,000원 × 24개월\n주의: 라이트할부 1.3만원은 구독결제 기준입니다.';
+      return;
+    }
+
+    if(nq.includes('네이버') || nq.includes('naver')){
+      answer.textContent = '네이버페이/QR 추가혜택 기준\n- 대상 카드: 롯데 멤버스/플랜, 우리제휴, 삼성제휴, 신한제휴\n- 500만원 이상: 5만원\n- 1,000만원 이상: 10만원\n- 분할결제 합산불가, 네이버페이X삼성페이 제외 등 원본 조건 확인이 필요합니다.';
+      return;
+    }
+
+    if(nq.includes('리워드') || nq.includes('온누리')){
+      answer.textContent = '삼성 리워드 안내\n- 계산 항목에서는 종료되어 더 이상 혜택으로 반영하지 않습니다.\n- 신청 페이지는 메인 화면의 “삼성 리워드 신청” 버튼에서 QR/링크로 확인할 수 있습니다.';
+      return;
+    }
+
+    const matched = modelPromoItems.filter(item => promoSearchMatches(item, q)).slice(0, 8);
+    if(matched.length){
+      answer.textContent = matched.map((item, idx) => `${idx+1}. ${item.model}\n- 구분: ${item.group}\n- 품목: ${item.product}\n- 혜택: ${won(item.amount)} ${item.payType}\n- 적용: ${promoEligibleText(item)}${item.lpay ? `\n- 엘페이 추가: ${won(item.lpay)} · 롯데 멤버스/플랜 조건` : ''}${item.price ? `\n- 상품가액: ${won(item.price)}` : ''}\n- 메모: ${item.note || '원본 장표 확인 필요'}`).join('\n\n');
+      return;
+    }
+
+    if(nq.includes('슈퍼') || nq.includes('엘페이') || nq.includes('lpay')){
+      answer.textContent = '슈퍼히어로/엘페이 안내\n- 대형가전 캐시백은 장표상 적용 가능 카드에만 반영됩니다.\n- 엘페이 추가 혜택은 롯데 멤버스/플랜 조건에서만 별도 반영됩니다.\n- 모델명 일부를 입력하면 대상 모델을 검색할 수 있습니다.';
+      return;
+    }
+
+    answer.textContent = '등록된 판촉 데이터에서 명확한 답변을 찾지 못했습니다.\n모델명 일부, 카드명, “무이자”, “네이버페이”, “삼성 24개월”처럼 다시 질문해보거나 원본 장표를 확인해주세요.';
   }
 
   function openInstallmentGuide(){
