@@ -538,22 +538,9 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">8월 v3</div>
+        <div class="version-badge" title="현재 적용 버전">8월 v4</div>
       </div>
       <p>결제금액과 할부개월을 입력하면 카드별 캐시백·청구할인·포인트·조건부 혜택·예상 이자를 한 번에 비교합니다.</p>
-      <div class="smart-hero-tools">
-        <div class="smart-hero-card">
-          <div class="smart-hero-title">8월 상담 흐름을 단순화했습니다</div>
-          <div class="smart-hero-text">① 결제금액 입력 → ② 모델 검색 → ③ 계산하기 순서로 보면 됩니다. 세부 장표와 조건은 필요할 때만 열어보는 구조로 정리했습니다.</div>
-        </div>
-        <div class="smart-hero-card">
-          <div class="smart-hero-title">빠른 실행</div>
-          <div class="smart-hero-actions">
-            <button type="button" onclick="focusModelPromoSearch()">모델 검색</button>
-            <button type="button" class="dark" onclick="openPromoChatbot()">판촉 챗봇</button>
-          </div>
-        </div>
-      </div>
     </header>
 
     <main class="grid">
@@ -597,15 +584,13 @@
 
 
         <div class="model-promo-box">
-          <div class="model-promo-head">모델별 혜택 확인</div>
-          <div class="hint">8월 v3: 모델 검색을 상담의 중심으로 두고, 자동 적용 가능/수기 확인 항목을 분리했습니다. 복잡한 판촉은 검색 후 필요한 항목만 적용하세요.</div>
+          <div class="model-promo-head">행사모델 혜택 확인</div>
+          <div class="hint">8월 v4: 행사모델 검색 후 자동 적용 가능/수기 확인 항목을 분리해서 보여줍니다. 복잡한 판촉은 검색 결과를 확인한 뒤 필요한 항목만 적용하세요.</div>
           <label for="modelPromoSearchInput">모델명 일부 입력</label>
           <input id="modelPromoSearchInput" placeholder="예: M876G, WD90, FQ18, OLED77, SM-F976" />
-          <label for="galaxyPromoSelect">갤럭시/MX 빠른 선택</label>
-          <select id="galaxyPromoSelect"><option value="">갤럭시 모델 선택</option></select>
           <div class="checkbox-row"><input id="promoLpayCheck" type="checkbox"><span>선택 모델의 추가 L.PAY 항목이 있으면 함께 반영</span></div>
           <div class="model-promo-actions">
-            <button class="model-promo-btn" onclick="renderModelPromoResults()" type="button">모델 혜택 확인</button>
+            <button class="model-promo-btn" onclick="renderModelPromoResults()" type="button">행사모델 혜택 확인</button>
             <button class="model-promo-btn sub" onclick="openModelPromoGuide()" type="button">원본 장표 보기</button>
           </div>
           <div id="modelPromoResults" class="model-promo-results"></div>
@@ -660,28 +645,22 @@
 
       <section class="panel">
 
-        <div class="advisor-panel" id="smartAdvisorPanel">
+        <div class="advisor-panel" id="smartAdvisorPanel" style="display:none;">
           <div class="advisor-head">
             <div>
               <div class="advisor-kicker">스마트 상담 대시보드</div>
               <div class="advisor-title">입력 후 바로 상담 포인트를 확인하세요</div>
               <div class="advisor-desc">계산 결과와 8월 주요 주의사항을 한 화면에서 요약합니다. 상세표는 아래에서 필요할 때 확인하면 됩니다.</div>
             </div>
-            <div class="advisor-badge">8월 v3</div>
+            <div class="advisor-badge">8월 v4</div>
           </div>
-          <div id="smartAdvisorSummary" class="smart-summary-grid">
-            <div class="smart-summary-card blue"><div class="label">시작 방법</div><div class="value">금액 입력</div><div class="sub">결제금액과 할부개월 선택 후 계산하기</div></div>
-            <div class="smart-summary-card"><div class="label">모델 혜택</div><div class="value">검색 우선</div><div class="sub">M876G, WD90처럼 일부 모델명 입력</div></div>
-            <div class="smart-summary-card warn"><div class="label">롯데카드</div><div class="value">발급 제한</div><div class="sub">신규/추가 발급 중지, 기존 고객 교체만 안내</div></div>
-            <div class="smart-summary-card good"><div class="label">상담 보조</div><div class="value">챗봇 사용</div><div class="sub">조건이 헷갈리면 판촉 챗봇으로 확인</div></div>
-          </div>
-          <div id="smartAdvisorChecks" class="advisor-checklist">
-            <div class="advisor-check warning"><b>필수 주의</b><span>롯데카드는 8/1~9/15 신규·추가 발급이 제한됩니다. 기존 고객 교체/재발급만 가능하며 기존 혜택 소멸 가능성을 안내하세요.</span></div>
+          <div id="smartAdvisorSummary" class="smart-summary-grid"></div>
+          <div id="smartAdvisorChecks" class="advisor-checklist"></div>
             <div class="advisor-check info"><b>간편결제</b><span>네이버페이와 엘페이는 1,000만원 이상 조건 중심입니다. QR/앱카드 등록과 분할결제 합산 불가 조건을 확인하세요.</span></div>
           </div>
           <div class="advisor-actions">
             <button type="button" onclick="focusAmountInput()">결제금액 수정</button>
-            <button type="button" class="green" onclick="focusModelPromoSearch()">모델 혜택 검색</button>
+            <button type="button" class="green" onclick="focusModelPromoSearch()">행사모델 검색</button>
             <button type="button" class="sub" onclick="openModelPromoGuide()">원본 장표</button>
             <button type="button" class="orange" onclick="openPromoChatbot()">판촉 챗봇</button>
           </div>
@@ -1766,33 +1745,50 @@
   }
 
   function renderSmartAdvisor(best, amount, rows){
+    const panel = $('smartAdvisorPanel');
     const summary = $('smartAdvisorSummary');
     const checks = $('smartAdvisorChecks');
-    if(!summary || !checks) return;
+    if(!panel || !summary || !checks) return;
+    if(!rows || !rows.length){
+      panel.style.display = 'none';
+      summary.innerHTML = '';
+      checks.innerHTML = '';
+      return;
+    }
+    panel.style.display = 'block';
     const promo = summarizeSelectedPromos();
     const flags = currentContext && currentContext.flags ? currentContext.flags : readFlags();
-    const topName = best ? safeText(best.name) : '계산 전';
+    const topName = best ? safeText(best.name) : '계산 결과 없음';
     const netBenefit = best ? won(best.netBenefit) : '0원';
     const netCost = best ? won(best.netCost) : won(amount || 0);
-    const modelText = promo.selected.length ? `${promo.auto.length}건 자동 · ${promo.manual.length}건 수기` : '검색 전';
-    const payText = `${flags.naverPay ? '네이버페이 ' : ''}${flags.superHero ? '엘페이 ' : ''}`.trim() || '미선택';
+    const modelText = promo.selected.length ? `${promo.auto.length}건 자동 · ${promo.manual.length}건 수기` : '선택 없음';
     summary.innerHTML = `
       <div class="smart-summary-card blue"><div class="label">추천 카드</div><div class="value">${topName}</div><div class="sub">현재 조건 기준 1순위</div></div>
       <div class="smart-summary-card good"><div class="label">순혜택</div><div class="value">${netBenefit}</div><div class="sub">이자 반영 후 실질 혜택</div></div>
       <div class="smart-summary-card"><div class="label">실체감가</div><div class="value">${netCost}</div><div class="sub">결제금액 - 순혜택</div></div>
-      <div class="smart-summary-card warn"><div class="label">모델 혜택</div><div class="value">${modelText}</div><div class="sub">자동 적용/수기 확인 분리</div></div>
+      <div class="smart-summary-card warn"><div class="label">행사모델</div><div class="value">${modelText}</div><div class="sub">자동 적용/수기 확인 분리</div></div>
     `;
     const checkItems = [];
-    checkItems.push(`<div class="advisor-check warning"><b>롯데카드 발급 제한</b><span>8/1~9/15 신규·추가 발급 중지. 기존 고객 교체/재발급만 가능하며 교체 시 기존 롯데카드 혜택 소멸 가능성을 안내하세요.</span></div>`);
-    checkItems.push(`<div class="advisor-check ${payText==='미선택'?'info':'ok'}"><b>간편결제 적용</b><span>${payText==='미선택'?'네이버페이/엘페이 미선택 상태입니다. 1,000만원 이상 결제 상담 시 조건을 확인하세요.':payText+' 적용 체크 상태입니다. 단일 승인건, QR/앱카드 등록, 분할결제 합산불가 조건을 확인하세요.'}</span></div>`);
+    if(best && /롯데.*멤버스|롯데.*플랜|롯데.*클래스/.test(best.name)){
+      checkItems.push(`<div class="advisor-check warning"><b>롯데카드 주의</b><span>8/1~9/15 신규·추가 발급 중지입니다. 기존 고객 교체/재발급만 가능하며 교체 시 기존 롯데카드 혜택 소멸 가능성을 안내하세요.</span></div>`);
+    }
+    if(flags.naverPay || flags.superHero){
+      const parts = [];
+      if(flags.naverPay) parts.push('네이버페이');
+      if(flags.superHero) parts.push('엘페이');
+      checkItems.push(`<div class="advisor-check ok"><b>간편결제 적용</b><span>${parts.join(' + ')} 적용 상태입니다. 1,000만원 이상 조건, 단일 승인건, QR/앱카드 등록, 분할결제 합산불가 여부를 확인하세요.</span></div>`);
+    }
     if(promo.manual.length){
-      checkItems.push(`<div class="advisor-check warning"><b>수기 확인 ${promo.manual.length}건</b><span>패키지·동시구매·MX 항목은 자동 계산하지 않았습니다. 원본 장표 확인 후 제품별 캐시백 칸에 직접 입력하세요.</span></div>`);
+      checkItems.push(`<div class="advisor-check warning"><b>행사모델 수기 확인 ${promo.manual.length}건</b><span>패키지·동시구매 항목은 자동 계산하지 않았습니다. 원본 장표 확인 후 제품별 캐시백 칸에 직접 입력하세요.</span></div>`);
     }
     if(best && /우리제휴/.test(best.name)){
-      checkItems.push(`<div class="advisor-check ok"><b>우리제휴 8월 조건</b><span>24/36개월 조건부 혜택은 30만 1.8만 기준입니다. 24개월 결제건은 금액대별 캐시백 제외 조건을 함께 확인하세요.</span></div>`);
+      checkItems.push(`<div class="advisor-check ok"><b>우리제휴 조건</b><span>24/36개월 조건부 혜택은 30만 1.8만 기준입니다. 24개월 결제건은 금액대별 캐시백 제외 조건을 함께 확인하세요.</span></div>`);
     }
     if(best && /삼성제휴/.test(best.name)){
-      checkItems.push(`<div class="advisor-check ok"><b>삼성제휴 24개월</b><span>라이트할부 24개월은 6.5% 유이자이며, 합산 300만원 이상 시 10만원 추가 캐시백 조건을 확인하세요.</span></div>`);
+      checkItems.push(`<div class="advisor-check ok"><b>삼성제휴 조건</b><span>라이트할부 24개월은 6.5% 유이자이며, 합산 300만원 이상 시 10만원 추가 캐시백 조건을 확인하세요.</span></div>`);
+    }
+    if(best && /신한제휴/.test(best.name)){
+      checkItems.push(`<div class="advisor-check ok"><b>신한제휴 조건</b><span>신한 단독/행사모델 캐시백은 대상 모델 및 행사기간, 수금/승인 조건을 함께 확인하세요.</span></div>`);
     }
     checks.innerHTML = checkItems.join('');
   }
