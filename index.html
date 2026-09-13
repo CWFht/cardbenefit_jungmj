@@ -534,7 +534,7 @@
     }
 
 
-    /* 9월 v6: 금액대 추천 카드 */
+    /* 9월 v7: 금액대 추천 카드 */
     .amount-recommend-box{margin:14px 0 18px;padding:16px;border:1px solid #c7d2fe;background:linear-gradient(180deg,#eef2ff,#fff);border-radius:20px;box-shadow:0 10px 24px rgba(37,99,235,.08)}
     .amount-recommend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
     .amount-recommend-title{font-size:16px;font-weight:900;color:#1e1b4b;margin-bottom:4px}
@@ -557,7 +557,7 @@
     @media(max-width:760px){.amount-recommend-head{flex-direction:column}.amount-recommend-action{width:100%}.amount-rec-top{align-items:flex-start}.amount-rec-benefit{font-size:16px}}
 
   
-    /* 9월 v6 · 2차 UI 개선 */
+    /* 9월 v7 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -631,7 +631,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">9월 v6</div>
+        <div class="version-badge" title="현재 적용 버전">9월 v7</div>
       </div>
       <p>결제금액을 입력하면 추천 카드부터 확인하고, 할부개월 선택 후 카드별 캐시백·청구할인·조건부 혜택·예상 이자를 비교합니다.</p>
     </header>
@@ -1036,6 +1036,17 @@
     el.dataset.rawValue = String(n);
     return n;
   };
+  // 결제금액은 화면 전체에서 하나의 상태값만 사용한다.
+  // 입력창 표시값/추천카드/오른쪽 계산결과가 서로 다른 값을 읽는 문제를 방지하기 위한 단일 소스.
+  let authoritativeAmount = 0;
+  const syncAuthoritativeAmountFromInput = () => {
+    const el = $('amountInput');
+    if(!el) return authoritativeAmount;
+    const raw = onlyNumber(el.value);
+    authoritativeAmount = Number(raw || 0);
+    el.dataset.rawValue = String(authoritativeAmount);
+    return authoritativeAmount;
+  };
   const val = (id, def = '') => {
     const el = $(id);
     return el ? el.value : def;
@@ -1096,7 +1107,6 @@
       tiers:memberTiers,
       billingDiscount:{rate:.05, cap:30000},
       memberPoint:{specialRate:.01, specialCap:50000, baseRate:.005},
-      superHeroLpay:true,
       supportsLpay:true,
       supportsNaverPay:true,
       installmentRules:[
@@ -1105,7 +1115,7 @@
         {type:'free', months:[12], min:1000000, label:'100만원 이상 12개월 무이자'},
         {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
       ],
-      memo:'300만원 구간부터 금액대 캐시백 반영. 일시불/유이자할부 시 포인트적립과 L.PAY 슈퍼히어로 추가 혜택을 확인.'
+      memo:'300만원 구간부터 금액대 캐시백 반영. 일시불/유이자할부 시 포인트적립과 엘페이 추가혜택 적용 여부를 확인.'
     },
     {
       name:'롯데 플랜카드',
@@ -1115,7 +1125,6 @@
       fixedBenefit:40000,
       billingDiscount:{rate:.05, cap:50000},
       lolaMoney:{rate:.07, cap:30000},
-      superHeroLpay:true,
       supportsLpay:true,
       supportsNaverPay:true,
       installmentRules:[
@@ -1123,7 +1132,7 @@
         {type:'free', months:[2,3,4,5], min:1000000, label:'100만원 이상 2~5개월 무이자'},
         {type:'subscriptionFree', months:[36,48,60], min:0, label:'구독전용'}
       ],
-      memo:'20만원 이상 고정혜택 + 청구할인 + 롤라머니 + 슈퍼히어로 조합.'
+      memo:'20만원 이상 고정혜택 + 청구할인 + 롤라머니를 기본으로 비교합니다. 엘페이는 별도 조건 충족 시에만 추가됩니다.'
     },
     {
       name:'롯데 W카드',
@@ -1310,7 +1319,7 @@
     return 20000;
   }
 
-  function superHero(card, amount, flags){
+  function lpayBenefit(card, amount, flags){
     if(flags.simple || !flags.hero || !card.supportsLpay) return 0;
     return amount >= 10000000 ? 100000 : (amount >= 5000000 ? 50000 : 0);
   }
@@ -1567,7 +1576,7 @@
       const billing = billingDiscount(card, amount, flags, month);
       const point = memberPoint(card, amount, inst, flags);
       const lola = lolaMoney(card, amount, flags);
-      const hero = superHero(card, amount, flags);
+      const hero = lpayBenefit(card, amount, flags);
       const planConnect = planConnectBenefit(card, amount, flags);
       const cond = conditionalBenefit(card, amount, month, flags, category);
       const conditionTotal = cond;
@@ -1744,8 +1753,8 @@
   }
 
 
-  function getInputs(forcedAmount = null){
-    const amount = forcedAmount === null ? readMoneyValue('amountInput') : Number(forcedAmount || 0);
+  function getInputs(){
+    const amount = Number(authoritativeAmount || syncAuthoritativeAmountFromInput() || 0);
     const installmentRaw = val('installmentSelect', '');
     const month = installmentRaw === '' ? null : Number(installmentRaw);
     const productCashback = Number(onlyNumber(val('productCashbackInput')));
@@ -1776,10 +1785,10 @@
     return {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
   }
 
-  function calculate(forcedAmount = null){
+  function calculate(){
     showAllResults = false;
     updateSamsungRewardPreview();
-    const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs(forcedAmount);
+    const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs();
     const rows = [
       ...buildBaseRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
       ...buildStrategyRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
@@ -2342,7 +2351,7 @@
     .print-benefit-note{font-size:11px;min-height:30px;margin-top:9px;padding-top:7px}
   }
 
-    /* 9월 v6 · 2차 UI 개선 */
+    /* 9월 v7 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -3095,13 +3104,13 @@
     }
     box.dataset.open = '1';
     if(button) button.textContent = '접기';
-    renderAmountCardRecommendation(readMoneyValue('amountInput'));
+    renderAmountCardRecommendation(Number(authoritativeAmount || syncAuthoritativeAmountFromInput() || 0));
   }
 
   function renderAmountCardRecommendation(forcedAmount = null){
     const box = $('amountRecommendationBox');
     if(!box) return;
-    const amount = forcedAmount === null ? readMoneyValue('amountInput') : Number(forcedAmount || 0);
+    const amount = forcedAmount === null ? Number(authoritativeAmount || syncAuthoritativeAmountFromInput() || 0) : Number(forcedAmount || 0);
     if(!amount){
       box.innerHTML = `<div class="amount-rec-summary">결제금액을 입력하면 9월 판촉 기준 추천 카드가 표시됩니다. 예: 100만원, 300만원, 500만원</div>`;
       return;
@@ -3130,15 +3139,15 @@
     const el = $('amountInput');
     if(!el) return;
     const raw = onlyNumber(el.value);
-    const amount = Number(raw || 0);
-    el.dataset.rawValue = String(amount);
+    authoritativeAmount = Number(raw || 0);
+    el.dataset.rawValue = String(authoritativeAmount);
     el.value = formatNumber(raw);
     try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
     syncSamsungRewardBase(false);
-    // 동일한 amount 값을 전체 카드 계산과 금액대 추천에 동시에 전달해 화면 불일치를 방지
-    calculate(amount);
+    // 이후 모든 계산은 authoritativeAmount 하나만 읽는다.
+    calculate();
     const recBox = $('amountRecommendationBox');
-    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation(amount);
+    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation(authoritativeAmount);
   }
 
   bindInput('amountInput', syncAmountInputAndCalculate);
@@ -3178,6 +3187,7 @@
   renderModelPromoResults();
   updateSamsungRewardPreview();
   updateLgInstantPreview();
+  authoritativeAmount = syncAuthoritativeAmountFromInput();
   calculate();
 </script>
 </body>
