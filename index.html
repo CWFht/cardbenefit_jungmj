@@ -534,7 +534,7 @@
     }
 
 
-    /* 9월 v7: 금액대 추천 카드 */
+    /* 9월 v8: 금액대 추천 카드 */
     .amount-recommend-box{margin:14px 0 18px;padding:16px;border:1px solid #c7d2fe;background:linear-gradient(180deg,#eef2ff,#fff);border-radius:20px;box-shadow:0 10px 24px rgba(37,99,235,.08)}
     .amount-recommend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
     .amount-recommend-title{font-size:16px;font-weight:900;color:#1e1b4b;margin-bottom:4px}
@@ -557,7 +557,7 @@
     @media(max-width:760px){.amount-recommend-head{flex-direction:column}.amount-recommend-action{width:100%}.amount-rec-top{align-items:flex-start}.amount-rec-benefit{font-size:16px}}
 
   
-    /* 9월 v7 · 2차 UI 개선 */
+    /* 9월 v8 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -631,7 +631,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">9월 v7</div>
+        <div class="version-badge" title="현재 적용 버전">9월 v8</div>
       </div>
       <p>결제금액을 입력하면 추천 카드부터 확인하고, 할부개월 선택 후 카드별 캐시백·청구할인·조건부 혜택·예상 이자를 비교합니다.</p>
     </header>
@@ -726,7 +726,7 @@
             <div class="checkbox-row"><input id="memberPointCheck" type="checkbox" checked><span>멤버스 포인트적립 포함</span></div>
             <div class="checkbox-row"><input id="lolaCheck" type="checkbox" checked><span>플랜 롤라머니 7% 포함</span></div>
             <div class="checkbox-row"><input id="superHeroCheck" type="checkbox" checked><span>엘페이 500/1,000만원 이상 5/10만원 추가혜택 포함</span></div>
-            <div class="advanced-field"><label for="monthlySpendSelect">월 카드 사용 예상액</label><select id="monthlySpendSelect"><option value="0">사용조건 혜택 제외</option><option value="300000" selected>30만원 이상</option><option value="500000">50만원 이상</option><option value="700000">70만원 이상</option><option value="1000000">100만원 이상</option><option value="1200000">120만원 이상</option><option value="1500000">150만원 이상</option><option value="2000000">200만원 이상</option></select><div class="hint">우리·삼성·기존 신한 장기할부의 월 사용조건부 혜택을 계산할 때 사용합니다.</div></div>
+            <div class="advanced-field"><label for="monthlySpendSelect">월 카드 사용 예상액</label><select id="monthlySpendSelect"><option value="0">사용조건 혜택 제외</option><option value="300000" selected>30만원 이상</option><option value="500000">50만원 이상</option><option value="700000">70만원 이상</option><option value="1000000">100만원 이상</option><option value="1200000">120만원 이상</option><option value="1500000">150만원 이상</option><option value="2000000">200만원 이상</option></select><div class="hint">우리·삼성·기존 신한 장기할부의 월 사용조건부 혜택 기준입니다. 구매금액과 무관하며 기본값은 월 30만원입니다.</div></div>
             <div class="checkbox-row"><input id="splitStrategyCheck" type="checkbox" checked><span>우리/삼성 장기할부 상담전략 표시</span></div>
             <div class="checkbox-row"><input id="naverPayCheck" type="checkbox"><span>네이버페이 QR 500/1,000만원 이상 5/10만원 포함</span></div>
             <div class="checkbox-row"><input id="interestCheck" type="checkbox" checked><span>유이자/예상 이자비용 반영</span></div>
@@ -753,7 +753,7 @@
       <section class="panel results-panel">
         <div class="workspace-toolbar">
           <button type="button" onclick="focusAmountInput()">결제금액</button>
-          <button type="button" class="primary-tool" onclick="focusModelPromoSearch()">행사모델 검색</button>
+          <button type="button" onclick="focusModelPromoSearch()">행사모델 검색</button>
           <button type="button" onclick="openInstallmentGuide()">카드 할부</button>
           <button type="button" onclick="openAmountBenefitGuide()">금액대 혜택</button>
           <button type="button" onclick="openModelPromoGuide()">9월 원본 장표</button>
@@ -1036,17 +1036,18 @@
     el.dataset.rawValue = String(n);
     return n;
   };
-  // 결제금액은 화면 전체에서 하나의 상태값만 사용한다.
-  // 입력창 표시값/추천카드/오른쪽 계산결과가 서로 다른 값을 읽는 문제를 방지하기 위한 단일 소스.
-  let authoritativeAmount = 0;
-  const syncAuthoritativeAmountFromInput = () => {
+  // 결제금액 단일 소스: 화면에 보이는 amountInput.value 자체를 항상 다시 읽는다.
+  // 별도 상태값을 계산의 원본으로 사용하면 입력 중 상태가 오래 남을 수 있으므로 금지한다.
+  let authoritativeAmount = 0; // 디버그/호환용 미러값. 계산 원본으로 사용하지 않음.
+  const getCanonicalAmount = () => {
     const el = $('amountInput');
-    if(!el) return authoritativeAmount;
-    const raw = onlyNumber(el.value);
-    authoritativeAmount = Number(raw || 0);
-    el.dataset.rawValue = String(authoritativeAmount);
-    return authoritativeAmount;
+    if(!el) return 0;
+    const amount = Number(onlyNumber(el.value) || 0);
+    authoritativeAmount = amount;
+    el.dataset.rawValue = String(amount);
+    return amount;
   };
+  const syncAuthoritativeAmountFromInput = getCanonicalAmount;
   const val = (id, def = '') => {
     const el = $(id);
     return el ? el.value : def;
@@ -1178,9 +1179,9 @@
       type:'woori',
       cashbackType:'tier',
       tiers:standardTiers,
-      supportsNaverPay:true,
-      cond:{months:[24,35,36], spendTiers:[{min:300000,monthly:18000},{min:700000,monthly:20000},{min:1200000,monthly:22000}], label:'월 사용액 30/70/120만원'},
-      split:{amount:390000, rate:.06, monthly:18000, months:24, label:'39만원만 24개월 고객유이자 6.0%'},
+      supportsNaverPay:false,
+      cond:{months:[24,35,36], purchaseMin24:440000, spendTiers:[{min:300000,monthly:18000},{min:700000,monthly:20000},{min:1200000,monthly:22000}], label:'월 사용액 30/70/120만원'},
+      split:{amount:440000, rate:.06, monthly:18000, months:24, label:'44만원만 24개월 고객유이자 6.0%'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3,4,5,6], min:0, label:'2~6개월 무이자'},
@@ -1268,7 +1269,9 @@
     return benefit;
   }
 
-  function baseCashback(card, amount){
+  function baseCashback(card, amount, month = null){
+    // 9월 우리제휴: 24/35/36개월 승인건은 금액대별 캐시백 제외
+    if(card && card.name === '우리제휴카드' && [24,35,36].includes(Number(month))) return 0;
     if(card.cashbackType === 'tier') return tierBenefit(amount, card.tiers || []);
     if(card.cashbackType === 'fixed') return amount >= card.fixedMin ? card.fixedBenefit : 0;
     return 0;
@@ -1352,6 +1355,7 @@
   function conditionalBenefit(card, amount, month, flags, category){
     if(flags.simple || !card.cond || !flags.monthlySpend) return 0;
     if(!card.cond.months.includes(month)) return 0;
+    if(card.name === '우리제휴카드' && month === 24 && amount < Number(card.cond.purchaseMin24 || 0)) return 0;
     const monthly=conditionalMonthly(card, category, month, flags);
     return monthly * month;
   }
@@ -1572,7 +1576,7 @@
   function buildBaseRows(amount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, originalAmount){
     return cards.map(card => {
       const inst = getInstallmentInfo(card, amount, month, category, annualRate, flags);
-      const base = baseCashback(card, amount);
+      const base = baseCashback(card, amount, month);
       const billing = billingDiscount(card, amount, flags, month);
       const point = memberPoint(card, amount, inst, flags);
       const lola = lolaMoney(card, amount, flags);
@@ -1621,18 +1625,18 @@
   }
 
   function buildStrategyRows(amount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, originalAmount){
-    if(flags.simple || !flags.split || amount <= 0) return [];
+    if(flags.simple || !flags.split || amount <= 0 || month !== 24) return [];
 
     return cards.filter(c => c.split && amount >= c.split.amount).map(card => {
       const s = card.split;
-      const base = baseCashback(card, amount);
       const balance = Math.max(amount - s.amount, 0);
+      const base = card.name === '우리제휴카드' ? baseCashback(card, balance, 0) : baseCashback(card, amount, month);
       const balanceMonth = month && month !== 24 ? month : 0;
       const balanceInst = getInstallmentInfo(card, balance, balanceMonth, category, annualRate, flags);
       const splitInterest = flags.interest ? s.amount * s.rate : 0;
       const balanceInterest = flags.interest ? balanceInst.interest : 0;
       const interest = splitInterest + balanceInterest;
-      const conditionMonthly = conditionalMonthly(card, category) || s.monthly;
+      const conditionMonthly = conditionalMonthly(card, category, 24, flags) || s.monthly;
       const conditionTotal = conditionMonthly * s.months;
       const light = isSamsungLightEligible(card, amount, category) ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
@@ -1692,9 +1696,9 @@
 
     return cards.filter(c => c.split && c.cond && amount >= c.cond.min).map(card => {
       const s = card.split;
-      const base = baseCashback(card, amount);
+      const base = baseCashback(card, amount, 24);
       const full24Interest = flags.interest ? amount * s.rate : 0;
-      const conditionMonthly = conditionalMonthly(card, category) || s.monthly;
+      const conditionMonthly = conditionalMonthly(card, category, 24, flags) || s.monthly;
       const conditionTotal = conditionMonthly * s.months;
       const light = isSamsungLightEligible(card, amount, category) ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
@@ -1754,7 +1758,7 @@
 
 
   function getInputs(){
-    const amount = Number(authoritativeAmount || syncAuthoritativeAmountFromInput() || 0);
+    const amount = getCanonicalAmount();
     const installmentRaw = val('installmentSelect', '');
     const month = installmentRaw === '' ? null : Number(installmentRaw);
     const productCashback = Number(onlyNumber(val('productCashbackInput')));
@@ -1791,8 +1795,7 @@
     const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs();
     const rows = [
       ...buildBaseRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
-      ...buildStrategyRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
-      ...buildFull24OffsetRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount)
+      ...buildStrategyRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount)
     ]
       .filter(r => amount > 0)
       .sort((a,b) => b.netBenefit - a.netBenefit);
@@ -2351,7 +2354,7 @@
     .print-benefit-note{font-size:11px;min-height:30px;margin-top:9px;padding-top:7px}
   }
 
-    /* 9월 v7 · 2차 UI 개선 */
+    /* 9월 v8 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -3001,95 +3004,52 @@
     return `${Math.round(min/10000).toLocaleString('ko-KR')}만원 구간`;
   }
 
+  function recommendationCardImage(name){
+    const base = String(name || '').replace(/ · .+$/,'');
+    const map = {
+      '신한 Simple Plan+':'shinhan-simple-plan-plus.png',
+      '삼성제휴카드':'samsung-partner-card.png',
+      '우리제휴카드':'woori-partner-card.png',
+      '하이마트 신한카드':'shinhan-partner-card.png'
+    };
+    return map[base] || '';
+  }
+
+  function recommendationReason(row){
+    const base = String(row.name || '').replace(/ · .+$/,'');
+    if(base === '신한 Simple Plan+') return '금액대별 캐시백과 1.5% 결제일 할인 조건을 현재 결제방식 기준으로 함께 계산한 결과입니다.';
+    if(base === '롯데 플랜카드') return '20만원 이상 첫 결제 혜택과 청구할인·롤라머니를 현재 옵션 기준으로 합산한 결과입니다.';
+    if(base === '삼성제휴카드') return '금액대 캐시백과 선택한 할부개월의 라이트/사용조건 혜택을 현재 옵션 기준으로 계산한 결과입니다.';
+    if(base === '우리제휴카드') return '금액대 캐시백 또는 선택한 24개월 사용조건부 혜택을 현재 옵션 기준으로 계산한 결과입니다.';
+    if(base === '롯데 멤버스카드') return '금액대 캐시백과 현재 활성화된 청구할인·포인트 조건을 기준으로 계산한 결과입니다.';
+    return row.memo || '오른쪽 카드 비교와 동일한 계산 결과입니다.';
+  }
+
+  function recommendationCaution(row){
+    const base = String(row.name || '').replace(/ · .+$/,'');
+    if(base === '우리제휴카드') return '월 사용조건은 구매금액이 아니라 고급 옵션의 ‘월 카드 사용 예상액’으로 판정합니다. 기본값 30만원이면 월 18,000원 기준입니다.';
+    if(base === '신한 Simple Plan+') return '2~3개월 무이자 선택 시 1.5% 결제일 할인은 제외됩니다. 20/100/200만원 저액구간은 9/11부터 전 고객 대상 기준입니다.';
+    if(base === '롯데 플랜카드' || base === '롯데 멤버스카드' || base === '롯데 클래스카드') return '9/15까지 롯데카드 신규/추가 발급 제한이 있으므로 기존 고객의 교체/재발급 여부를 확인하세요.';
+    if(base === '삼성제휴카드') return '24개월 라이트할부 추가 10만원은 라이트할부 포함 300만원 이상 조건입니다.';
+    return row.inst && row.inst.label ? row.inst.label : '카드별 행사기간과 결제조건을 확인하세요.';
+  }
+
   function buildAmountCardRecommendations(amount){
-    const month = Number(val('installmentSelect') || 0);
-    const category = val('categorySelect','normal');
-    const isLong = month === 24 || month === 35 || month === 36;
-    const isShortFree = month === 2 || month === 3;
-    const sh = septTierBenefit(amount, septAmountTiers);
-    const standard = septTierBenefit(amount, septStandardTiers);
-    const lpay = septLpayBenefit(amount);
-    const list = [];
-
-    if(amount >= 200000){
-      const simpleDiscount = Math.round(amount * 0.015);
-      const welcome = 0; // 웰컴 3만원은 별도 가맹점 추가결제 조건이므로 추천 예상혜택에 자동합산하지 않음
-      list.push({
-        name:'신한 Simple Plan+',
-        image:'shinhan-simple-plan-plus.png',
-        benefit: sh.benefit + (isShortFree ? 0 : simpleDiscount) + welcome,
-        display: `${won(sh.benefit)} + ${isShortFree ? '무이자 선택 시 1.5% 제외' : won(simpleDiscount)+' 결제일 할인'}${amount>=30000?' · 웰컴 3만원은 별도 추가결제 조건':''}`,
-        reason: amount < 3000000 ? '20/100/200만원 저액 구간에서 가장 먼저 확인할 카드입니다. 9/11일부터 저액구간은 신규/기존 구분 없이 전 고객 대상 기준입니다.' : '금액대별 캐시백에 1.5% 청구할인을 더해 일시불·유이자 할부 상담에 유리합니다.',
-        caution: '2~3개월 무이자 결제금액은 1.5% 청구할인과 웰컴 캐시백 대상에서 제외될 수 있습니다. 웰컴은 마트/병원/주유 3만원 이상 최초 1회 조건입니다.',
-        tags:['저액구간','1.5% 결제일 할인','웰컴 별도조건'],
-        score: 100 + sh.benefit/10000 + (amount < 3000000 ? 60 : 20) - (isShortFree ? 15 : 0)
-      });
-    }
-
-    if(amount >= 1000000 && amount < 3000000){
-      list.push({
-        name:'롯데 플랜카드',
-        benefit: 140000,
-        display:'100만원 결제 + 플랜 연결 시 총 14만원 예시',
-        reason:'100만원 전후 상담에서는 플랜 연결 조건이 맞으면 체감 혜택이 크게 보이는 후보입니다.',
-        caution:'9/15까지 롯데카드 신규/추가 발급 제한이 있어 기존 고객 교체/재발급 가능 여부를 먼저 확인해야 합니다.',
-        tags:['플랜 연결','기존고객 확인','조건부'],
-        score: 82
-      });
-    }
-
-    if(amount >= 3000000){
-      list.push({
-        name:'삼성제휴카드',
-        image:'samsung-partner-card.png',
-        benefit: standard.benefit + 100000 + (amount >= 200000 ? 50000 : 0),
-        display:`금액대 ${won(standard.benefit)} + 라이트할부 추가 ${won(100000)} + 신규 ${won(50000)}`,
-        reason:'24개월 라이트할부 상담 시 6.5% 저리할부와 합산 300만원 이상 10만원 추가 캐시백을 함께 제안하기 좋습니다.',
-        caution:'신규 5만원은 신규고객 20만원 이상 결제 조건입니다. 라이트할부 추가 10만원은 라이트할부 포함 300만원 이상 조건입니다.',
-        tags:['24개월 상담','라이트할부','신규혜택'],
-        score: 90 + standard.benefit/10000 + (month === 24 ? 45 : 10)
-      });
-    }else if(amount >= 200000){
-      list.push({
-        name:'삼성제휴카드',
-        image:'samsung-partner-card.png',
-        benefit: 50000,
-        display:'신규고객 20만원 이상 결제 시 5만원',
-        reason:'20만원 이상 신규고객이면 삼성제휴 신규 캐시백을 조건부 후보로 안내할 수 있습니다.',
-        caution:'신규고객 여부 확인이 필요합니다. 300만원 미만은 금액대별 캐시백/라이트할부 추가 10만원 대상이 아닙니다.',
-        tags:['신규고객','20만원 이상'],
-        score: 70
-      });
-    }
-
-    if(amount >= 3000000){
-      const monthly = amount >= 1200000 ? 22000 : amount >= 700000 ? 20000 : 18000;
-      list.push({
-        name:'우리제휴카드',
-        image:'woori-partner-card.png',
-        benefit: isLong ? monthly * (month || 24) : standard.benefit,
-        display: isLong ? `월 조건부 ${won(monthly)} × ${month || 24}개월` : `금액대 캐시백 ${won(standard.benefit)}`,
-        reason: isLong ? '장기할부 조건부 청구할인을 중심으로 상담할 때 유리합니다.' : '2~6개월 무이자 또는 일반 결제에서는 금액대별 캐시백 후보로 비교할 수 있습니다.',
-        caution:'24/35/36개월 결제건은 금액대별 캐시백 대상에서 제외됩니다. 24개월은 44만원 이상 결제 시 청구할인 적용 가능 조건을 확인하세요.',
-        tags:['우리 독자','장기할부','조건부'],
-        score: 78 + (isLong ? 38 : 0) + standard.benefit/20000
-      });
-    }
-
-    if(amount >= 3000000){
-      list.push({
-        name:'롯데멤버스/롯데플랜',
-        benefit: standard.benefit + (amount >= 5000000 ? lpay : 0),
-        display:`금액대 ${won(standard.benefit)}${lpay ? ' + 엘페이 '+won(lpay) : ''}`,
-        reason:'기존 롯데카드 고객이고 엘페이 조건까지 맞으면 500만원 이상부터 추가 혜택까지 상담 가능합니다.',
-        caution:'9/15까지 신규/추가 발급 제한이 있어 기존 고객 교체/재발급 여부와 기존 혜택 소멸 가능성을 안내해야 합니다.',
-        tags:['기존고객','엘페이 후보','발급제한'],
-        score: 75 + standard.benefit/15000 + (lpay ? 20 : 0)
-      });
-    }
-
-    list.sort((a,b) => b.score - a.score);
-    return {tier: sh.min || standard.min || 0, lpay, list:list.slice(0,4)};
+    // 별도 추천공식 금지: 오른쪽 계산결과(currentRows)를 그대로 사용한다.
+    // 따라서 왼쪽 추천카드의 순위/혜택금액은 오른쪽 BEST 카드와 항상 동일하다.
+    if(getCanonicalAmount() !== Number(amount || 0)) amount = getCanonicalAmount();
+    if(!currentRows.length || Number(currentContext.amount || 0) !== Number(amount || 0)) calculate();
+    const list = currentRows.slice(0,4).map(row => ({
+      name: row.name,
+      image: recommendationCardImage(row.name),
+      benefit: row.netBenefit,
+      display: `순혜택 ${won(row.netBenefit)} · 실체감가 ${won(row.netCost)}`,
+      reason: recommendationReason(row),
+      caution: recommendationCaution(row),
+      tags:[row.inst && row.inst.status ? row.inst.status : '결제조건', row.conditionTotal>0?'사용조건부':'현재옵션', row.modelPromo>0?'행사모델 적용':'동일 계산식']
+    }));
+    const tier = septTierBenefit(amount, simplePlanTiers.map(t=>[t.min,t.benefit]));
+    return {tier:tier.min || 0, lpay:0, list};
   }
 
   function toggleAmountCardRecommendation(button){
@@ -3104,13 +3064,14 @@
     }
     box.dataset.open = '1';
     if(button) button.textContent = '접기';
-    renderAmountCardRecommendation(Number(authoritativeAmount || syncAuthoritativeAmountFromInput() || 0));
+    calculate();
+    renderAmountCardRecommendation(getCanonicalAmount());
   }
 
   function renderAmountCardRecommendation(forcedAmount = null){
     const box = $('amountRecommendationBox');
     if(!box) return;
-    const amount = forcedAmount === null ? Number(authoritativeAmount || syncAuthoritativeAmountFromInput() || 0) : Number(forcedAmount || 0);
+    const amount = forcedAmount === null ? getCanonicalAmount() : Number(forcedAmount || 0);
     if(!amount){
       box.innerHTML = `<div class="amount-rec-summary">결제금액을 입력하면 9월 판촉 기준 추천 카드가 표시됩니다. 예: 100만원, 300만원, 500만원</div>`;
       return;
@@ -3120,7 +3081,7 @@
       box.innerHTML = `<div class="amount-rec-summary"><b>${won(amount)}</b> 기준으로는 카드사 금액대별 판촉 구간이 명확하지 않습니다. 20만원 이상부터 추천 카드가 표시됩니다.</div>`;
       return;
     }
-    const summary = `<div class="amount-rec-summary"><b>입력금액 ${won(amount)}</b> · ${septAmountLabel(data.tier)}${data.lpay ? ` · 엘페이 추가 후보 ${won(data.lpay)}` : ''}<br>추천은 상담 보조용입니다. 실제 적용은 카드 발급/결제 방식/행사기간/고객 조건을 확인하세요.</div>`;
+    const summary = `<div class="amount-rec-summary"><b>입력금액 ${won(amount)}</b> · ${septAmountLabel(data.tier)}<br>추천은 상담 보조용입니다. 실제 적용은 카드 발급/결제 방식/행사기간/고객 조건을 확인하세요.</div>`;
     const cards = data.list.map((item, idx) => {
       const tagHtml = item.tags.map((t,i)=>`<span class="amount-rec-tag ${i===0?'blue':i===1?'green':'orange'}">${t}</span>`).join('');
       const imageHtml = item.image ? `<img class="amount-rec-cardimg" src="${safeText(item.image)}" alt="${safeText(item.name)} 카드 이미지" onerror="this.style.display='none'">` : '';
@@ -3139,15 +3100,13 @@
     const el = $('amountInput');
     if(!el) return;
     const raw = onlyNumber(el.value);
-    authoritativeAmount = Number(raw || 0);
-    el.dataset.rawValue = String(authoritativeAmount);
+    // 표시값을 먼저 확정한 뒤, calculate()가 그 DOM 값을 직접 다시 읽는다.
     el.value = formatNumber(raw);
-    try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
+    const amount = getCanonicalAmount();
     syncSamsungRewardBase(false);
-    // 이후 모든 계산은 authoritativeAmount 하나만 읽는다.
     calculate();
     const recBox = $('amountRecommendationBox');
-    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation(authoritativeAmount);
+    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation(amount);
   }
 
   bindInput('amountInput', syncAmountInputAndCalculate);
@@ -3187,7 +3146,7 @@
   renderModelPromoResults();
   updateSamsungRewardPreview();
   updateLgInstantPreview();
-  authoritativeAmount = syncAuthoritativeAmountFromInput();
+  getCanonicalAmount();
   calculate();
 </script>
 </body>
