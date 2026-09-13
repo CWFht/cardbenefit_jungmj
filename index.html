@@ -327,6 +327,7 @@
     .issue-content{min-width:0}
     .issue-title{font-size:16px;font-weight:950;letter-spacing:-.04em;margin-bottom:4px}
     .issue-desc{font-size:11px;color:var(--muted);margin-bottom:8px}
+    .issue-fee{margin:7px 0 9px;padding:8px 10px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;font-size:11px;line-height:1.45;color:#334155}.issue-fee b{color:#0f172a;font-weight:950}
     .issue-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
     .issue-actions button{padding:10px 8px;font-size:12px;border-radius:12px}
     .issue-open{background:#111827;color:#fff}.issue-copy{background:#eef2ff;color:#1e3a8a}.issue-save{background:#f1f5f9;color:#334155}.issue-disabled{opacity:.5;cursor:not-allowed}
@@ -533,7 +534,7 @@
     }
 
 
-    /* 9월 v5: 금액대 추천 카드 */
+    /* 9월 v6: 금액대 추천 카드 */
     .amount-recommend-box{margin:14px 0 18px;padding:16px;border:1px solid #c7d2fe;background:linear-gradient(180deg,#eef2ff,#fff);border-radius:20px;box-shadow:0 10px 24px rgba(37,99,235,.08)}
     .amount-recommend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
     .amount-recommend-title{font-size:16px;font-weight:900;color:#1e1b4b;margin-bottom:4px}
@@ -556,7 +557,7 @@
     @media(max-width:760px){.amount-recommend-head{flex-direction:column}.amount-recommend-action{width:100%}.amount-rec-top{align-items:flex-start}.amount-rec-benefit{font-size:16px}}
 
   
-    /* 9월 v5 · 2차 UI 개선 */
+    /* 9월 v6 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -630,7 +631,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">9월 v5</div>
+        <div class="version-badge" title="현재 적용 버전">9월 v6</div>
       </div>
       <p>결제금액을 입력하면 추천 카드부터 확인하고, 할부개월 선택 후 카드별 캐시백·청구할인·조건부 혜택·예상 이자를 비교합니다.</p>
     </header>
@@ -1743,8 +1744,8 @@
   }
 
 
-  function getInputs(){
-    const amount = readMoneyValue('amountInput');
+  function getInputs(forcedAmount = null){
+    const amount = forcedAmount === null ? readMoneyValue('amountInput') : Number(forcedAmount || 0);
     const installmentRaw = val('installmentSelect', '');
     const month = installmentRaw === '' ? null : Number(installmentRaw);
     const productCashback = Number(onlyNumber(val('productCashbackInput')));
@@ -1775,10 +1776,10 @@
     return {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
   }
 
-  function calculate(){
+  function calculate(forcedAmount = null){
     showAllResults = false;
     updateSamsungRewardPreview();
-    const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs();
+    const {amount, paymentAmount, month, productCashback, samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags} = getInputs(forcedAmount);
     const rows = [
       ...buildBaseRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
       ...buildStrategyRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount),
@@ -2341,7 +2342,7 @@
     .print-benefit-note{font-size:11px;min-height:30px;margin-top:9px;padding-top:7px}
   }
 
-    /* 9월 v5 · 2차 UI 개선 */
+    /* 9월 v6 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -2535,35 +2536,40 @@
       name:'롯데제휴카드',
       image:'lotte-partner-card.png',
       url:'https://m.lottecard.co.kr/spa/card/booth?bId=101511&vtCdKndC=P15670-A15670',
-      desc:'8/1~9/15 신규/추가 발급 중지 · 기존 고객 교체/재발급만 가능'
+      desc:'8/1~9/15 신규/추가 발급 중지 · 기존 고객 교체/재발급만 가능',
+      annualFee:'국내 30,000원 / 해외 150,000원'
     },
     {
       id:'samsung',
       name:'삼성제휴카드',
       image:'samsung-partner-card.png',
       url:'https://www.samsungcard.com/personal/card/simple-apply/UHPPCA0225M0.jsp?code=AAP1883&aIncmpC=QKHIMART36&affcode=HMT4170228',
-      desc:'삼성제휴카드 발급 링크 · QR · URL 복사용'
+      desc:'삼성제휴카드 발급 링크 · QR · URL 복사용',
+      annualFee:'국내/해외 18,000원'
     },
     {
       id:'woori',
       name:'우리제휴카드',
       image:'woori-partner-card.png',
       url:'https://m.site.naver.com/1Erah',
-      desc:'우리제휴카드 발급 링크 · QR · URL 복사용'
+      desc:'우리제휴카드 발급 링크 · QR · URL 복사용',
+      annualFee:'국내/해외 18,000원'
     },
     {
       id:'shinhan_simple_plan',
       name:'신한카드 Simple Plan+',
       image:'shinhan-simple-plan-plus.png',
       url:'https://m.site.naver.com/2ed3h',
-      desc:'9월 신규 Simple Plan+ 발급 링크 · 해당 링크 발급건만 실적 인정'
+      desc:'9월 신규 Simple Plan+ 발급 링크 · 해당 링크 발급건만 실적 인정',
+      annualFee:'국내전용 47,000원 / Master 50,000원'
     },
     {
       id:'shinhan_legacy',
       name:'하이마트 신한카드(기존)',
       image:'shinhan-partner-card.png',
       url:'https://m.site.naver.com/20U3L',
-      desc:'기존 하이마트 신한카드 발급 링크 · QR · URL 복사용'
+      desc:'기존 하이마트 신한카드 발급 링크 · QR · URL 복사용',
+      annualFee:'Master 28,000원 · Master 카드만 판촉 적용(Local 불가)'
     }
   ];
 
@@ -2604,6 +2610,7 @@
           <div class="issue-content">
             <div class="issue-title">${safeText(card.name)}</div>
             <div class="issue-desc">${safeText(card.desc)}</div>
+            ${card.annualFee ? `<div class="issue-fee"><b>연회비</b><br>${safeText(card.annualFee)}</div>` : ''}
             <div class="issue-qr-row">
               ${hasUrl ? `<img class="issue-qr" src="${qrUrl(url)}" alt="${safeText(card.name)} QR코드" onclick="openQrViewer('${safeText(card.name)} 발급 QR','${safeText(url)}')" />` : `<div class="issue-qr-empty">URL 등록 후<br>QR 생성</div>`}
               <div style="flex:1;min-width:120px;">
@@ -3088,12 +3095,13 @@
     }
     box.dataset.open = '1';
     if(button) button.textContent = '접기';
+    renderAmountCardRecommendation(readMoneyValue('amountInput'));
   }
 
-  function renderAmountCardRecommendation(){
+  function renderAmountCardRecommendation(forcedAmount = null){
     const box = $('amountRecommendationBox');
     if(!box) return;
-    const amount = readMoneyValue('amountInput');
+    const amount = forcedAmount === null ? readMoneyValue('amountInput') : Number(forcedAmount || 0);
     if(!amount){
       box.innerHTML = `<div class="amount-rec-summary">결제금액을 입력하면 9월 판촉 기준 추천 카드가 표시됩니다. 예: 100만원, 300만원, 500만원</div>`;
       return;
@@ -3118,17 +3126,25 @@
   }
 
 
-  bindInput('amountInput', () => {
+  function syncAmountInputAndCalculate(){
     const el = $('amountInput');
+    if(!el) return;
     const raw = onlyNumber(el.value);
-    el.dataset.rawValue = raw || '0';
+    const amount = Number(raw || 0);
+    el.dataset.rawValue = String(amount);
     el.value = formatNumber(raw);
     try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
     syncSamsungRewardBase(false);
-    calculate();
+    // 동일한 amount 값을 전체 카드 계산과 금액대 추천에 동시에 전달해 화면 불일치를 방지
+    calculate(amount);
     const recBox = $('amountRecommendationBox');
-    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation();
-  });
+    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation(amount);
+  }
+
+  bindInput('amountInput', syncAmountInputAndCalculate);
+  bindChange('amountInput', syncAmountInputAndCalculate);
+  const amountElForBlur = $('amountInput');
+  if(amountElForBlur) amountElForBlur.addEventListener('blur', syncAmountInputAndCalculate);
 
   bindInput('productCashbackInput', () => {
     const el = $('productCashbackInput');
