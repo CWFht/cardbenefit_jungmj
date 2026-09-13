@@ -93,7 +93,7 @@
     .samsung-reward-grid label{margin:0 0 5px;color:#92400e}
     .reward-preview{font-size:12px;font-weight:950;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:9px;margin-top:8px;line-height:1.35}
 
-    .model-promo-box{margin-top:10px;border:1px solid #c4b5fd;border-radius:16px;background:#f5f3ff;padding:11px}.model-promo-box:not([open]){padding:11px 12px}.model-promo-box:not([open])>*:not(summary){display:none}.model-promo-box summary::-webkit-details-marker{display:none}
+    .model-promo-box{margin-top:10px;border:1px solid #c4b5fd;border-radius:16px;background:#f5f3ff;padding:11px}
     .model-promo-head{font-size:13px;font-weight:950;color:#5b21b6;margin-bottom:4px;letter-spacing:-.03em}
     .model-promo-box .hint{color:#6d28d9}
     .model-promo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
@@ -533,7 +533,7 @@
     }
 
 
-    /* 9월 v5: 금액대 추천 카드 */
+    /* 9월 v4: 금액대 추천 카드 */
     .amount-recommend-box{margin:14px 0 18px;padding:16px;border:1px solid #c7d2fe;background:linear-gradient(180deg,#eef2ff,#fff);border-radius:20px;box-shadow:0 10px 24px rgba(37,99,235,.08)}
     .amount-recommend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
     .amount-recommend-title{font-size:16px;font-weight:900;color:#1e1b4b;margin-bottom:4px}
@@ -556,7 +556,7 @@
     @media(max-width:760px){.amount-recommend-head{flex-direction:column}.amount-recommend-action{width:100%}.amount-rec-top{align-items:flex-start}.amount-rec-benefit{font-size:16px}}
 
   
-    /* 9월 v5 · 2차 UI 개선 */
+    /* 9월 v4 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -630,7 +630,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">9월 v5</div>
+        <div class="version-badge" title="현재 적용 버전">9월 v4</div>
       </div>
       <p>결제금액을 입력하면 추천 카드부터 확인하고, 할부개월 선택 후 카드별 캐시백·청구할인·조건부 혜택·예상 이자를 비교합니다.</p>
     </header>
@@ -641,7 +641,20 @@
 
         <label for="amountInput">결제금액</label>
         <input id="amountInput" inputmode="numeric" value="3,000,000" placeholder="예: 3,000,000" />
-        <div class="hint">카드 혜택 차감 전 실제 결제원금 기준</div><div class="two-col">
+        <div class="hint">카드 혜택 차감 전 실제 결제원금 기준</div>
+
+        <div class="amount-recommend-box">
+          <div class="amount-recommend-head">
+            <div>
+              <div class="amount-recommend-title">이 금액이면 어떤 카드?</div>
+              <div class="amount-recommend-desc">결제금액 기준으로 9월 판촉에 맞는 추천 카드와 주의사항을 먼저 확인합니다.</div>
+            </div>
+            <button type="button" class="amount-recommend-action" onclick="renderAmountCardRecommendation()">추천보기</button>
+          </div>
+          <div id="amountRecommendationBox" class="amount-recommend-result"></div>
+        </div>
+
+        <div class="two-col">
           <div>
             <label for="installmentSelect">할부개월</label>
             <select id="installmentSelect">
@@ -667,28 +680,14 @@
           </div>
         </div>
 
-        
-
-
-        <div class="amount-recommend-box">
-          <div class="amount-recommend-head">
-            <div>
-              <div class="amount-recommend-title">이 금액이면 어떤 카드?</div>
-              <div class="amount-recommend-desc">결제금액 기준으로 9월 판촉에 맞는 추천 카드와 주의사항을 먼저 확인합니다.</div>
-            </div>
-            <button type="button" class="amount-recommend-action" onclick="toggleAmountCardRecommendation(this)">추천보기</button>
-          </div>
-          <div id="amountRecommendationBox" class="amount-recommend-result"></div>
-        </div>
-
         <label for="productCashbackInput">제품별 캐시백 혜택</label>
         <input id="productCashbackInput" inputmode="numeric" value="0" placeholder="예: 100,000" />
         <div class="hint">상품권, 제조사 캐시백, 품목별 추가 혜택처럼 카드와 별도로 발생하는 제품 혜택을 입력합니다. 모든 카드 비교와 요약 인쇄에 동일하게 반영됩니다.</div>
 
 
 
-        <details class="model-promo-box" id="modelPromoDetails">
-          <summary class="model-promo-head" style="cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;">행사모델 혜택 확인 <span style="font-size:11px;color:#7c3aed;">필요할 때 열기</span></summary>
+        <div class="model-promo-box">
+          <div class="model-promo-head">행사모델 혜택 확인</div>
           <div class="hint">9월 2주차 판촉안의 모델코드 기준입니다. 단품은 자동 적용, 다품목·패키지는 수기확인으로 분리합니다.</div>
           <label for="modelPromoSearchInput">모델명 일부 입력</label>
           <input id="modelPromoSearchInput" placeholder="예: M876GBB231, WD90H25BHB, OLED77C6" />
@@ -699,7 +698,7 @@
           <div id="modelPromoResults" class="model-promo-results"></div>
           <div id="selectedModelPromos" class="model-promo-selected"></div>
           <div class="promo-empty">9월 PPT 명시 모델 DB: 자동반영 137건 / 수기확인 205건. 다품목·패키지는 조건 확인 후 수기 반영됩니다.</div>
-        </details>
+        </div>
 
         <label for="annualRateInput">일반 유이자 예상 연이율</label>
         <input id="annualRateInput" inputmode="decimal" value="19.5" />
@@ -1027,14 +1026,6 @@
   const won = n => Math.round(Number(n || 0)).toLocaleString('ko-KR') + '원';
   const onlyNumber = v => String(v || '').replace(/[^0-9]/g, '');
   const formatNumber = v => onlyNumber(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const readMoneyValue = id => {
-    const el = $(id);
-    if(!el) return 0;
-    const raw = onlyNumber(el.value);
-    const n = Number(raw || 0);
-    el.dataset.rawValue = String(n);
-    return n;
-  };
   const val = (id, def = '') => {
     const el = $(id);
     return el ? el.value : def;
@@ -1744,7 +1735,7 @@
 
 
   function getInputs(){
-    const amount = readMoneyValue('amountInput');
+    const amount = Number(onlyNumber(val('amountInput')));
     const installmentRaw = val('installmentSelect', '');
     const month = installmentRaw === '' ? null : Number(installmentRaw);
     const productCashback = Number(onlyNumber(val('productCashbackInput')));
@@ -1763,8 +1754,7 @@
       point:checked('memberPointCheck', true),
       lola:checked('lolaCheck', true),
       hero:checked('superHeroCheck', true),
-      monthlySpend:Number(val('monthlySpendSelect', 300000) || 0),
-      monthly:Number(val('monthlySpendSelect', 300000) || 0) > 0,
+      monthly:checked('monthlySpendSelect', true),
       split:checked('splitStrategyCheck', true),
       naver:checked('naverPayCheck', false),
       simplePlan15:checked('simplePlan15Check', true),
@@ -1900,6 +1890,7 @@
     renderMobile(rows);
     renderTable(rows);
     renderMoreToggle(rows);
+    renderAmountCardRecommendation();
   }
 
   function renderStrategyGuide(rows){
@@ -2341,7 +2332,7 @@
     .print-benefit-note{font-size:11px;min-height:30px;margin-top:9px;padding-top:7px}
   }
 
-    /* 9월 v5 · 2차 UI 개선 */
+    /* 9월 v4 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -3025,7 +3016,6 @@
     if(amount >= 3000000){
       list.push({
         name:'삼성제휴카드',
-        image:'samsung-partner-card.png',
         benefit: standard.benefit + 100000 + (amount >= 200000 ? 50000 : 0),
         display:`금액대 ${won(standard.benefit)} + 라이트할부 추가 ${won(100000)} + 신규 ${won(50000)}`,
         reason:'24개월 라이트할부 상담 시 6.5% 저리할부와 합산 300만원 이상 10만원 추가 캐시백을 함께 제안하기 좋습니다.',
@@ -3036,7 +3026,6 @@
     }else if(amount >= 200000){
       list.push({
         name:'삼성제휴카드',
-        image:'samsung-partner-card.png',
         benefit: 50000,
         display:'신규고객 20만원 이상 결제 시 5만원',
         reason:'20만원 이상 신규고객이면 삼성제휴 신규 캐시백을 조건부 후보로 안내할 수 있습니다.',
@@ -3050,7 +3039,6 @@
       const monthly = amount >= 1200000 ? 22000 : amount >= 700000 ? 20000 : 18000;
       list.push({
         name:'우리제휴카드',
-        image:'woori-partner-card.png',
         benefit: isLong ? monthly * (month || 24) : standard.benefit,
         display: isLong ? `월 조건부 ${won(monthly)} × ${month || 24}개월` : `금액대 캐시백 ${won(standard.benefit)}`,
         reason: isLong ? '장기할부 조건부 청구할인을 중심으로 상담할 때 유리합니다.' : '2~6개월 무이자 또는 일반 결제에서는 금액대별 캐시백 후보로 비교할 수 있습니다.',
@@ -3076,24 +3064,10 @@
     return {tier: sh.min || standard.min || 0, lpay, list:list.slice(0,4)};
   }
 
-  function toggleAmountCardRecommendation(button){
-    const box = $('amountRecommendationBox');
-    if(!box) return;
-    const isOpen = box.dataset.open === '1' && box.innerHTML.trim() !== '';
-    if(isOpen){
-      box.innerHTML = '';
-      box.dataset.open = '0';
-      if(button) button.textContent = '추천보기';
-      return;
-    }
-    box.dataset.open = '1';
-    if(button) button.textContent = '접기';
-  }
-
   function renderAmountCardRecommendation(){
     const box = $('amountRecommendationBox');
     if(!box) return;
-    const amount = readMoneyValue('amountInput');
+    const amount = Number(onlyNumber(val('amountInput')));
     if(!amount){
       box.innerHTML = `<div class="amount-rec-summary">결제금액을 입력하면 9월 판촉 기준 추천 카드가 표시됩니다. 예: 100만원, 300만원, 500만원</div>`;
       return;
@@ -3120,14 +3094,9 @@
 
   bindInput('amountInput', () => {
     const el = $('amountInput');
-    const raw = onlyNumber(el.value);
-    el.dataset.rawValue = raw || '0';
-    el.value = formatNumber(raw);
-    try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){}
+    el.value = formatNumber(el.value);
     syncSamsungRewardBase(false);
     calculate();
-    const recBox = $('amountRecommendationBox');
-    if(recBox && recBox.dataset.open === '1') renderAmountCardRecommendation();
   });
 
   bindInput('productCashbackInput', () => {
@@ -3160,6 +3129,7 @@
   ].forEach(id => bindChange(id, calculate));
 
   renderModelPromoResults();
+  renderAmountCardRecommendation();
   updateSamsungRewardPreview();
   updateLgInstantPreview();
   calculate();
