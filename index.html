@@ -534,7 +534,7 @@
     }
 
 
-    /* 9월 v8: 금액대 추천 카드 */
+    /* 9월 v10: 금액대 추천 카드 */
     .amount-recommend-box{margin:14px 0 18px;padding:16px;border:1px solid #c7d2fe;background:linear-gradient(180deg,#eef2ff,#fff);border-radius:20px;box-shadow:0 10px 24px rgba(37,99,235,.08)}
     .amount-recommend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
     .amount-recommend-title{font-size:16px;font-weight:900;color:#1e1b4b;margin-bottom:4px}
@@ -557,7 +557,7 @@
     @media(max-width:760px){.amount-recommend-head{flex-direction:column}.amount-recommend-action{width:100%}.amount-rec-top{align-items:flex-start}.amount-rec-benefit{font-size:16px}}
 
   
-    /* 9월 v8 · 2차 UI 개선 */
+    /* 9월 v10 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -631,7 +631,7 @@
     <header class="hero">
       <div class="hero-top">
         <h1>롯데하이마트 카드 판촉 혜택 비교툴</h1>
-        <div class="version-badge" title="현재 적용 버전">9월 v8</div>
+        <div class="version-badge" title="현재 적용 버전">9월 v10</div>
       </div>
       <p>결제금액을 입력하면 추천 카드부터 확인하고, 할부개월 선택 후 카드별 캐시백·청구할인·조건부 혜택·예상 이자를 비교합니다.</p>
     </header>
@@ -722,6 +722,8 @@
           <div class="checks">
             <div class="checkbox-row"><input id="billingCheck" type="checkbox" checked><span>청구할인 포함</span></div>
             <div class="checkbox-row"><input id="simplePlan15Check" type="checkbox" checked><span>신한 Simple Plan+ 1.5% 결제일 할인 포함</span></div>
+            <div class="checkbox-row"><input id="legacyShinhan3Check" type="checkbox"><span>기존 하이마트 신한카드 일시불 3% 할인 포함 (전월실적 50만원 이상, 최대 3만원)</span></div>
+            <div class="checkbox-row"><input id="samsungNewCheck" type="checkbox"><span>삼성제휴 신규고객 20만원 이상 +5만원 포함</span></div>
             <div class="checkbox-row"><input id="planConnectCheck" type="checkbox"><span>롯데 플랜 발급 익월까지 연결 +2만원 포함</span></div>
             <div class="checkbox-row"><input id="memberPointCheck" type="checkbox" checked><span>멤버스 포인트적립 포함</span></div>
             <div class="checkbox-row"><input id="lolaCheck" type="checkbox" checked><span>플랜 롤라머니 7% 포함</span></div>
@@ -815,7 +817,7 @@
           <div style="margin-top:10px;">
             ① 9월 2주차 판촉안 기준으로 카드 금액대/할부/간편결제 조건을 반영합니다.<br>
             ② 신한 Simple Plan+는 20/100/200/300만원 이상 금액대 캐시백과 일시불·유이자 할부 1.5% 결제일 할인을 분리 계산합니다.<br>
-            ③ 하이마트 신한카드는 구독 36개월/전월실적 캐시백 성격이 달라 Simple Plan+와 별도 카드로 비교합니다.<br>
+            ③ 하이마트 신한카드도 9/11부터 20/100/200만원 저액구간 캐시백을 적용하며, 구독 36개월/일시불 3% 혜택은 Simple Plan+와 별도 조건으로 비교합니다.<br>
             ④ 우리제휴 24/35/36개월은 금액대별 캐시백 제외, 24/36개월 조건부 청구할인은 30/70/120만원 사용구간별로 확인합니다.<br>
             ⑤ 삼성제휴는 24개월 6.5% 라이트할부, 300만원 이상 추가 10만원, 36개월 구독 무이자를 구분합니다.<br>
             ⑥ 네이버페이/엘페이는 500/1,000만원 이상 5/10만원이며 단일 승인건 기준입니다.<br>
@@ -847,8 +849,8 @@
             <tr><td>롯데 플랜</td><td>100만원 이상 2~3개월 무이자</td><td>플랜 연결/청구할인과 별도</td></tr>
             <tr><td>우리제휴</td><td>2~6개월 무이자 · 24개월 고객유이자 6.0%</td><td>24/35/36개월 금액대 캐시백 제외</td></tr>
             <tr><td>삼성제휴</td><td>2~3개월 무이자 · 24개월 고객유이자 6.5%</td><td>36개월 구독은 고객 무이자</td></tr>
-            <tr><td>신한 Simple Plan+</td><td>2~3개월 무이자</td><td>무이자 결제금액은 1.5% 결제일 할인 제외</td></tr>
-            <tr><td>하이마트 신한카드</td><td>2~3개월 무이자 · 36개월 구독 무이자</td><td>36개월 일반결제 불가</td></tr>
+            <tr><td>신한 Simple Plan+</td><td>일시불 추천 / 2~3개월 무이자 가능</td><td>1.5% 결제일 할인은 일시불·유이자만 적용, 2~3개월 무이자 제외</td></tr>
+            <tr><td>하이마트 신한카드</td><td>2~3개월 무이자 · 36개월 구독 무이자</td><td>9/11부터 20/100/200만원 저액구간 포함 · 일시불 3%는 전월실적 50만원↑ · 참고장표의 Master 문구는 계산 자격조건으로 제한하지 않음</td></tr>
             <tr><td>하나제휴</td><td>24개월/36개월 장기할부 운영</td><td>9/9부터 36개월 무이자 추가 운영</td></tr>
           </tbody>
         </table>
@@ -882,6 +884,7 @@
           </thead>
           <tbody>
             <tr><td>신한 Simple Plan+</td><td>20/100/200/300/500/700/1,000/1,200/1,500/2,000만원</td><td>5/5/10/15/25/35/50/60/75/100만원 · 20/100/200은 9/11부터 전 고객</td></tr>
+            <tr><td>하이마트 신한카드</td><td>20/100/200/300/500/700/1,000/1,200/1,500/2,000만원</td><td>5/5/10/15/25/35/50/60/75/100만원 · 9/11부터 저액구간 전 고객</td></tr>
             <tr><td>롯데 플랜</td><td>20만원 첫 결제 4만원 + 플랜 연결 2만원(조건)</td><td>5% 청구할인·롤라머니와 별도 확인</td></tr>
             <tr><td>우리제휴</td><td>300~2,000만원 5% 구간</td><td>24/35/36개월 승인건 제외</td></tr>
             <tr><td>삼성제휴</td><td>300~2,000만원 5% 구간</td><td>300만원 이상 라이트할부 추가 10만원 가능</td></tr>
@@ -1086,6 +1089,9 @@
   ];
 
   const simplePlanTiers = [{min:200000,benefit:50000},{min:1000000,benefit:50000},{min:2000000,benefit:100000},{min:3000000,benefit:150000},{min:5000000,benefit:250000},{min:7000000,benefit:350000},{min:10000000,benefit:500000},{min:12000000,benefit:600000},{min:15000000,benefit:750000},{min:20000000,benefit:1000000}];
+  // 9/11부터 신한 기존제휴와 Simple Plan+ 모두 20/100/200만원 저액구간을 동일 적용
+  const shinhanAffiliateTiers = simplePlanTiers.map(t => ({...t}));
+  // 출처 우선순위: 9월 2주차 '필독'/월간 장표(2p,10p,16p) > 참고 부록. 참고13-1 Master 문구는 자동 자격 제한에 사용하지 않음.
   const kbTiers = [
     {min:5000000, benefit:250000},
     {min:7000000, benefit:350000},
@@ -1202,7 +1208,7 @@
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
-        {type:'customerInterest', months:[24], rate:.065, min:300000, label:'24개월 고객유이자 6.5%'}
+        {type:'customerInterest', months:[24], rate:.065, min:240000, label:'24만원 이상 24개월 고객유이자 6.5%'}
       ],
       memo:'24개월 라이트할부 6.5%, 300만원 이상 라이트할부 포함 시 10만원 추가 캐시백. 36개월 구독은 무이자.'
     },
@@ -1214,6 +1220,7 @@
       supportsLpay:true,
       supportsNaverPay:true,
       billingDiscount:{rate:.015, cap:Number.MAX_SAFE_INTEGER, simplePlan:true},
+      annualFee:50000,
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'}
@@ -1224,16 +1231,18 @@
       name:'하이마트 신한카드',
       type:'shinhan_legacy',
       cashbackType:'tier',
-      tiers:[{min:2000000,benefit:100000},...standardTiers],
+      tiers:shinhanAffiliateTiers,
       supportsLpay:false,
       supportsNaverPay:false,
+      billingDiscount:{rate:.03, cap:30000, legacyShinhan:true},
+      annualFee:28000,
       cond:{months:[36], spendTiers:[{min:500000,monthly:10000},{min:1000000,monthly:20000},{min:2000000,monthly:30000}], label:'36개월 구독 · 월 사용액 50/100/200만원'},
       installmentRules:[
         {type:'free', months:[0], min:0, label:'일시불'},
         {type:'free', months:[2,3], min:0, label:'2~3개월 무이자'},
         {type:'subscriptionFree', months:[36], min:500000, label:'50만원 이상 36개월 구독 무이자'}
       ],
-      memo:'기존 하이마트 신한카드. 36개월 구독결제/전월실적 청구할인 중심이며 Simple Plan+와 별도 비교.'
+      memo:'기존 하이마트 신한카드. 9/11부터 20/100/200만원 저액구간도 Simple Plan+와 동일하게 전 고객 금액대 캐시백 적용. 2~3개월 무이자에서는 1.5% 할인이 없는 Simple Plan+보다 연회비가 낮은 선택지가 될 수 있습니다. 일시불 3% 할인은 전월실적 50만원 이상 조건입니다.'
     },
     {
       name:'삼성 일반카드 LINK',
@@ -1297,8 +1306,15 @@
 
   function billingDiscount(card, amount, flags, month){
     if(flags.simple || !flags.billing || !card.billingDiscount) return 0;
+    // 결제방식 미선택 상태에서는 일시불/유이자 전용 청구할인을 추정 적용하지 않는다.
+    if(month === null || Number.isNaN(month)) return 0;
     if(card.billingDiscount.simplePlan){
+      // Simple Plan+ 1.5%: 일시불 또는 유이자 할부만 적용, 2~3개월 무이자 제외
       if(!flags.simplePlan15 || month===2 || month===3) return 0;
+    }
+    if(card.billingDiscount.legacyShinhan){
+      // 기존 하이마트 신한 3%: 전월실적 50만원 이상 + 일시불, 최대 3만원. 명시 체크 시에만 반영.
+      if(!flags.legacyShinhan3 || month!==0) return 0;
     }
     return Math.min(amount * card.billingDiscount.rate, card.billingDiscount.cap);
   }
@@ -1366,6 +1382,11 @@
       return month === 24 && isSamsungLightEligible(card, amount, category) ? card.light.benefit : 0;
     }
     return amount >= card.light.min ? card.light.benefit : 0;
+  }
+
+  function samsungNewCustomerBenefit(card, amount, flags){
+    if(flags.simple || !flags.samsungNew || !card || card.name !== '삼성제휴카드') return 0;
+    return amount >= 200000 ? 50000 : 0;
   }
 
   function naverPayBenefit(card, amount, flags){
@@ -1586,6 +1607,7 @@
       const conditionTotal = cond;
       const light = lightBenefit(card, amount, flags, month, category);
       const naver = naverPayBenefit(card, amount, flags);
+      const samsungNew = samsungNewCustomerBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
       const lgInstant = Number(lgInstantDiscount || 0);
@@ -1593,7 +1615,7 @@
       const modelPromo = modelPromoInfo.total;
       const original = Number(originalAmount || amount);
       const interest = inst.interest;
-      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + billing + point + lola + hero + planConnect + conditionTotal + light + naver;
+      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + billing + point + lola + hero + planConnect + conditionTotal + light + samsungNew + naver;
       const netBenefit = gross - interest;
 
       return {
@@ -1613,6 +1635,7 @@
         cond,
         conditionTotal,
         light,
+        samsungNew,
         naver,
         inst,
         interest,
@@ -1640,13 +1663,14 @@
       const conditionTotal = conditionMonthly * s.months;
       const light = isSamsungLightEligible(card, amount, category) ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
+      const samsungNew = samsungNewCustomerBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
       const lgInstant = Number(lgInstantDiscount || 0);
       const modelPromoInfo = modelPromoBenefit(card);
       const modelPromo = modelPromoInfo.total;
       const original = Number(originalAmount || amount);
-      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
+      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + conditionTotal + light + samsungNew + naver;
       const netBenefit = gross - interest;
       const balancePayText = balanceMonth ? `${balanceMonth}개월 ${balanceInst.status}` : '일시불 또는 2~3개월 권장';
       const usageDetail = samsungUsageDetail(card, category, month, flags);
@@ -1671,6 +1695,7 @@
         cond:conditionTotal,
         conditionTotal,
         light,
+        samsungNew,
         naver,
         inst:{
           status:'부분 24개월',
@@ -1702,13 +1727,14 @@
       const conditionTotal = conditionMonthly * s.months;
       const light = isSamsungLightEligible(card, amount, category) ? s.lightBenefit : 0;
       const naver = naverPayBenefit(card, amount, flags);
+      const samsungNew = samsungNewCustomerBenefit(card, amount, flags);
       const product = Number(productCashback || 0);
       const samsungRewardAmount = Number(samsungReward || 0);
       const lgInstant = Number(lgInstantDiscount || 0);
       const modelPromoInfo = modelPromoBenefit(card);
       const modelPromo = modelPromoInfo.total;
       const original = Number(originalAmount || amount);
-      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + conditionTotal + light + naver;
+      const gross = base + product + modelPromo + samsungRewardAmount + lgInstant + conditionTotal + light + samsungNew + naver;
       const netBenefit = gross - full24Interest;
       const offsetBenefit = conditionTotal + light;
       const offsetResult = offsetBenefit - full24Interest;
@@ -1736,6 +1762,7 @@
         cond:conditionTotal,
         conditionTotal,
         light,
+        samsungNew,
         naver,
         inst:{
           status:'전체 24개월',
@@ -1782,6 +1809,8 @@
       split:checked('splitStrategyCheck', true),
       naver:checked('naverPayCheck', false),
       simplePlan15:checked('simplePlan15Check', true),
+      legacyShinhan3:checked('legacyShinhan3Check', false),
+      samsungNew:checked('samsungNewCheck', false),
       planConnect:checked('planConnectCheck', false),
       interest:checked('interestCheck', true),
       simple:checked('simpleModeCheck', false)
@@ -1798,7 +1827,14 @@
       ...buildStrategyRows(paymentAmount, month, category, annualRate, flags, productCashback, samsungReward, lgInstantDiscount, amount)
     ]
       .filter(r => amount > 0)
-      .sort((a,b) => b.netBenefit - a.netBenefit);
+      .sort((a,b) => {
+        const benefitDiff = b.netBenefit - a.netBenefit;
+        if(Math.abs(benefitDiff) > 0.5) return benefitDiff;
+        // 혜택이 동일하면 신규발급 상담 관점에서 연회비가 낮은 카드를 우선한다.
+        const feeA = Number.isFinite(a.annualFee) ? a.annualFee : Number.MAX_SAFE_INTEGER;
+        const feeB = Number.isFinite(b.annualFee) ? b.annualFee : Number.MAX_SAFE_INTEGER;
+        return feeA - feeB;
+      });
 
     currentRows = rows;
     currentContext = {amount, paymentAmount, month, productCashback, modelPromoTotal:rows.reduce((sum,r)=>Math.max(sum, r.modelPromo || 0),0), samsungRewardEnabled, samsungRewardBase, samsungReward, lgInstantEnabled, lgInstantBase, lgInstantInfo, lgInstantDiscount, category, annualRate, flags};
@@ -1943,6 +1979,26 @@
   }
 
 
+  function paymentBadgeHtml(row){
+    const status = row && row.inst ? row.inst.status : '';
+    if(status === '일시불') return '<span class="badge ok">일시불</span>';
+    if(status === '무이자') return '<span class="badge ok">무이자</span>';
+    if(status === '할부개월 선택') return '<span class="badge">결제방식 선택</span>';
+    if(status && status.includes('유이자')) return '<span class="badge warn">유이자</span>';
+    if(status === '부분 24개월') return '<span class="badge warn">부분 24개월</span>';
+    return status ? `<span class="badge">${safeText(status)}</span>` : '';
+  }
+
+  function paymentMiniHtml(row){
+    const status = row && row.inst ? row.inst.status : '';
+    if(status === '일시불') return '<span>일시불</span>';
+    if(status === '무이자') return '<span>무이자</span>';
+    if(status === '할부개월 선택') return '<span>결제방식 선택</span>';
+    if(status && status.includes('유이자')) return '<span>유이자</span>';
+    if(status === '부분 24개월') return '<span>부분24개월</span>';
+    return status ? `<span>${safeText(status)}</span>` : '';
+  }
+
   function renderRecommend(best, amount){
     const box = $('recommendBox');
 
@@ -1961,7 +2017,10 @@
     if(best.modelPromo > 0) tags.push('<span class="badge ok">모델단독</span>');
     if(best.point > 0) tags.push('<span class="badge ok">포인트적립</span>');
     if(best.interest > 0) tags.push('<span class="badge warn">이자반영</span>');
-    else tags.push('<span class="badge ok">무이자/일시불</span>');
+    tags.push(paymentBadgeHtml(best));
+    if(best.name === '신한 Simple Plan+' && best.inst && best.inst.status === '일시불' && best.billing > 0) tags.push('<span class="badge ok">1.5% 할인</span>');
+    if(best.name === '신한 Simple Plan+' && best.inst && best.inst.status === '무이자') tags.push('<span class="badge warn">1.5% 제외</span>');
+    if(best.name === '하이마트 신한카드' && best.inst && best.inst.status === '무이자') tags.push('<span class="badge ok">연회비 2.8만</span>');
 
     box.innerHTML = `
       <div>
@@ -2004,7 +2063,10 @@
           ${r.conditionTotal > 0 ? '<span>사용조건부</span>' : ''}
           ${r.rowType === 'strategy' ? '<span>분할전략</span>' : ''}
           ${r.rowType === 'full24' ? '<span>전체24개월</span>' : ''}
-          ${r.interest === 0 ? '<span>무이자</span>' : ''}
+          ${paymentMiniHtml(r)}
+          ${r.name === '신한 Simple Plan+' && r.inst && r.inst.status === '일시불' && r.billing > 0 ? '<span>1.5% 할인</span>' : ''}
+          ${r.name === '신한 Simple Plan+' && r.inst && r.inst.status === '무이자' ? '<span>1.5% 제외</span>' : ''}
+          ${r.name === '하이마트 신한카드' && r.inst && r.inst.status === '무이자' ? '<span>연회비 2.8만</span>' : ''}
         </div>
       </div>
     `;
@@ -2089,7 +2151,7 @@
           ${won(r.conditionTotal)}
           ${r.cond ? `<br><span class="small">월사용 ${won(r.cond)}</span>` : ''}
         </td>
-        <td>${won(r.light)}</td>
+        <td>${won((r.light||0) + (r.samsungNew||0))}</td>
         <td>${won(r.naver)}</td>
         <td>
           <span class="status ${r.inst.className}">${r.inst.status}</span><br>
@@ -2204,7 +2266,7 @@
     add('hero','엘페이 추가혜택',row.hero,'9월 엘페이 등록 결제 500/1,000만원 이상 조건');
     add('light','플랜 연결 추가혜택',row.planConnect||0,'롯데 플랜 발급 익월까지 연결 시 +2만원 옵션');
     add('condition','사용조건부 혜택',row.conditionTotal,`${row.cond?`월 사용액 ${won(currentContext.flags.monthlySpend||0)} 기준 ${won(row.cond)}${row.name.includes('삼성제휴') ? ' · 라이트할부 1만원/월, 구독결제 1.3만원/월 기준' : ''}`:''}`.trim());
-    add('light','라이트/추가 혜택',row.light,'삼성제휴 라이트할부 이용 및 합산 300만원 이상 결제 시 추가 10만원');
+    add('light','라이트/추가 혜택',(row.light||0)+(row.samsungNew||0),`${row.light?'라이트할부 포함 300만원 이상 +10만원':''}${row.light&&row.samsungNew?' · ':''}${row.samsungNew?'신규고객 20만원 이상 +5만원':''}`);
     if(row.rowType === 'full24') add('offset','24개월 이자상쇄 결과',Math.abs(row.offsetResult || 0),row.offsetResult >= 0 ? '월 사용혜택/라이트 혜택이 예상 이자를 초과합니다.' : '월 사용혜택/라이트 혜택으로 이자를 일부 상쇄한 뒤 남는 부담입니다.',row.offsetResult < 0);
     add('naver','네이버페이 QR 추가혜택',row.naver,'9/1~9/30 · QR 결제 · 500/1,000만원 이상 5/10만원');
     add('installment','할부상태',0,`${row.inst.status} · ${row.inst.label}${row.strategyText?` · ${row.strategyText}`:''}`);
@@ -2354,7 +2416,7 @@
     .print-benefit-note{font-size:11px;min-height:30px;margin-top:9px;padding-top:7px}
   }
 
-    /* 9월 v8 · 2차 UI 개선 */
+    /* 9월 v10 · 2차 UI 개선 */
     .workspace-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
     .workspace-toolbar button{border:1px solid #e2e8f0;background:#fff;color:#0f172a;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}
     .workspace-toolbar button.primary-tool{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
@@ -2580,8 +2642,8 @@
       name:'하이마트 신한카드(기존)',
       image:'shinhan-partner-card.png',
       url:'https://m.site.naver.com/20U3L',
-      desc:'기존 하이마트 신한카드 발급 링크 · QR · URL 복사용',
-      annualFee:'Master 28,000원 · Master 카드만 판촉 적용(Local 불가)'
+      desc:'기존 하이마트 신한카드 발급 링크 · QR · URL 복사용 · 9월 필독 기준 저액구간 포함',
+      annualFee:'해외겸용 28,000원(장표 표기) · 국내전용 연회비는 현재 판촉안에 별도 표기 없음'
     }
   ];
 
@@ -2866,7 +2928,7 @@
         return;
       }
       if(nq.includes('신한')){
-        answer.textContent = '신한카드는 2종으로 분리합니다.\n- Simple Plan+: 20/100/200만원 저액구간 + 300만원 이상 5% 구간, 일시불/유이자 1.5% 결제일 할인\n- 하이마트 신한카드: 36개월 구독/전월실적 청구할인 중심\n- LG전자×신한 모델별 캐시백은 검색 결과에서 해당 카드별로 반영됩니다.';
+        answer.textContent = '신한카드는 2종으로 분리합니다.\n- Simple Plan+: 9/11부터 20/100/200만원 + 300만원 이상 금액대 캐시백, 일시불/유이자 1.5% 결제일 할인\n- 하이마트 신한카드: 9/11부터 동일 저액구간 캐시백 + 일시불 3%(전월실적 50만원↑, 최대 3만원) + 36개월 구독 사용조건 혜택\n- 2~3개월 무이자라면 Simple Plan+ 1.5% 할인은 제외되므로 기존 신한카드도 연회비 측면에서 유력한 비교 대상입니다.\n- 참고 13-1의 Master 전용 문구는 9월 필독 요약과 충돌하므로 계산 자격조건으로 자동 제한하지 않고 발급 전 카드종 확인을 권장합니다.';
         return;
       }
       answer.textContent = '기본 무이자 요약\n- 우리: 2~6개월\n- KB국민: 2~5개월\n- 롯데 멤버스: 5만원 이상 2~5개월, 100만원 이상 12개월\n- 롯데 플랜/W: 100만원 이상 2~5개월\n- 삼성/신한/현대/광주/하나/NH농협/BC: 주로 2~3개월 기준\n원본 장표도 함께 확인해주세요.';
@@ -3017,7 +3079,8 @@
 
   function recommendationReason(row){
     const base = String(row.name || '').replace(/ · .+$/,'');
-    if(base === '신한 Simple Plan+') return '금액대별 캐시백과 1.5% 결제일 할인 조건을 현재 결제방식 기준으로 함께 계산한 결과입니다.';
+    if(base === '신한 Simple Plan+') return '금액대별 캐시백을 기본으로, 일시불·유이자 선택 시에만 1.5% 결제일 할인을 추가합니다. 2~3개월 무이자에서는 1.5%를 제외합니다.';
+    if(base === '하이마트 신한카드') return '9/11부터 20/100/200만원 저액구간도 동일 적용합니다. 2~3개월 무이자에서는 Simple Plan+와 금액대 캐시백은 같고, 일시불 3% 할인은 전월실적 50만원 이상일 때만 선택 반영합니다.';
     if(base === '롯데 플랜카드') return '20만원 이상 첫 결제 혜택과 청구할인·롤라머니를 현재 옵션 기준으로 합산한 결과입니다.';
     if(base === '삼성제휴카드') return '금액대 캐시백과 선택한 할부개월의 라이트/사용조건 혜택을 현재 옵션 기준으로 계산한 결과입니다.';
     if(base === '우리제휴카드') return '금액대 캐시백 또는 선택한 24개월 사용조건부 혜택을 현재 옵션 기준으로 계산한 결과입니다.';
@@ -3028,7 +3091,8 @@
   function recommendationCaution(row){
     const base = String(row.name || '').replace(/ · .+$/,'');
     if(base === '우리제휴카드') return '월 사용조건은 구매금액이 아니라 고급 옵션의 ‘월 카드 사용 예상액’으로 판정합니다. 기본값 30만원이면 월 18,000원 기준입니다.';
-    if(base === '신한 Simple Plan+') return '2~3개월 무이자 선택 시 1.5% 결제일 할인은 제외됩니다. 20/100/200만원 저액구간은 9/11부터 전 고객 대상 기준입니다.';
+    if(base === '신한 Simple Plan+') return '혜택 극대화는 일시불·유이자 결제 시 1.5% 할인까지 보는 방식입니다. 2~3개월 무이자는 가능하지만 1.5% 할인은 제외됩니다.';
+    if(base === '하이마트 신한카드') return '9월 필독 장표의 저액구간 혜택을 우선 반영했습니다. 참고 13-1에는 Master 전용 문구가 남아 있어 발급 전 실제 카드종은 최종 확인하세요.';
     if(base === '롯데 플랜카드' || base === '롯데 멤버스카드' || base === '롯데 클래스카드') return '9/15까지 롯데카드 신규/추가 발급 제한이 있으므로 기존 고객의 교체/재발급 여부를 확인하세요.';
     if(base === '삼성제휴카드') return '24개월 라이트할부 추가 10만원은 라이트할부 포함 300만원 이상 조건입니다.';
     return row.inst && row.inst.label ? row.inst.label : '카드별 행사기간과 결제조건을 확인하세요.';
@@ -3132,6 +3196,8 @@
     'annualRateInput',
     'billingCheck',
     'simplePlan15Check',
+    'legacyShinhan3Check',
+    'samsungNewCheck',
     'planConnectCheck',
     'memberPointCheck',
     'lolaCheck',
