@@ -37,7 +37,7 @@
     </section>
 
     <section class="card conditions">
-      <h3 class="section-title">고객 조건</h3><div class="section-sub">체크한 조건만 조건부 혜택에 반영합니다. 신한 13만원은 네 가지 조건이 모두 필요합니다.</div>
+      <div class="condition-head"><h3 class="section-title">고객 조건</h3><span id="conditionHint" class="condition-hint">카드를 선택하면 필요한 조건을 표시합니다.</span></div><div class="section-sub">체크한 조건만 조건부 혜택에 반영합니다. 선택한 카드와 관련 있는 조건은 자동으로 강조합니다.</div>
       <div class="chips">
         <label class="chip"><input id="shinhanNew" type="checkbox"><span>신한 신규/6개월 무실적</span></label>
         <label class="chip"><input id="shinhanApply" type="checkbox"><span>신한 이벤트 응모</span></label>
@@ -57,12 +57,18 @@
       </div>
     </section>
 
-    <section class="card pay">
-      <h3 class="section-title">간편결제 전략</h3><div class="section-sub">PAYCO는 카드혜택에 더하는 방식이 아니라 카드결제 금액을 나누는 전략으로 계산합니다.</div>
+    <section class="card pay collapsible-card">
+      <button class="collapse-head" type="button" onclick="togglePayStrategy()" aria-expanded="false">
+        <span><strong>간편결제 전략</strong><small>PAYCO · NaverPay · L.Pay가 필요할 때만 펼쳐보세요.</small></span>
+        <span id="payCollapseIcon" class="collapse-icon">＋</span>
+      </button>
+      <div id="payStrategyBody" class="collapse-body">
+      <div class="section-sub">PAYCO는 카드혜택에 더하는 방식이 아니라 카드결제 금액을 나누는 전략으로 계산합니다.</div>
       <div class="pay-grid">
         <div class="pay-card payco"><b>PAYCO 포인트</b><div id="paycoBenefit" class="big">0원</div><div id="paycoDesc" class="small">사용 안 함</div><div class="payco-controls"><button data-payco="0">없음</button><button data-payco="500000">50만</button><button data-payco="1000000">100만</button><button data-payco="2000000">200만</button></div></div>
         <label class="pay-card"><b>NaverPay QR</b><div id="naverText" class="big">+0원</div><div class="small">롯데 멤버스/플랜 · Simple Plan+ · 삼성제휴<br>500/1,000만 → 5/10만</div><div class="chips"><span class="chip green"><input id="naverPay" type="checkbox"><span>적용</span></span></div></label>
         <label class="pay-card"><b>L.Pay</b><div id="lpayText" class="big">+0원</div><div class="small">11월은 롯데 멤버스/플랜만<br>500/1,000만 → 5/10만</div><div class="chips"><span class="chip green"><input id="lpay" type="checkbox"><span>적용</span></span></div></label>
+      </div>
       </div>
     </section>
 
@@ -78,7 +84,7 @@
     </section>
 
     <section class="card tools">
-      <h3 class="section-title">빠른 도구</h3><div class="tool-grid"><button class="tool" onclick="openModal('memberModal')"><b>회원등록</b><span>하이마트 회원·L.POINT</span></button><button class="tool" onclick="openModal('issueModal')"><b>제휴카드 발급</b><span>연회비·발급링크</span></button><button class="tool" onclick="openModal('sourceModal')"><b>11월 원본장표</b><span>필독/카드/모델 장표</span></button><button class="tool" onclick="openModal('chatModal')"><b>판촉 도우미</b><span>조건 빠른 확인</span></button><button class="tool" onclick="window.print()"><b>상담요약 인쇄</b><span>현재 계산값 출력</span></button></div>
+      <h3 class="section-title">빠른 도구</h3><div class="tool-grid"><button class="tool" onclick="openModal('memberModal')"><b>회원등록</b><span>하이마트 회원·L.POINT</span></button><button class="tool" onclick="openModal('issueModal')"><b>제휴카드 발급</b><span>연회비·발급링크</span></button><button class="tool" onclick="openModal('benefitGuideModal')"><b>무이자/금액대별캐시백</b><span>11월 할부·캐시백만 바로 확인</span></button><button class="tool" onclick="openModal('sourceModal')"><b>11월 원본장표</b><span>필독/카드/모델 장표</span></button><button class="tool" onclick="openModal('chatModal')"><b>판촉 도우미</b><span>조건 빠른 확인</span></button><button class="tool" onclick="window.print()"><b>상담요약 인쇄</b><span>현재 계산값 출력</span></button></div>
       <div class="notice">11월 신한 신규 13만원은 <b>신규/6개월 무실적 + 응모 + Master + 마케팅 전체동의</b> 조건을 모두 확인한 경우만 계산합니다.</div>
     </section>
   </main>
@@ -87,6 +93,7 @@
 
 <div class="modal" id="memberModal" onclick="if(event.target===this)closeModal('memberModal')"><div class="modal-box"><div class="modal-head"><div><h3>회원등록</h3><div class="section-sub">하이마트 회원등록과 L.POINT 모바일카드를 바로 열거나 QR로 안내합니다.</div></div><button class="x" onclick="closeModal('memberModal')">×</button></div><div id="memberGrid" class="issue-grid"></div></div></div>
 <div class="modal" id="issueModal" onclick="if(event.target===this)closeModal('issueModal')"><div class="modal-box"><div class="modal-head"><div><h3>제휴카드 발급</h3><div class="section-sub">11월 상담용 연회비와 발급 링크</div></div><button class="x" onclick="closeModal('issueModal')">×</button></div><div id="issueGrid" class="issue-grid"></div></div></div>
+<div class="modal" id="benefitGuideModal" onclick="if(event.target===this)closeModal('benefitGuideModal')"><div class="modal-box benefit-guide-box"><div class="modal-head"><div><h3>무이자/금액대별캐시백</h3><div class="section-sub">11월 상담에서 자주 확인하는 두 장표만 모았습니다.</div></div><button class="x" onclick="closeModal('benefitGuideModal')">×</button></div><div class="benefit-guide-grid"><button class="source-card source-click" onclick="openViewer('11월 무이자·할부','source/slide-15.png','','11월 판촉안 v3 · 15p')"><img src="source/slide-15.png" alt="11월 무이자 할부"><b>무이자/할부</b><div class="section-sub">카드별 무이자·부분무이자·장기할부 확인</div></button><button class="source-card source-click" onclick="openViewer('11월 금액대별 캐시백','source/slide-16.png','','11월 판촉안 v3 · 16p')"><img src="source/slide-16.png" alt="11월 금액대별 캐시백"><b>금액대별 캐시백</b><div class="section-sub">카드별 구매금액 구간 혜택 확인</div></button></div></div></div>
 <div class="modal" id="sourceModal" onclick="if(event.target===this)closeModal('sourceModal')"><div class="modal-box"><div class="modal-head"><div><h3>11월 원본 장표</h3><div class="section-sub">필독·카드·간편결제·모델 판촉 원본</div></div><button class="x" onclick="closeModal('sourceModal')">×</button></div><div id="sourceGrid" class="source-grid"></div></div></div>
 <div class="modal" id="chatModal" onclick="if(event.target===this)closeModal('chatModal')"><div class="modal-box" style="max-width:700px"><div class="modal-head"><div><h3>11월 판촉 도우미</h3><div class="section-sub">예: 신한 신규, 우리 24개월, LPay, PAYCO</div></div><button class="x" onclick="closeModal('chatModal')">×</button></div><div class="chat-row"><input id="chatQ" placeholder="궁금한 조건을 입력하세요" onkeydown="if(event.key==='Enter')askChat()"><button class="primary" onclick="askChat()">확인</button></div><div id="chatA" class="chat-answer">질문을 입력하면 11월 판촉안 기준 핵심 조건을 보여줍니다.</div></div></div>
 <div class="modal viewer-modal" id="viewerModal" onclick="if(event.target===this)closeViewer()"><div class="viewer-box"><div class="modal-head"><div><h3 id="viewerTitle">확대 보기</h3><div id="viewerSub" class="section-sub"></div></div><button class="x" onclick="closeViewer()">×</button></div><div class="viewer-body"><img id="viewerImage" alt="확대 이미지"><div id="viewerUrl" class="viewer-url"></div><div class="viewer-actions"><button id="viewerOpenBtn" class="primary">링크 열기</button><button id="viewerCopyBtn">URL 복사</button></div></div></div></div>
