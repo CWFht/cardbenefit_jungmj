@@ -194,3 +194,23 @@ body{padding-bottom:86px}
   .floating-tools-grid{grid-template-columns:1fr}
 }
 @media print{.floating-tools{display:none!important}body{padding-bottom:0}}
+
+/* v46.6 force viewport-level floating dock */
+#floatingTools.floating-tools{
+  position:fixed!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 10px)!important;
+  transform:translate3d(-50%,0,0)!important;
+  z-index:2147483000!important;
+  width:min(760px,calc(100vw - 20px))!important;
+  margin:0!important;
+}
+#floatingTools .floating-tools-tab{display:grid!important}
+@media(max-width:720px){
+  #floatingTools.floating-tools{
+    bottom:calc(env(safe-area-inset-bottom,0px) + 8px)!important;
+    width:calc(100vw - 14px)!important;
+  }
+}
