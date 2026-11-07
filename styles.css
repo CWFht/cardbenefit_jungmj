@@ -87,3 +87,34 @@
   .hero-break .mini:last-child{grid-column:auto}
   .rank-table tr.rank-row{grid-template-columns:48px 1fr 1fr}
 }
+/* v46.3 consultation flow refinements */
+.condition-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.condition-hint{font-size:10px;font-weight:850;color:#315dc7;background:#eef3ff;border-radius:999px;padding:6px 9px}
+.conditions .chip.recommended span{border-color:#7ea2ff;background:#eaf1ff;color:#2458d5;box-shadow:0 0 0 2px rgba(49,94,251,.08)}
+.conditions .chip.recommended-extra span{border-color:#ffbf7d;background:#fff2e5;color:#c66410;box-shadow:0 0 0 2px rgba(240,138,46,.07)}
+.conditions .chip.recommended span::before{content:'추천';font-size:8px;font-weight:950;background:#315efb;color:#fff;border-radius:999px;padding:2px 5px}
+.conditions .chip.recommended-extra span::before{content:'추가';font-size:8px;font-weight:950;background:#f08a2e;color:#fff;border-radius:999px;padding:2px 5px}
+
+.collapsible-card{padding:0;overflow:hidden}
+.collapse-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;background:transparent;padding:18px 20px;text-align:left;color:var(--text)}
+.collapse-head strong{display:block;font-size:17px;letter-spacing:-.35px}
+.collapse-head small{display:block;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.45;font-weight:650}
+.collapse-icon{width:34px;height:34px;border-radius:12px;background:#f1f4f9;display:grid;place-items:center;font-size:20px;color:#536078;flex:0 0 auto}
+.collapse-body{display:none;padding:0 20px 20px}
+.collapse-body.open{display:block}
+
+.benefit-guide-box{max-width:920px}
+.benefit-guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.benefit-guide-grid .source-click img{height:250px;object-fit:cover;object-position:top}
+
+@media(max-width:720px){
+  .condition-head{align-items:flex-start}
+  .condition-hint{font-size:10px;line-height:1.35}
+  .conditions .chip.recommended span::before,.conditions .chip.recommended-extra span::before{font-size:7px}
+  .collapse-head{padding:16px}
+  .collapse-head strong{font-size:18px}
+  .collapse-head small{font-size:12px}
+  .collapse-body{padding:0 16px 16px}
+  .benefit-guide-grid{grid-template-columns:1fr}
+  .benefit-guide-grid .source-click img{height:180px}
+}
