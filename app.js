@@ -94,3 +94,18 @@ function searchModel(){const q=$('modelQuery').value.trim().toUpperCase().replac
 function askChat(){const q=$('chatQ').value.trim();let a='11월 판촉안에서 해당 키워드를 찾지 못했습니다. 원본 장표를 확인하세요.';const s=q.replace(/\s/g,'').toLowerCase();if(s.includes('신한')&&s.includes('신규'))a='신한 11월 신규 프로모션\n- 대상: 하이마트 신한카드 / Simple Plan+\n- 신규 또는 6개월 무실적\n- 20만원 이상 결제 시 13만원\n- 별도 URL 응모 + Master + 마케팅 전체동의 + 앱카드 등록 필요\n- 12월 말 지급, 카드 1년 유지조건';else if(s.includes('우리'))a='우리제휴 11월\n- 금액대별 캐시백 미운영\n- 24/36개월 조건부 청구할인 30/70/120만원 → 월 1.8/2.0/2.2만원\n- 24개월은 44만원 이상 결제 조건\n- 기존 BC 우리제휴는 제외';else if(s.includes('payco'))a='PAYCO 11월\n- PAYCO 포인트 결제만 즉시할인\n- 50/100/200만원 → 3/6/12만원\n- ID당 1회, 첫 결제건 기준\n- 카드 등록 PAYCO 결제는 즉시할인 대상이 아님';else if(s.includes('lpay')||s.includes('엘페이'))a='L.Pay 11월\n- 대상: 롯데제휴 멤버스 / Hi-Plan\n- 500/1,000만원 이상 → 5/10만원 캐시백\n- 1인 1회, 단일 승인건 기준';else if(s.includes('네이버'))a='NaverPay 11월\n- 롯데 멤버스/플랜, 신한 Simple Plan+, 삼성제휴 QR 결제\n- 500/1,000만원 → 5/10만원 포인트\n- 분할합산 불가, QR 결제건만';else if(s.includes('삼성')&&s.includes('24'))a='삼성제휴 24개월\n- 24만원을 24개월 라이트할부 6.5%\n- 나머지는 일시불 또는 2~3개월\n- 라이트할부 포함 총 300만원 이상이면 10만원 추가 캐시백\n- 월사용 30/70만원 → 월 1.0/1.4만원';else if(s.includes('플랜')&&s.includes('수리'))a='Hi-Plan 수리올케어 신규 5만원\n- 신규/6개월 무실적\n- 행사기간 발급\n- 수리올케어 포함 20만원 이상 승인\n- 판촉 지급체크 필요\n4가지 모두 충족해야 지급';$('chatA').textContent=a}
 function bind(){['amount','productCashback'].forEach(id=>$(id).addEventListener('input',calculate));['category','month','monthlySpend'].forEach(id=>$(id).addEventListener('change',calculate));document.querySelectorAll('input[type=checkbox]').forEach(el=>el.addEventListener('change',e=>{if(e.target.id==='naverPay'&&e.target.checked)$('lpay').checked=false;if(e.target.id==='lpay'&&e.target.checked)$('naverPay').checked=false;calculate()}));document.querySelectorAll('[data-payco]').forEach(b=>b.onclick=()=>setPayco(+b.dataset.payco));$('modelQuery').addEventListener('keydown',e=>{if(e.key==='Enter')searchModel()})}
 renderIssue();renderMembers();renderSources();bind();setPayco(0);calculate();
+function toggleFloatingTools(){
+  const wrap=$('floatingTools'),panel=$('floatingToolsPanel'),icon=$('floatingToolsIcon'),tab=document.querySelector('.floating-tools-tab');
+  const open=!wrap.classList.contains('open');
+  wrap.classList.toggle('open',open);
+  panel?.classList.toggle('open',open);
+  if(icon) icon.textContent=open?'⌄':'⌃';
+  if(tab) tab.setAttribute('aria-expanded',String(open));
+}
+function closeFloatingTools(){
+  const wrap=$('floatingTools'),panel=$('floatingToolsPanel'),icon=$('floatingToolsIcon'),tab=document.querySelector('.floating-tools-tab');
+  wrap?.classList.remove('open');panel?.classList.remove('open');
+  if(icon) icon.textContent='⌃';
+  if(tab) tab.setAttribute('aria-expanded','false');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFloatingTools()});
