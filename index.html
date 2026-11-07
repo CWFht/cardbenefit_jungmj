@@ -88,7 +88,24 @@
       <div class="notice">11월 신한 신규 13만원은 <b>신규/6개월 무실적 + 응모 + Master + 마케팅 전체동의</b> 조건을 모두 확인한 경우만 계산합니다.</div>
     </section>
   </main>
-  <div class="footer">상담 보조용 · 행사기간/대상카드/응모/전산 지급체크/수금 조건은 원본 판촉안 및 HISIS에서 최종 확인</div>
+  <div class="footer">상담 보조용 · 행사기간/대상카드/응모/전산 지급체크/수금 조건은 원본 판촉안 및 HISIS에서 최종 확인</div><div class="floating-tools" id="floatingTools">
+  <button class="floating-tools-tab" type="button" onclick="toggleFloatingTools()" aria-expanded="false">
+    <span class="floating-tools-handle"></span>
+    <span class="floating-tools-title">빠른도구</span>
+    <span id="floatingToolsIcon" class="floating-tools-icon">⌃</span>
+  </button>
+  <div id="floatingToolsPanel" class="floating-tools-panel">
+    <div class="floating-tools-grid">
+      <button onclick="openModal('memberModal');closeFloatingTools()"><b>회원등록</b><span>하이마트 회원 · L.POINT</span></button>
+      <button onclick="openModal('issueModal');closeFloatingTools()"><b>제휴카드 발급</b><span>발급링크 · QR</span></button>
+      <button onclick="openModal('benefitGuideModal');closeFloatingTools()"><b>무이자/금액대별캐시백</b><span>할부 · 금액대 혜택</span></button>
+      <button onclick="openModal('sourceModal');closeFloatingTools()"><b>11월 원본장표</b><span>필독 · 카드 · 모델</span></button>
+      <button onclick="openModal('chatModal');closeFloatingTools()"><b>판촉 도우미</b><span>조건 빠른 확인</span></button>
+      <button onclick="window.print();closeFloatingTools()"><b>상담요약 인쇄</b><span>현재 계산값 출력</span></button>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="modal" id="memberModal" onclick="if(event.target===this)closeModal('memberModal')"><div class="modal-box"><div class="modal-head"><div><h3>회원등록</h3><div class="section-sub">하이마트 회원등록과 L.POINT 모바일카드를 바로 열거나 QR로 안내합니다.</div></div><button class="x" onclick="closeModal('memberModal')">×</button></div><div id="memberGrid" class="issue-grid"></div></div></div>
