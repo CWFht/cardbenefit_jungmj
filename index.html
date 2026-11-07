@@ -10,7 +10,7 @@
 <div class="app">
   <div class="topbar">
     <div class="brand"><div class="logo">H</div><div><h1>롯데하이마트 카드 판촉 혜택 계산기</h1><p>2026년 11월 판촉안 v3 · LG/삼성 월간 모델리스트 반영</p></div><span class="version">11월 v1 · Bento</span></div>
-    <div class="top-actions"><button onclick="openModal('issueModal')">카드 발급</button><button onclick="openModal('sourceModal')">11월 원본 장표</button><button onclick="openModal('chatModal')">판촉 도우미</button><button onclick="window.print()">상담요약 인쇄</button></div>
+    <div class="top-actions"><button onclick="openModal('memberModal')">회원등록</button><button onclick="openModal('issueModal')">카드 발급</button><button onclick="openModal('sourceModal')">11월 원본 장표</button><button onclick="openModal('chatModal')">판촉 도우미</button><button onclick="window.print()">상담요약 인쇄</button></div>
   </div>
 
   <main class="grid">
@@ -78,24 +78,19 @@
     </section>
 
     <section class="card tools">
-      <h3 class="section-title">빠른 도구</h3><div class="tool-grid"><button class="tool" onclick="openModal('issueModal')"><b>제휴카드 발급</b><span>연회비·발급링크</span></button><button class="tool" onclick="openModal('sourceModal')"><b>11월 원본장표</b><span>필독/카드/모델 장표</span></button><button class="tool" onclick="openModal('chatModal')"><b>판촉 도우미</b><span>조건 빠른 확인</span></button><button class="tool" onclick="window.print()"><b>상담요약 인쇄</b><span>현재 계산값 출력</span></button></div>
+      <h3 class="section-title">빠른 도구</h3><div class="tool-grid"><button class="tool" onclick="openModal('memberModal')"><b>회원등록</b><span>하이마트 회원·L.POINT</span></button><button class="tool" onclick="openModal('issueModal')"><b>제휴카드 발급</b><span>연회비·발급링크</span></button><button class="tool" onclick="openModal('sourceModal')"><b>11월 원본장표</b><span>필독/카드/모델 장표</span></button><button class="tool" onclick="openModal('chatModal')"><b>판촉 도우미</b><span>조건 빠른 확인</span></button><button class="tool" onclick="window.print()"><b>상담요약 인쇄</b><span>현재 계산값 출력</span></button></div>
       <div class="notice">11월 신한 신규 13만원은 <b>신규/6개월 무실적 + 응모 + Master + 마케팅 전체동의</b> 조건을 모두 확인한 경우만 계산합니다.</div>
     </section>
   </main>
   <div class="footer">상담 보조용 · 행사기간/대상카드/응모/전산 지급체크/수금 조건은 원본 판촉안 및 HISIS에서 최종 확인</div>
 </div>
 
+<div class="modal" id="memberModal" onclick="if(event.target===this)closeModal('memberModal')"><div class="modal-box"><div class="modal-head"><div><h3>회원등록</h3><div class="section-sub">하이마트 회원등록과 L.POINT 모바일카드를 바로 열거나 QR로 안내합니다.</div></div><button class="x" onclick="closeModal('memberModal')">×</button></div><div id="memberGrid" class="issue-grid"></div></div></div>
 <div class="modal" id="issueModal" onclick="if(event.target===this)closeModal('issueModal')"><div class="modal-box"><div class="modal-head"><div><h3>제휴카드 발급</h3><div class="section-sub">11월 상담용 연회비와 발급 링크</div></div><button class="x" onclick="closeModal('issueModal')">×</button></div><div id="issueGrid" class="issue-grid"></div></div></div>
 <div class="modal" id="sourceModal" onclick="if(event.target===this)closeModal('sourceModal')"><div class="modal-box"><div class="modal-head"><div><h3>11월 원본 장표</h3><div class="section-sub">필독·카드·간편결제·모델 판촉 원본</div></div><button class="x" onclick="closeModal('sourceModal')">×</button></div><div id="sourceGrid" class="source-grid"></div></div></div>
 <div class="modal" id="chatModal" onclick="if(event.target===this)closeModal('chatModal')"><div class="modal-box" style="max-width:700px"><div class="modal-head"><div><h3>11월 판촉 도우미</h3><div class="section-sub">예: 신한 신규, 우리 24개월, LPay, PAYCO</div></div><button class="x" onclick="closeModal('chatModal')">×</button></div><div class="chat-row"><input id="chatQ" placeholder="궁금한 조건을 입력하세요" onkeydown="if(event.key==='Enter')askChat()"><button class="primary" onclick="askChat()">확인</button></div><div id="chatA" class="chat-answer">질문을 입력하면 11월 판촉안 기준 핵심 조건을 보여줍니다.</div></div></div>
-
-<script src="model-meta.js"></script>
-<script src="model-db-1.js"></script>
-<script src="model-db-2.js"></script>
-<script src="model-db-3.js"></script>
-<script src="model-db-4.js"></script>
-<script src="model-db-5.js"></script>
-<script src="model-db-6.js"></script>
+<div class="modal viewer-modal" id="viewerModal" onclick="if(event.target===this)closeViewer()"><div class="viewer-box"><div class="modal-head"><div><h3 id="viewerTitle">확대 보기</h3><div id="viewerSub" class="section-sub"></div></div><button class="x" onclick="closeViewer()">×</button></div><div class="viewer-body"><img id="viewerImage" alt="확대 이미지"><div id="viewerUrl" class="viewer-url"></div><div class="viewer-actions"><button id="viewerOpenBtn" class="primary">링크 열기</button><button id="viewerCopyBtn">URL 복사</button></div></div></div></div>
+<script src="model-db.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
