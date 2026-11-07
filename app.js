@@ -42,6 +42,52 @@ function computeCard(card,c){let confirmed=c.product,conditional=0,interest=0,pa
  if(card.name==='하나 MOVING ALLDAY'){if(checked('hanaNew')&&s>=300000){conditional+=120000;condParts.push('신규조건 12만원');if(checked('hanaAllcare')){conditional+=50000;condParts.push('수리올케어 5만원')}}tags.push('12개월 유지조건')}
  const pay=commonPay(card.name,a);conditional+=pay.x;condParts.push(...pay.labels);if(!eligible){confirmed=0;conditional=0;interest=0;parts=[];condParts=[];tags=['구독 비추천'];}const gross=confirmed+conditional;const net=Math.max(0,gross-interest);return{...card,eligible,confirmed,conditional,interest,net,parts,condParts,tags,reason:eligible?reasonFor(card.name,c,tags,condParts):'11월 구독 선택가이드에서 다른 구독 제휴카드를 우선합니다.'}}
 function reasonFor(name,c,tags,cond){if(name==='신한 Simple Plan+')return [2,3].includes(c.month)?'무이자에서는 1.5%가 빠지지만 300만원 이상 금액대 혜택과 신규조건을 비교합니다.':'일시불/유이자 1.5%와 300만원 이상 금액대 혜택이 강점입니다.';if(name==='하이마트 신한카드')return c.category==='subscription'?'36개월 구독과 월 사용액 조건을 함께 보는 카드입니다.':'일시불 3%와 300만원 이상 금액대 혜택을 비교합니다.';if(name==='삼성제휴카드')return c.month===24?'24만원 라이트할부와 300만원 이상 추가 10만원을 함께 봅니다.':'300만원 이상 금액대와 신규 5만원이 핵심입니다.';if(name==='우리제휴카드')return '11월 금액대 캐시백은 없고 24/36개월 월 사용 조건 혜택 중심입니다.';if(name==='Hi-Plan 카드')return '첫 결제 4만원·5% 청구할인·발급 첫달 롤라머니는 기본 반영하고, 플랜연결·수리올케어만 추가조건으로 확인합니다.';if(name==='롯데멤버스 카드')return '300만원 이상 금액대 혜택과 첫결제 할인을 확인합니다.';if(name==='Hi-Class 카드')return '5% 청구할인 최대 5만원은 기본 반영하고, 구독 신규·장기할부 이용조건만 추가 확인합니다.';return '신규 프로모션과 수리올케어 조건을 충족할 때 비교합니다.'}
+function medalBadge(i){if(i===0)return '🥇';if(i===1)return '🥈';if(i===2)return '🥉';return (i+1)+'위'}
+function openCardSelect(){renderCardSelect();openModal('cardSelectModal')}
+function renderCardSelect(){
+  const grid=$('cardSelectGrid'); if(!grid) return;
+  grid.innerHTML=currentRows.map((r,i)=>`<button class="card-select-item ${selectedCardName===r.name?'selected':''}" onclick="selectCard('${esc(r.name)}');closeModal('cardSelectModal')"><span class="card-select-rank">${medalBadge(i)}</span><span class="card-select-main"><b>${esc(r.name)}</b><small>${esc(r.reason)}</small></span><span class="card-select-money">${won(r.net)}</span></button>`).join('');
+}
+function renderPodium(c,rows){
+  const box=$('top3Podium'); if(!box) return;
+  box.innerHTML=rows.slice(0,3).map((r,i)=>`<button class="podium-item p${i+1}" onclick="selectCard('${esc(r.name)}')"><span class="podium-medal">${medalBadge(i)}</span><span class="podium-name">${esc(r.name)}</span><span class="podium-total">${won(r.net+c.paycoBenefit)}</span><small>총 혜택</small></button>`).join('');
+}
+function longTermStrategies(c){
+  const rows=[];
+  if(c.category==='subscription'&&c.month===36){
+    const samsung=currentRows.find(r=>r.name==='삼성제휴카드');
+    const shinhan=currentRows.find(r=>r.name==='하이마트 신한카드');
+    const woori=currentRows.find(r=>r.name==='우리제휴카드');
+    if(samsung) rows.push({title:'삼성 36개월 구독',desc:'구독 36개월 고객 무이자 + 월 사용조건 혜택 비교',benefit:samsung.net,interest:0});
+    if(shinhan) rows.push({title:'신한 36개월 구독',desc:'36개월 구독 + 월 사용조건 혜택 비교',benefit:shinhan.net,interest:0});
+    if(woori) rows.push({title:'우리 36개월 구독',desc:'월 사용조건 청구할인과 실제 월 청구액 한도를 함께 확인',benefit:woori.net,interest:woori.interest});
+    return rows;
+  }
+  if(c.month!==24) return rows;
+  const samsung=currentRows.find(r=>r.name==='삼성제휴카드');
+  const woori=currentRows.find(r=>r.name==='우리제휴카드');
+  if(samsung){
+    const financed=Math.min(240000,c.cardAmount);
+    const interest=annuityInterest(financed,.065,24);
+    const usage=usageTier(c.spend,[[300000,10000],[700000,14000]])*24;
+    const extra=c.cardAmount>=3000000?100000:0;
+    rows.push({title:'삼성 라이트할부 최소 유이자',desc:`${won(financed)}만 24개월 6.5% 유이자 · 나머지는 일시불/2~3개월 · 사용조건 ${won(usage)}${extra?' + 300만원↑ 추가 10만원':''}`,benefit:usage+extra,interest});
+  }
+  if(woori&&c.cardAmount>=440000){
+    const financed=Math.min(440000,c.cardAmount);
+    const interest=annuityInterest(financed,.06,24);
+    const usage=usageTier(c.spend,[[300000,18000],[700000,20000],[1200000,22000]])*24;
+    rows.push({title:'우리 최소금액 저리할부',desc:`${won(financed)}만 24개월 6.0% 유이자 · 나머지 금액 분리결제 전략 · 사용조건 ${won(usage)}`,benefit:usage,interest});
+  }
+  return rows.sort((a,b)=>(b.benefit-b.interest)-(a.benefit-a.interest));
+}
+function renderStrategy(c){
+  const card=$('strategyCard'),box=$('strategyGuide'); if(!card||!box)return;
+  const items=longTermStrategies(c);
+  if(!items.length){card.style.display='none';box.innerHTML='';return}
+  card.style.display='block';
+  box.innerHTML=items.map((x,i)=>`<div class="strategy-item ${i===0?'best':''}"><div><span class="strategy-badge">${i===0?'추천 전략':'비교 전략'}</span><b>${esc(x.title)}</b><p>${esc(x.desc)}</p></div><div class="strategy-math"><span>예상 혜택 <b>${won(x.benefit)}</b></span><span>예상이자 <b>-${won(x.interest)}</b></span><strong>상쇄 후 ${won(Math.max(0,x.benefit-x.interest))}</strong></div></div>`).join('');
+}
 function calculate(){const c=context();currentRows=CARDS.map(x=>computeCard(x,c)).sort((a,b)=>(Number(b.eligible)-Number(a.eligible))||b.net-a.net||b.confirmed-a.confirmed);if(selectedCardName&&!currentRows.some(r=>r.name===selectedCardName))selectedCardName='';render(c,currentRows)}
 function highlightConditions(name){
   document.querySelectorAll('.conditions .chip').forEach(label=>label.classList.remove('recommended','recommended-extra'));
@@ -62,10 +108,10 @@ function togglePayStrategy(){
   if(btn) btn.setAttribute('aria-expanded',String(open));
   if(icon) icon.textContent=open?'−':'＋';
 }
-function render(c,rows){const best=rows[0];const hero=rows.find(r=>r.name===selectedCardName)||best;highlightConditions(hero.name);$('cardAmountKpi').textContent=won(c.cardAmount);$('paycoKpi').textContent=won(c.paycoBenefit);$('paycoBenefit').textContent=won(c.paycoBenefit);$('paycoDesc').textContent=c.payco?`총 ${won(c.total)} 중 ${won(c.payco)} PAYCO 결제`:'사용 안 함';$('modelCount').textContent=(window.MODEL_MINI?.s?.models||0).toLocaleString()+'개';$('modelStats').textContent=`${(MODEL_MINI?.s?.models||0).toLocaleString()}개 모델 · ${(MODEL_MINI?.s?.promotions||0).toLocaleString()}개 판촉 연결 · 자동금액 ${(MODEL_MINI?.s?.auto||0).toLocaleString()} / 조합확인 ${(MODEL_MINI?.s?.manual||0).toLocaleString()}`;
+function render(c,rows){const best=rows[0];const hero=rows.find(r=>r.name===selectedCardName)||best;highlightConditions(hero.name);renderPodium(c,rows);renderStrategy(c);$('cardAmountKpi').textContent=won(c.cardAmount);$('paycoKpi').textContent=won(c.paycoBenefit);$('paycoBenefit').textContent=won(c.paycoBenefit);$('paycoDesc').textContent=c.payco?`총 ${won(c.total)} 중 ${won(c.payco)} PAYCO 결제`:'사용 안 함';$('modelCount').textContent=(window.MODEL_MINI?.s?.models||0).toLocaleString()+'개';$('modelStats').textContent=`${(MODEL_MINI?.s?.models||0).toLocaleString()}개 모델 · ${(MODEL_MINI?.s?.promotions||0).toLocaleString()}개 판촉 연결 · 자동금액 ${(MODEL_MINI?.s?.auto||0).toLocaleString()} / 조합확인 ${(MODEL_MINI?.s?.manual||0).toLocaleString()}`;
  $('heroKicker').textContent=selectedCardName?'선택한 카드 상세':'지금 조건에서 1위';$('heroReset').style.display=selectedCardName?'inline-flex':'none';$('heroName').textContent=hero.name;$('heroReason').textContent=hero.reason;$('heroMoney').innerHTML=won(hero.net+c.paycoBenefit)+' <small>카드 순혜택 + PAYCO</small>';$('heroConfirmed').textContent=won(hero.confirmed);$('heroConditional').textContent=won(hero.conditional);$('heroInterest').textContent=won(hero.interest);const img=CARD_IMAGES[hero.name];$('heroImg').style.display=img?'block':'none';if(img)$('heroImg').src=img;$('heroTags').innerHTML=hero.tags.slice(0,5).map(t=>`<span class="tag">${t}</span>`).join('');
  $('naverText').textContent='+'+won(checked('naverPay')?payTier(c.cardAmount):0);$('lpayText').textContent='+'+won(checked('lpay')?payTier(c.cardAmount):0);$('rankNote').textContent=`총 ${won(c.total)} · 카드 ${won(c.cardAmount)}${c.payco?' · PAYCO '+won(c.payco):''}`;
- $('rankBody').innerHTML=rows.map((r,i)=>`<tr class="rank-row ${selectedCardName===r.name?'selected':''}" onclick="selectCard('${esc(r.name)}')"><td data-label="순위"><span class="rank">${i+1}</span></td><td data-label="카드"><div class="cardname">${r.name}</div><div class="muted">${r.annual}</div></td><td data-label="확정" class="money">${won(r.confirmed)}</td><td data-label="조건부">${won(r.conditional)}</td><td data-label="이자">${won(r.interest)}</td><td data-label="순혜택" class="money">${won(r.net)}</td><td data-label="추천 포인트"><span class="status ${!r.eligible?'orange':i===0?'green':i<3?'':'orange'}">${r.eligible?r.tone:'구독 비추천'}</span><div class="muted rank-detail">${[...r.parts,...r.condParts].slice(0,3).join(' · ')||r.reason}</div></td></tr>`).join('')}
+ $('rankBody').innerHTML=rows.map((r,i)=>`<tr class="rank-row ${selectedCardName===r.name?'selected':''}" onclick="selectCard('${esc(r.name)}')"><td data-label="순위"><span class="rank">${medalBadge(i)}</span></td><td data-label="카드"><div class="cardname">${r.name}</div><div class="muted">${r.annual}</div></td><td data-label="확정" class="money">${won(r.confirmed)}</td><td data-label="조건부">${won(r.conditional)}</td><td data-label="이자">${won(r.interest)}</td><td data-label="순혜택" class="money">${won(r.net)}</td><td data-label="추천 포인트"><span class="status ${!r.eligible?'orange':i===0?'green':i<3?'':'orange'}">${r.eligible?r.tone:'구독 비추천'}</span><div class="muted rank-detail">${[...r.parts,...r.condParts].slice(0,3).join(' · ')||r.reason}</div></td></tr>`).join('')}
 function selectCard(name){selectedCardName=name;render(context(),currentRows);if(window.matchMedia('(max-width:720px)').matches){document.querySelector('.hero')?.scrollIntoView({behavior:'smooth',block:'start'})}}
 function resetSelectedCard(){selectedCardName='';render(context(),currentRows)}
 function setPayco(v){PAYCO=v;document.querySelectorAll('[data-payco]').forEach(b=>b.classList.toggle('active',+b.dataset.payco===v));calculate()}
