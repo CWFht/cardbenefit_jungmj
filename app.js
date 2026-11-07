@@ -7,6 +7,16 @@ const paycoDisc=a=>a>=2000000?120000:a>=1000000?60000:a>=500000?30000:0;
 function annuityInterest(p,rate,months){if(!p||!rate||!months)return 0;const r=rate/12;const pm=p*r/(1-Math.pow(1+r,-months));return Math.max(0,pm*months-p)}
 function fmtInput(el){const n=num(el.value);el.value=n?n.toLocaleString('ko-KR'):'';return n}
 const CARD_IMAGES={"삼성제휴카드":"samsung-partner-card.png","우리제휴카드":"woori-partner-card.png","신한 Simple Plan+":"shinhan-simple-plan-plus.png","하이마트 신한카드":"shinhan-partner-card.png"};
+const CARD_CONDITION_MAP={
+'롯데멤버스 카드':{core:['membersFirst'],extra:[]},
+'Hi-Plan 카드':{core:['planFirst','lotteBilling','lola'],extra:['planConnected','planAllcare']},
+'삼성제휴카드':{core:[],extra:['samsungNew']},
+'신한 Simple Plan+':{core:[],extra:['shinhanNew','shinhanApply','shinhanMaster','shinhanMarketing','simpleWelcome']},
+'하이마트 신한카드':{core:[],extra:['shinhanNew','shinhanApply','shinhanMaster','shinhanMarketing']},
+'우리제휴카드':{core:[],extra:[]},
+'Hi-Class 카드':{core:['lotteBilling'],extra:['classNewSub']},
+'하나 MOVING ALLDAY':{core:[],extra:['hanaNew','hanaAllcare']}
+};
 const CARDS=[
 {name:'롯데멤버스 카드',annual:'3만원 / 프리미엄 15만원',tone:'롯데 금액대',url:'https://m.lottecard.co.kr/spa/card/booth?bId=101511&vtCdKndC=P15670-A15670'},
 {name:'Hi-Plan 카드',annual:'2만원',tone:'플랜·수리올케어',url:'https://m.lottecard.co.kr/spa/card/booth?bId=101511&vtCdKndC=P15670-A15670'},
@@ -33,7 +43,26 @@ function computeCard(card,c){let confirmed=c.product,conditional=0,interest=0,pa
  const pay=commonPay(card.name,a);conditional+=pay.x;condParts.push(...pay.labels);if(!eligible){confirmed=0;conditional=0;interest=0;parts=[];condParts=[];tags=['구독 비추천'];}const gross=confirmed+conditional;const net=Math.max(0,gross-interest);return{...card,eligible,confirmed,conditional,interest,net,parts,condParts,tags,reason:eligible?reasonFor(card.name,c,tags,condParts):'11월 구독 선택가이드에서 다른 구독 제휴카드를 우선합니다.'}}
 function reasonFor(name,c,tags,cond){if(name==='신한 Simple Plan+')return [2,3].includes(c.month)?'무이자에서는 1.5%가 빠지지만 300만원 이상 금액대 혜택과 신규조건을 비교합니다.':'일시불/유이자 1.5%와 300만원 이상 금액대 혜택이 강점입니다.';if(name==='하이마트 신한카드')return c.category==='subscription'?'36개월 구독과 월 사용액 조건을 함께 보는 카드입니다.':'일시불 3%와 300만원 이상 금액대 혜택을 비교합니다.';if(name==='삼성제휴카드')return c.month===24?'24만원 라이트할부와 300만원 이상 추가 10만원을 함께 봅니다.':'300만원 이상 금액대와 신규 5만원이 핵심입니다.';if(name==='우리제휴카드')return '11월 금액대 캐시백은 없고 24/36개월 월 사용 조건 혜택 중심입니다.';if(name==='Hi-Plan 카드')return '첫결제·플랜연결·수리올케어 조건이 맞을 때 저액구간에서도 강합니다.';if(name==='롯데멤버스 카드')return '300만원 이상 금액대 혜택과 첫결제 할인을 확인합니다.';if(name==='Hi-Class 카드')return '구독/장기할부 월 이용조건 혜택에 적합합니다.';return '신규 프로모션과 수리올케어 조건을 충족할 때 비교합니다.'}
 function calculate(){const c=context();currentRows=CARDS.map(x=>computeCard(x,c)).sort((a,b)=>(Number(b.eligible)-Number(a.eligible))||b.net-a.net||b.confirmed-a.confirmed);if(selectedCardName&&!currentRows.some(r=>r.name===selectedCardName))selectedCardName='';render(c,currentRows)}
-function render(c,rows){const best=rows[0];const hero=rows.find(r=>r.name===selectedCardName)||best;$('cardAmountKpi').textContent=won(c.cardAmount);$('paycoKpi').textContent=won(c.paycoBenefit);$('paycoBenefit').textContent=won(c.paycoBenefit);$('paycoDesc').textContent=c.payco?`총 ${won(c.total)} 중 ${won(c.payco)} PAYCO 결제`:'사용 안 함';$('modelCount').textContent=(window.MODEL_MINI?.s?.models||0).toLocaleString()+'개';$('modelStats').textContent=`${(MODEL_MINI?.s?.models||0).toLocaleString()}개 모델 · ${(MODEL_MINI?.s?.promotions||0).toLocaleString()}개 판촉 연결 · 자동금액 ${(MODEL_MINI?.s?.auto||0).toLocaleString()} / 조합확인 ${(MODEL_MINI?.s?.manual||0).toLocaleString()}`;
+function highlightConditions(name){
+  document.querySelectorAll('.conditions .chip').forEach(label=>label.classList.remove('recommended','recommended-extra'));
+  const map=CARD_CONDITION_MAP[name]||{core:[],extra:[]};
+  map.core.forEach(id=>$(id)?.closest('.chip')?.classList.add('recommended'));
+  map.extra.forEach(id=>$(id)?.closest('.chip')?.classList.add('recommended-extra'));
+  const hint=$('conditionHint');
+  if(hint){
+    const total=map.core.length+map.extra.length;
+    hint.textContent=total?name+' 확인조건 '+total+'개':'이 카드는 별도 고객조건 선택이 거의 없습니다.';
+  }
+}
+function togglePayStrategy(){
+  const body=$('payStrategyBody'), icon=$('payCollapseIcon');
+  const open=!body.classList.contains('open');
+  body.classList.toggle('open',open);
+  const btn=document.querySelector('.collapse-head');
+  if(btn) btn.setAttribute('aria-expanded',String(open));
+  if(icon) icon.textContent=open?'−':'＋';
+}
+function render(c,rows){const best=rows[0];const hero=rows.find(r=>r.name===selectedCardName)||best;highlightConditions(hero.name);$('cardAmountKpi').textContent=won(c.cardAmount);$('paycoKpi').textContent=won(c.paycoBenefit);$('paycoBenefit').textContent=won(c.paycoBenefit);$('paycoDesc').textContent=c.payco?`총 ${won(c.total)} 중 ${won(c.payco)} PAYCO 결제`:'사용 안 함';$('modelCount').textContent=(window.MODEL_MINI?.s?.models||0).toLocaleString()+'개';$('modelStats').textContent=`${(MODEL_MINI?.s?.models||0).toLocaleString()}개 모델 · ${(MODEL_MINI?.s?.promotions||0).toLocaleString()}개 판촉 연결 · 자동금액 ${(MODEL_MINI?.s?.auto||0).toLocaleString()} / 조합확인 ${(MODEL_MINI?.s?.manual||0).toLocaleString()}`;
  $('heroKicker').textContent=selectedCardName?'선택한 카드 상세':'지금 조건에서 1위';$('heroReset').style.display=selectedCardName?'inline-flex':'none';$('heroName').textContent=hero.name;$('heroReason').textContent=hero.reason;$('heroMoney').innerHTML=won(hero.net+c.paycoBenefit)+' <small>카드 순혜택 + PAYCO</small>';$('heroConfirmed').textContent=won(hero.confirmed);$('heroConditional').textContent=won(hero.conditional);$('heroInterest').textContent=won(hero.interest);const img=CARD_IMAGES[hero.name];$('heroImg').style.display=img?'block':'none';if(img)$('heroImg').src=img;$('heroTags').innerHTML=hero.tags.slice(0,5).map(t=>`<span class="tag">${t}</span>`).join('');
  $('naverText').textContent='+'+won(checked('naverPay')?payTier(c.cardAmount):0);$('lpayText').textContent='+'+won(checked('lpay')?payTier(c.cardAmount):0);$('rankNote').textContent=`총 ${won(c.total)} · 카드 ${won(c.cardAmount)}${c.payco?' · PAYCO '+won(c.payco):''}`;
  $('rankBody').innerHTML=rows.map((r,i)=>`<tr class="rank-row ${selectedCardName===r.name?'selected':''}" onclick="selectCard('${esc(r.name)}')"><td data-label="순위"><span class="rank">${i+1}</span></td><td data-label="카드"><div class="cardname">${r.name}</div><div class="muted">${r.annual}</div></td><td data-label="확정" class="money">${won(r.confirmed)}</td><td data-label="조건부">${won(r.conditional)}</td><td data-label="이자">${won(r.interest)}</td><td data-label="순혜택" class="money">${won(r.net)}</td><td data-label="추천 포인트"><span class="status ${!r.eligible?'orange':i===0?'green':i<3?'':'orange'}">${r.eligible?r.tone:'구독 비추천'}</span><div class="muted rank-detail">${[...r.parts,...r.condParts].slice(0,3).join(' · ')||r.reason}</div></td></tr>`).join('')}
